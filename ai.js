@@ -49,6 +49,41 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
   const lireHist = () => { try { const h = JSON.parse(sessionStorage.getItem(CLE_HIST) || '[]'); return Array.isArray(h) ? h : []; } catch (e) { return []; } };
   const ecrireHist = h => { try { sessionStorage.setItem(CLE_HIST, JSON.stringify(h.slice(-MAX_ECHANGES))); } catch (e) {} };
 
+  // ── Fiche en contexte (page d'une tomate ouverte) ──
+  let ctxId = null, ctxOff = {}, ctxFresh = true;
+  const CTX_SUGG = ['Comment la cultiver ?', 'Quel goût a-t-elle ?', 'Des variétés proches ?'];
+  const ctxTomato = () => ctxId ? TLx().getTomatoes().find(x => String(x.id) === String(ctxId)) || null : null;
+  function imgOf(t, w) {
+    const u = (t.imageURLs && t.imageURLs[0]) || t.imageURL || '';
+    if (!u) return '';
+    const im = window.FV ? FV.thumb(u, w || 120) : u;
+    return `<img src="${esc(im)}" data-o="${esc(u)}" referrerpolicy="no-referrer" alt="" decoding="async" onerror="if(this.dataset.o&&this.src!==this.dataset.o){this.src=this.dataset.o}else{this.style.display='none'}">`;
+  }
+  function ctxTag(nom, couleur) {
+    return nom ? `<div class="ai-ctxtag">${window.FV ? FV.tomato(couleur || 'Rouge', 13) : '🍅'}<span>${esc(nom)}</span></div>` : '';
+  }
+  function renderCtx() {
+    const box = panel && panel.querySelector('#ai-ctx');
+    if (!box) return;
+    const inp = panel.querySelector('#ai-input');
+    const t = ctxTomato();
+    if (!t) { box.hidden = true; box.innerHTML = ''; if (inp) inp.placeholder = 'Pose ta question…'; return; }
+    const meta = [t.weight ? t.weight + ' g' : '', t.country || ''].filter(Boolean).map(esc).join(' · ');
+    box.hidden = false;
+    box.innerHTML = `<div class="ai-ctx-card">
+        <div class="ai-thumb">${imgOf(t, 120)}</div>
+        <div class="ai-cinfo"><small><i class="fa-solid fa-paperclip"></i> Fiche en contexte</small><b>${esc(t.name)}</b><span>${window.FV ? FV.tomato(t.color, 14) : ''} ${esc(t.color || '')}${meta ? ' · ' + meta : ''}</span></div>
+        <button class="ai-ctx-x" type="button" aria-label="Retirer cette fiche du contexte"><i class="fa-solid fa-xmark"></i></button>
+      </div>` + (ctxFresh ? `<div class="ai-chips">${CTX_SUGG.map(q => `<button class="ai-chip" type="button">${esc(q)}</button>`).join('')}</div>` : '');
+    if (inp) inp.placeholder = 'Pose ta question sur cette tomate…';
+  }
+  function syncCtx() {
+    const id = TLx().detailId ? TLx().detailId() : null;
+    if (!id) { ctxOff = {}; if (ctxId) { ctxId = null; ctxFresh = true; } }
+    else if (String(id) !== String(ctxId) && !ctxOff[id]) { ctxId = String(id); ctxFresh = true; }
+    renderCtx();
+  }
+
   let fab, panel, msgs, played = false, labelTimer;
   function build() {
     if (fab) return;
@@ -68,12 +103,15 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
       </header>
       ${LIVE ? '<div class="ai-note"><i class="fa-solid fa-lock"></i> Tes questions sont envoyées à un service d’IA externe (Pollinations).</div>' : '<div class="ai-demo-note"><i class="fa-solid fa-flask"></i> Aperçu : l’assistant n’est pas encore connecté, cette conversation est un exemple.</div>'}
       <div class="ai-msgs" id="ai-msgs" aria-live="polite"></div>
+      <div class="ai-ctx" id="ai-ctx" hidden></div>
       <form class="ai-form" autocomplete="off"><input type="text" id="ai-input" maxlength="300" placeholder="Pose ta question…" aria-label="Ta question"><button type="submit" aria-label="Envoyer"><i class="fa-solid fa-paper-plane"></i></button></form>`;
     document.body.appendChild(panel);
     msgs = panel.querySelector('#ai-msgs');
     panel.querySelector('.ai-x').onclick = closeChat;
     panel.querySelector('form').onsubmit = e => { e.preventDefault(); const i = panel.querySelector('#ai-input'); const v = i.value.trim(); if (v) { i.value = ''; ask(v); } };
     panel.addEventListener('click', e => {
+      const x = e.target.closest('.ai-ctx-x');
+      if (x) { if (ctxId) ctxOff[ctxId] = true; ctxId = null; renderCtx(); return; }
       const chip = e.target.closest('.ai-chip');
       if (chip) { ask(chip.textContent); return; }
       const c = e.target.closest('.ai-card[data-open]');
@@ -154,7 +192,11 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
     if (busy) return;
     text = String(text).trim().slice(0, 300);
     if (!text) return;
-    bubble('me', esc(text));
+    syncCtx();
+    const ct = ctxTomato();
+    const cid = ct ? String(ct.id) : null;
+    bubble('me', ctxTag(ct && ct.name, ct && ct.color) + esc(text));
+    if (cid) { ctxFresh = false; renderCtx(); }
     let th = thinking();
     setBusy(true);
     const hist = lireHist();
@@ -201,9 +243,9 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
       try { jeton = window.TL && TL.getToken ? await TL.getToken() : null; } catch (e) {}
       const headers = { 'Content-Type': 'application/json' };
       if (jeton) headers.Authorization = 'Bearer ' + jeton;
-      const r = await fetch(WORKER_URL, { method: 'POST', headers, body: JSON.stringify({ message: text, historique, stream: true }), signal: ctrl.signal });
-      const ct = r.headers.get('content-type') || '';
-      if (!r.ok || !/event-stream/i.test(ct) || !r.body) {
+      const r = await fetch(WORKER_URL, { method: 'POST', headers, body: JSON.stringify({ message: text, historique, stream: true, tomate_id: cid || undefined }), signal: ctrl.signal });
+      const typeRep = r.headers.get('content-type') || '';
+      if (!r.ok || !/event-stream/i.test(typeRep) || !r.body) {
         let j = null; try { j = await r.json(); } catch (e) {}
         if (r.ok && j && typeof j.texte === 'string') { acc = j.texte; final = Object.assign({ t: 'done' }, j); }
         else erreur = erreurTexte(r.status, j && j.erreur, j && j.connecte);
@@ -237,7 +279,7 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
       bubble('bot', '<p>' + esc(erreur || erreurTexte(0)) + '</p>');
       return;
     }
-    hist.push({ q: text, a: final.texte, ids: final.ids || [] });
+    hist.push({ q: text, a: final.texte, ids: final.ids || [], c: ct ? ct.name : '', cc: ct ? ct.color : '' });
     ecrireHist(hist);
     ensureLive();
     live.innerHTML = texteHtml(final.texte) + cardsFromIds(final.ids) + (typeof final.reste === 'number' && final.reste <= 3 && !final.connecte ? `<p class="ai-tip">Il te reste ${esc(final.reste)} question${final.reste > 1 ? 's' : ''} aujourd’hui.</p>` : '');
@@ -253,7 +295,7 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
       bubble('bot', `<p>Salut ! Je suis l’assistant du catalogue. Dis-moi ce que tu cherches : couleur, taille, précocité, pays…</p><div class="ai-chips">${SUGGESTIONS.map(s => `<button class="ai-chip" type="button">${esc(s)}</button>`).join('')}</div>`);
       return;
     }
-    hist.forEach(h => { bubble('me', esc(h.q)); bubble('bot', texteHtml(h.a) + cardsFromIds(h.ids)); });
+    hist.forEach(h => { bubble('me', ctxTag(h.c, h.cc) + esc(h.q)); bubble('bot', texteHtml(h.a) + cardsFromIds(h.ids)); });
     if (window.PL) PL.refresh();
     scroll();
   }
@@ -261,6 +303,7 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
   function openChat() {
     build();
     clearTimeout(labelTimer); fab.classList.remove('wide');
+    syncCtx();
     panel.classList.add('open'); fab.classList.add('hide');
     if (!played) { played = true; if (LIVE) restaurer(); else playDemo(); }
     setTimeout(() => { const i = panel.querySelector('#ai-input'); if (i && matchMedia('(hover:hover)').matches) i.focus(); }, 300);
@@ -279,7 +322,7 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
     build();
     let seen = false; try { seen = sessionStorage.getItem('pdt_ai_hint'); } catch (e) {}
     if (!seen) setTimeout(() => { hint('Une question sur les tomates&nbsp;?', 6000); try { sessionStorage.setItem('pdt_ai_hint', '1'); } catch (e) {} }, 9000);
-    new MutationObserver(() => { if (document.body.classList.contains('detail-open')) hint('Une question sur cette tomate&nbsp;?', 4500); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    new MutationObserver(() => { if (panel && panel.classList.contains('open')) syncCtx(); if (document.body.classList.contains('detail-open')) hint('Une question sur cette tomate&nbsp;?', 4500); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
     const grid = document.getElementById('tomatoes-grid');
     if (grid) new MutationObserver(() => {
       const e = grid.querySelector('.empty-state .fa-leaf');
@@ -328,6 +371,19 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
 .ai-form button{width:42px;height:42px;flex-shrink:0;border:none;border-radius:50%;background:var(--primary);color:#fff;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.ai-m,#ai-fab.wide .ai-spark{animation:none}}
 .ai-form input:disabled,.ai-form button:disabled{opacity:.6}
+.ai-ctx{padding:8px 12px 0;background:#fff;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;animation:aiIn .25s ease both}
+.ai-ctx[hidden]{display:none}
+.ai-ctx-card{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 6px;border:1px solid #fecaca;border-radius:14px;background:linear-gradient(135deg,#fef2f2,#fff)}
+.ai-ctx-card .ai-thumb{width:46px;height:46px;border-radius:10px}
+.ai-ctx-card .ai-cinfo small{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--primary)}
+.ai-ctx-card .ai-cinfo b{font-size:14px}
+.ai-ctx-x{width:30px;height:30px;flex-shrink:0;border:none;border-radius:50%;background:#fee2e2;color:var(--primary);font-size:12px;cursor:pointer}.ai-ctx-x:hover{background:#fecaca}
+.ai-ctx .ai-chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.ai-ctx .ai-chips::-webkit-scrollbar{display:none}
+.ai-ctx .ai-chip{white-space:nowrap;flex-shrink:0}
+.ai-ctx + .ai-form{border-top:none;padding-top:8px}
+.ai-ctxtag{display:inline-flex;align-items:center;gap:6px;max-width:100%;margin-bottom:7px;padding:3px 9px 3px 6px;border-radius:99px;background:rgba(255,255,255,.2);font-size:12px;font-weight:600}
+.ai-ctxtag span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ai-m.me .ai-ctxtag{display:flex;width:fit-content}
 .ai-think{display:flex;align-items:center;gap:10px;min-height:34px}
 .ai-think-ico{display:flex;width:30px;height:30px;align-items:center;justify-content:center;flex-shrink:0;transform-origin:50% 100%;animation:aiBounce 1.1s cubic-bezier(.3,.7,.4,1) infinite}
 .ai-think-ico.search{animation:aiRoll 1.6s ease-in-out infinite}

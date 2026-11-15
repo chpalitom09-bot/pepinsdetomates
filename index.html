@@ -115,6 +115,83 @@
   .filter-pill .color-dot { width: 16px; height: 16px; border-radius: 50%; display: inline-block; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05); flex-shrink: 0; }
   .foryou-pill { background: linear-gradient(135deg, #fef2f2, #fff); border-color: #fca5a5 !important; color: var(--primary) !important; }
 
+  /* ═══ PANNEAU DE FILTRES (refonte) ═══ */
+  #btn-toggle-filters { position: relative; }
+  .fbadge { position: absolute; top: -6px; right: -6px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 99px; background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-sizing: content-box; line-height: 1; }
+  .fbadge[hidden] { display: none; }
+  .filters-panel { padding: 0; overflow: hidden; border-radius: 18px; border-color: #fecaca; box-shadow: 0 18px 40px rgba(185,28,28,.08), 0 2px 6px rgba(0,0,0,.04); }
+  .fp-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: linear-gradient(180deg, #fef2f2, #fff); border-bottom: 1px solid #fee2e2; }
+  .fp-title { flex: 1; display: flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+  .fp-ico { width: 32px; height: 32px; border-radius: 10px; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .fp-reset { border: none; background: transparent; color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; padding: 8px 10px; border-radius: 8px; display: flex; align-items: center; gap: 6px; transition: background .15s, opacity .15s; }
+  .fp-reset:hover { background: #fee2e2; }
+  .fp-reset[disabled] { opacity: .35; pointer-events: none; }
+  .fp-x { width: 34px; height: 34px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); font-size: 16px; cursor: pointer; }
+  .fp-x:hover { background: #fee2e2; color: var(--text-main); }
+  .fp-body { padding: 6px 18px 4px; max-height: min(62vh, 560px); overflow-y: auto; overscroll-behavior: contain; }
+  .fp-sec { padding: 16px 0; border-bottom: 1px dashed var(--line); }
+  .fp-sec:last-child { border-bottom: none; }
+  .fp-lab { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+  .fp-lab > i { color: #f87171; font-size: 13px; width: 16px; text-align: center; }
+  .fp-add { margin-left: auto; border: 1px dashed #f87171; background: #fff; color: var(--primary); border-radius: 99px; padding: 5px 12px; font-size: 12px; font-weight: 600; cursor: pointer; text-transform: none; letter-spacing: 0; display: inline-flex; align-items: center; gap: 6px; transition: background .15s; }
+  .fp-add:hover { background: #fef2f2; }
+  .fp-sort { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  .fp-sort .filter-pill { border-radius: 12px; padding: 11px 14px; justify-content: flex-start; box-shadow: none; background: #fafafa; border: 1.5px solid transparent; color: var(--text-main); font-weight: 500; }
+  .fp-sort .filter-pill > i { width: 16px; text-align: center; color: var(--text-muted); font-size: 13px; }
+  .fp-sort .filter-pill:hover { background: #fff; border-color: #fecaca; transform: none; box-shadow: none; }
+  .fp-sort .filter-pill.active { background: #fef2f2; border-color: var(--primary); box-shadow: none; color: var(--primary); font-weight: 600; }
+  .fp-sort .filter-pill.active > i { color: var(--primary); }
+  .fp-sort .foryou-pill { background: linear-gradient(135deg, #fef2f2, #fff) !important; }
+  .fp-colors { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sw { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 99px; border: 1.5px solid var(--line); background: #fff; color: var(--text-main); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: border-color .15s, transform .15s, box-shadow .15s, background .15s; }
+  .sw:hover { border-color: #fca5a5; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,.06); }
+  .sw-dot { position: relative; width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 -3px 5px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.35), 0 0 0 1px rgba(0,0,0,.08); font-style: normal; }
+  .sw-rainbow { background: conic-gradient(#ef4444, #f97316, #eab308, #22c55e, #3b5bdb, #7c3aed, #ef4444); }
+  .sw-ck { font-size: 11px; color: #fff; opacity: 0; transform: scale(.4); transition: opacity .15s, transform .2s cubic-bezier(.3,1.6,.5,1); text-shadow: 0 1px 2px rgba(0,0,0,.45); }
+  .sw-dot[data-light="1"] .sw-ck { color: #374151; text-shadow: none; }
+  .sw.active { border-color: var(--text-main); background: #fff; box-shadow: 0 0 0 3px rgba(17,24,39,.07); font-weight: 600; }
+  .sw.active .sw-ck { opacity: 1; transform: none; }
+  .sw small { font-size: 11px; font-weight: 600; color: var(--text-muted); background: #f3f4f6; border-radius: 99px; padding: 1px 7px; }
+  .sw-empty { opacity: .55; }
+  .fp-select { position: relative; }
+  .fp-select .country-select { appearance: none; -webkit-appearance: none; padding: 13px 40px 13px 14px; border-radius: 12px; background: #fafafa; border: 1.5px solid transparent; cursor: pointer; font-weight: 500; transition: border-color .15s, background .15s; }
+  .fp-select .country-select:hover { background: #fff; border-color: #fecaca; }
+  .fp-select .country-select:focus { background: #fff; border-color: var(--primary); }
+  .fp-select > i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 12px; pointer-events: none; }
+  .fp-foot { padding: 12px 18px 16px; border-top: 1px solid #fee2e2; background: #fffafa; }
+  .fp-foot .btn { width: 100%; padding: 13px; border-radius: 12px; font-size: 14.5px; }
+  .af-row { display: none; flex-wrap: wrap; gap: 8px; padding: 0 24px; margin: -4px 0 14px; }
+  .af-row.show { display: flex; }
+  .af-chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 8px 5px 10px; border-radius: 99px; background: #fff; border: 1px solid #fecaca; font-size: 13px; font-weight: 500; }
+  .af-chip .sw-dot { width: 16px; height: 16px; box-shadow: inset 0 -2px 3px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.08); }
+  .af-chip button { border: none; background: #fee2e2; color: var(--primary); width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .af-chip button:hover { background: #fecaca; }
+  @media (max-width: 768px) {
+    .filters-panel { margin: 0 12px; }
+    .af-row, .toolbar { padding-left: 12px; padding-right: 12px; }
+    .af-row { padding: 0 12px; }
+    .fp-body { max-height: 58vh; padding: 4px 14px; }
+    .fp-sort { grid-template-columns: 1fr 1fr; }
+    .fbadge { top: -5px; right: -5px; }
+  }
+  /* Modale « Ajouter une couleur » */
+  .cm-pal { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 8px; }
+  .cm-sw { aspect-ratio: 1; border-radius: 50%; border: none; cursor: pointer; position: relative; box-shadow: inset 0 -3px 5px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.3), 0 0 0 1px rgba(0,0,0,.1); transition: transform .15s; }
+  .cm-sw:hover { transform: scale(1.12); }
+  .cm-sw.sel { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--text-main); transform: scale(1.05); }
+  .cm-top { display: flex; gap: 18px; align-items: center; margin-bottom: 18px; }
+  .cm-prev { width: 84px; height: 84px; flex-shrink: 0; border-radius: 20px; background: #fef2f2; display: flex; align-items: center; justify-content: center; }
+  .cm-exact { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 13px; color: var(--text-muted); }
+  .cm-exact input[type=color] { width: 44px; height: 34px; border: 1px solid var(--line); border-radius: 8px; padding: 2px; background: #fff; cursor: pointer; }
+  .cm-exact code { font-size: 13px; color: var(--text-main); background: #f3f4f6; padding: 3px 8px; border-radius: 6px; }
+  .cm-list { margin-top: 22px; border-top: 1px dashed var(--line); padding-top: 14px; }
+  .cm-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 14px; }
+  .cm-item .sw-dot { width: 22px; height: 22px; }
+  .cm-item span { flex: 1; }
+  .cm-item small { color: var(--text-muted); }
+  .cm-item button { border: none; background: transparent; color: var(--text-muted); width: 30px; height: 30px; border-radius: 8px; cursor: pointer; }
+  .cm-item button:hover { background: #fee2e2; color: var(--primary); }
+
   /* CARDS & IMAGES CADRÉES */
   .grid { max-width: 1200px; margin: 0 auto 32px; padding: 0 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s; display: flex; flex-direction: column; cursor: pointer; content-visibility: auto; contain-intrinsic-size: auto 420px; }
@@ -641,7 +718,7 @@
       <input type="search" id="search-input" name="variety-search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly onfocus="this.removeAttribute('readonly')" data-i18n-ph="search_ph" placeholder="Rechercher une variété...">
     </div>
     <button class="btn btn-outline" id="btn-toggle-filters">
-      <i class="fa-solid fa-sliders"></i> <span class="hide-mobile" data-i18n="filters">Filtres</span>
+      <i class="fa-solid fa-sliders"></i> <span class="hide-mobile" data-i18n="filters">Filtres</span><span class="fbadge" id="fbadge" hidden></span>
     </button>
     <button class="btn btn-outline" id="btn-open-map">
       <i class="fa-solid fa-map-location-dot"></i> <span class="hide-mobile" data-i18n="map_btn">Carte</span>
@@ -649,102 +726,38 @@
   </div>
 
   <div class="filters-panel" id="filters-panel">
-    <div class="filter-group">
-      <div class="filter-title" data-i18n="sort_by">Trier par</div>
-      <div class="pill-group" id="sort-group">
-        <button class="filter-pill foryou-pill" data-val="foryou"><i class="fa-solid fa-sparkles"></i> <span data-i18n="sort_foryou">Pour vous</span></button>
-        <button class="filter-pill active" data-val="date" data-i18n="sort_date">Les plus récentes</button>
-        <button class="filter-pill" data-val="alpha" data-i18n="sort_alpha">Ordre alphabétique</button>
-        <button class="filter-pill" data-val="likes"><i class="fa-solid fa-heart" style="color:var(--primary); font-size:12px"></i> <span data-i18n="sort_likes">Plus populaires</span></button>
-      </div>
+    <div class="fp-head">
+      <div class="fp-title"><span class="fp-ico"><i class="fa-solid fa-sliders"></i></span><span data-i18n="filters">Filtres</span></div>
+      <button class="fp-reset" id="fp-reset" type="button"><i class="fa-solid fa-rotate-left"></i> <span>Réinitialiser</span></button>
+      <button class="fp-x" id="fp-close" type="button" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
     </div>
-
-    <div class="filter-group">
-      <div class="filter-title" data-i18n="color">Couleur</div>
-      <div class="pill-group" id="color-group">
-        <button class="filter-pill active" data-val="all" data-i18n="color_all">Toutes les couleurs</button>
-
-        <!-- Couleurs existantes -->
-        <button class="filter-pill" data-val="Rouge">
-          <i class="color-dot" style="background:#ef4444"></i> <span data-i18n="color_red">Rouge</span>
-        </button>
-        <button class="filter-pill" data-val="Jaune">
-          <i class="color-dot" style="background:#eab308"></i> <span data-i18n="color_yellow">Jaune</span>
-        </button>
-        <button class="filter-pill" data-val="Noire">
-          <i class="color-dot" style="background:#4b5563"></i> <span data-i18n="color_black">Noire</span>
-        </button>
-        <button class="filter-pill" data-val="Verte">
-          <i class="color-dot" style="background:#22c55e"></i> <span data-i18n="color_green">Verte</span>
-        </button>
-        <button class="filter-pill" data-val="Orange">
-          <i class="color-dot" style="background:#f97316"></i> <span data-i18n="color_orange">Orange</span>
-        </button>
-        <button class="filter-pill" data-val="Rose">
-          <i class="color-dot" style="background:#ec4899"></i> <span data-i18n="color_pink">Rose</span>
-        </button>
-        <button class="filter-pill" data-val="Blanche">
-          <i class="color-dot" style="background:#f9fafb; border:1px solid #d1d5db"></i> <span data-i18n="color_white">Blanche</span>
-        </button>
-        <button class="filter-pill" data-val="Bicolore">
-          <i class="color-dot" style="background:linear-gradient(135deg,#ef4444 50%,#eab308 50%)"></i> <span data-i18n="color_bicolor">Bicolore</span>
-        </button>
-
-        <!-- Nouvelles couleurs -->
-        <button class="filter-pill" data-val="Violette">
-          <i class="color-dot" style="background:#7c3aed"></i> <span data-i18n="color_purple">Violette</span>
-        </button>
-        <button class="filter-pill" data-val="Bordeaux">
-          <i class="color-dot" style="background:#7f1d1d"></i> <span data-i18n="color_bordeaux">Bordeaux</span>
-        </button>
-        <button class="filter-pill" data-val="Crème">
-          <i class="color-dot" style="background:#d4a96a; border:1px solid #c9955a"></i> <span data-i18n="color_cream">Crème</span>
-        </button>
-        <button class="filter-pill" data-val="Rayée">
-          <i class="color-dot" style="background:repeating-linear-gradient(135deg,#22c55e 0px,#22c55e 4px,#eab308 4px,#eab308 8px)"></i> <span data-i18n="color_striped">Rayée / Striée</span>
-        </button>
-
-        <!-- 10 couleurs supplémentaires (texte en dur, pas de data-i18n tant que lang.json n'est pas mis à jour) -->
-        <button class="filter-pill" data-val="Bleue">
-          <i class="color-dot" style="background:#3b5bdb"></i> <span>Bleue</span>
-        </button>
-        <button class="filter-pill" data-val="Turquoise">
-          <i class="color-dot" style="background:#14b8a6"></i> <span>Turquoise</span>
-        </button>
-        <button class="filter-pill" data-val="Corail">
-          <i class="color-dot" style="background:#ff6f61"></i> <span>Corail</span>
-        </button>
-        <button class="filter-pill" data-val="Saumon">
-          <i class="color-dot" style="background:#fa8072"></i> <span>Saumon</span>
-        </button>
-        <button class="filter-pill" data-val="Chocolat">
-          <i class="color-dot" style="background:#5c3a21"></i> <span>Chocolat</span>
-        </button>
-        <button class="filter-pill" data-val="Ocre">
-          <i class="color-dot" style="background:#cc9a3a"></i> <span>Ocre</span>
-        </button>
-        <button class="filter-pill" data-val="Prune">
-          <i class="color-dot" style="background:#6b2545"></i> <span>Prune</span>
-        </button>
-        <button class="filter-pill" data-val="Grise">
-          <i class="color-dot" style="background:#9ca3af"></i> <span>Grise</span>
-        </button>
-        <button class="filter-pill" data-val="Dorée">
-          <i class="color-dot" style="background:#d4af37"></i> <span>Dorée</span>
-        </button>
-        <button class="filter-pill" data-val="Arc-en-ciel">
-          <i class="color-dot" style="background:linear-gradient(90deg,#ef4444,#f97316,#eab308,#22c55e,#3b5bdb,#7c3aed)"></i> <span>Arc-en-ciel</span>
-        </button>
-      </div>
+    <div class="fp-body">
+      <section class="fp-sec">
+        <div class="fp-lab"><i class="fa-solid fa-arrow-down-wide-short"></i><span data-i18n="sort_by">Trier par</span></div>
+        <div class="fp-sort" id="sort-group">
+          <button class="filter-pill foryou-pill" data-val="foryou" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="sort_foryou">Pour vous</span></button>
+          <button class="filter-pill active" data-val="date" type="button"><i class="fa-regular fa-clock"></i><span data-i18n="sort_date">Les plus récentes</span></button>
+          <button class="filter-pill" data-val="alpha" type="button"><i class="fa-solid fa-arrow-down-a-z"></i><span data-i18n="sort_alpha">Ordre alphabétique</span></button>
+          <button class="filter-pill" data-val="likes" type="button"><i class="fa-solid fa-heart" style="color:var(--primary)"></i><span data-i18n="sort_likes">Plus populaires</span></button>
+        </div>
+      </section>
+      <section class="fp-sec">
+        <div class="fp-lab"><i class="fa-solid fa-palette"></i><span data-i18n="color">Couleur</span><button class="fp-add" id="btn-add-color" type="button" style="display:none"><i class="fa-solid fa-plus"></i> Ajouter une couleur</button></div>
+        <div class="fp-colors" id="color-group"></div>
+      </section>
+      <section class="fp-sec">
+        <div class="fp-lab"><i class="fa-solid fa-earth-europe"></i><span data-i18n="country_filter">Pays</span></div>
+        <div class="fp-select">
+          <select class="country-select" id="country-filter-select">
+            <option value="all" data-i18n="country_all">Tous les pays</option>
+          </select>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </section>
     </div>
-
-    <div class="filter-group">
-      <div class="filter-title" data-i18n="country_filter">Pays</div>
-      <select class="country-select" id="country-filter-select">
-        <option value="all" data-i18n="country_all">Tous les pays</option>
-      </select>
-    </div>
+    <div class="fp-foot"><button class="btn btn-primary" id="fp-apply" type="button">Voir les variétés</button></div>
   </div>
+  <div class="af-row" id="active-filters"></div>
 </div>
 
 <div class="grid" id="tomatoes-grid">
@@ -919,6 +932,33 @@
 </div>
 
 <div id="print-area"></div>
+
+<!-- Modale couleurs (modérateurs) -->
+<div class="modal-overlay" id="color-modal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div class="modal-title">Ajouter une couleur</div>
+      <button class="modal-close" id="close-color-modal" type="button"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="error-msg" id="color-error"></div>
+      <div class="cm-top">
+        <div class="cm-prev" id="cm-prev"></div>
+        <div class="form-group" style="flex:1;margin:0">
+          <label>Nom de la couleur *</label>
+          <input type="text" class="form-control" id="cm-name" maxlength="24" placeholder="Ex : Mauve, Ambre, Pêche…" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label>Palette</label>
+        <div class="cm-pal" id="cm-pal"></div>
+        <div class="cm-exact"><input type="color" id="cm-hex" value="#ef4444" aria-label="Couleur exacte"> <span>Couleur exacte</span> <code id="cm-hex-txt">#ef4444</code></div>
+      </div>
+      <div class="cm-list" id="cm-list"></div>
+      <button class="btn btn-primary" id="cm-save" type="button" style="width:100%;margin-top:18px;padding:13px"><i class="fa-solid fa-plus"></i> Ajouter la couleur</button>
+    </div>
+  </div>
+</div>
 
 <!-- Add Modal -->
 <div class="modal-overlay" id="add-modal">
@@ -1128,6 +1168,7 @@ async function resolveAdmin(user) {
   isAdmin = ok;
   document.getElementById('btn-add-modal').style.display = ok ? '' : 'none';
   document.getElementById('btn-import-data').style.display = ok ? '' : 'none';
+  if (typeof renderColorFilters === 'function') renderColorFilters();
 }
 let currentProfile = null;
 let currentImagesData = [];
@@ -1236,7 +1277,7 @@ document.querySelectorAll('#lang-menu button').forEach(btn => {
   btn.onclick = (e) => {
     currentLang = e.currentTarget.dataset.lang;
     localStorage.setItem('tl_lang', currentLang);
-    applyI18n(); currentPage = 1; renderGrid();
+    applyI18n(); currentPage = 1; renderColorFilters(); renderGrid();
     document.getElementById('lang-menu').classList.remove('active');
   };
 });
@@ -1297,30 +1338,172 @@ document.getElementById('f-country-btn').onclick = (e) => {
 document.getElementById('f-country-search').oninput = (e) => renderCountryList(e.target.value);
 
 // ─── FILTRES ──────────────────────────────────────────────────────────────────
-document.getElementById('btn-toggle-filters').onclick = () => document.getElementById('filters-panel').classList.toggle('active');
-document.querySelectorAll('#sort-group .filter-pill').forEach(btn => {
-  btn.onclick = (e) => {
-    document.querySelectorAll('#sort-group .filter-pill').forEach(b => b.classList.remove('active'));
-    e.currentTarget.classList.add('active');
-    currentSort = e.currentTarget.getAttribute('data-val');
-    currentPage = 1;
-    renderGrid();
-  };
-});
-document.querySelectorAll('#color-group .filter-pill').forEach(btn => {
-  btn.onclick = (e) => {
-    document.querySelectorAll('#color-group .filter-pill').forEach(b => b.classList.remove('active'));
-    e.currentTarget.classList.add('active');
-    currentColor = e.currentTarget.getAttribute('data-val');
-    currentPage = 1;
-    renderGrid();
-  };
-});
-document.getElementById('country-filter-select').onchange = (e) => {
-  currentCountry = e.target.value;
-  currentPage = 1;
+const escHtml = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const BASE_COLOR_NAMES = Object.keys(colorMap);
+let customColors = {};
+const normName = v => String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+const slugColor = v => normName(v).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30);
+const isLightColor = bg => { const m = /^#([0-9a-f]{6})$/i.exec(bg || ''); if (!m) return false; const n = parseInt(m[1], 16); return (0.299 * (n >> 16 & 255) + 0.587 * (n >> 8 & 255) + 0.114 * (n & 255)) > 186; };
+const allColorNames = () => BASE_COLOR_NAMES.concat(Object.values(customColors).map(c => c.name).sort((x, y) => x.localeCompare(y, 'fr')));
+
+function renderColorFilters() {
+  const box = document.getElementById('color-group');
+  if (!box) return;
+  const counts = {};
+  tomatoesData.forEach(t => { if (t.color) counts[t.color] = (counts[t.color] || 0) + 1; });
+  const dot = (bg) => `<i class="sw-dot" style="background:${bg}" data-light="${isLightColor(bg) ? 1 : 0}"><i class="fa-solid fa-check sw-ck"></i></i>`;
+  let html = `<button type="button" class="sw${currentColor === 'all' ? ' active' : ''}" data-val="all"><i class="sw-dot sw-rainbow"><i class="fa-solid fa-check sw-ck"></i></i><span>${escHtml(tr('color_all'))}</span></button>`;
+  allColorNames().forEach(name => {
+    const n = counts[name] || 0;
+    html += `<button type="button" class="sw${currentColor === name ? ' active' : ''}${n ? '' : ' sw-empty'}" data-val="${escHtml(name)}">${dot(colorMap[name] || '#ccc')}<span>${escHtml(trColor(name))}</span>${n ? `<small>${n}</small>` : ''}</button>`;
+  });
+  box.innerHTML = html;
+  const add = document.getElementById('btn-add-color');
+  if (add) add.style.display = isAdmin ? '' : 'none';
+  syncColorSelect();
+}
+function syncColorSelect() {
+  const sel = document.getElementById('f-color');
+  if (!sel) return;
+  const keep = sel.value;
+  sel.querySelectorAll('option[data-custom]').forEach(o => o.remove());
+  Object.values(customColors).sort((x, y) => x.name.localeCompare(y.name, 'fr')).forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.name; o.textContent = c.name; o.setAttribute('data-custom', '1');
+    sel.appendChild(o);
+  });
+  if (keep) sel.value = keep;
+}
+function applyCustomColors(raw) {
+  Object.values(customColors).forEach(c => { delete colorMap[c.name]; });
+  customColors = {};
+  Object.keys(raw || {}).forEach(k => {
+    const c = raw[k];
+    if (c && typeof c.name === 'string' && /^#[0-9a-fA-F]{6}$/.test(c.hex || '')) {
+      customColors[k] = { key: k, name: c.name, hex: c.hex };
+      colorMap[c.name] = c.hex;
+      if (window.FV && FV.registerColor) FV.registerColor(c.name, c.hex);
+    }
+  });
+  renderColorFilters();
   renderGrid();
+  if (document.getElementById('color-modal').classList.contains('active')) renderColorModalList();
+}
+onValue(ref(db, 'pepins/colors'), snap => applyCustomColors(snap.val()), err => console.warn('Couleurs :', err && err.message));
+
+function setSort(v) {
+  currentSort = v;
+  document.querySelectorAll('#sort-group .filter-pill').forEach(b => b.classList.toggle('active', b.getAttribute('data-val') === v));
+}
+function setColor(v) { currentColor = v; currentPage = 1; renderColorFilters(); renderGrid(); }
+function setCountry(v) { currentCountry = v; document.getElementById('country-filter-select').value = v; currentPage = 1; renderGrid(); }
+
+function updateFilterUI(count) {
+  const n = (currentColor !== 'all' ? 1 : 0) + (currentCountry !== 'all' ? 1 : 0);
+  const badge = document.getElementById('fbadge');
+  if (badge) { badge.hidden = !n; badge.textContent = n; }
+  const reset = document.getElementById('fp-reset');
+  if (reset) reset.disabled = !(n || currentSort !== 'date');
+  const apply = document.getElementById('fp-apply');
+  if (apply && hasFirstData) apply.textContent = count === 0 ? 'Aucune variété' : (count === 1 ? 'Voir 1 variété' : 'Voir ' + count + ' variétés');
+  const row = document.getElementById('active-filters');
+  if (!row) return;
+  let h = '';
+  if (currentColor !== 'all') h += `<span class="af-chip"><i class="sw-dot" style="background:${colorMap[currentColor] || '#ccc'}"></i>${escHtml(trColor(currentColor))}<button type="button" data-clear="color" aria-label="Retirer"><i class="fa-solid fa-xmark"></i></button></span>`;
+  if (currentCountry !== 'all') h += `<span class="af-chip"><i class="fa-solid fa-earth-europe" style="color:#f87171"></i>${escHtml(currentCountry)}<button type="button" data-clear="country" aria-label="Retirer"><i class="fa-solid fa-xmark"></i></button></span>`;
+  row.innerHTML = h;
+  row.classList.toggle('show', !!h);
+}
+
+document.getElementById('btn-toggle-filters').onclick = () => document.getElementById('filters-panel').classList.toggle('active');
+document.getElementById('fp-close').onclick = () => document.getElementById('filters-panel').classList.remove('active');
+document.getElementById('fp-apply').onclick = () => {
+  document.getElementById('filters-panel').classList.remove('active');
+  document.getElementById('tomatoes-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
+document.getElementById('fp-reset').onclick = () => { setSort('date'); currentColor = 'all'; currentCountry = 'all'; document.getElementById('country-filter-select').value = 'all'; currentPage = 1; renderColorFilters(); renderGrid(); };
+document.getElementById('active-filters').addEventListener('click', e => {
+  const b = e.target.closest('[data-clear]');
+  if (!b) return;
+  if (b.dataset.clear === 'color') setColor('all'); else setCountry('all');
+});
+document.querySelectorAll('#sort-group .filter-pill').forEach(btn => {
+  btn.onclick = (e) => { setSort(e.currentTarget.getAttribute('data-val')); currentPage = 1; renderGrid(); };
+});
+document.getElementById('color-group').addEventListener('click', e => {
+  const b = e.target.closest('.sw');
+  if (b) setColor(b.getAttribute('data-val'));
+});
+document.getElementById('country-filter-select').onchange = (e) => { setCountry(e.target.value); };
+
+// ─── COULEURS AJOUTÉES PAR LES MODÉRATEURS ────────────────────────────────────
+const PALETTE = ['#ef4444','#dc2626','#b91c1c','#7f1d1d','#f97316','#ea580c','#fb923c','#f59e0b','#eab308','#facc15','#fde047','#d4af37','#a3e635','#84cc16','#22c55e','#15803d','#166534','#14b8a6','#06b6d4','#0ea5e9','#3b82f6','#3b5bdb','#4338ca','#6366f1','#7c3aed','#a855f7','#c026d3','#ec4899','#f43f5e','#ff6f61','#fa8072','#fda4af','#a16207','#92400e','#5c3a21','#78350f','#6b2545','#4b5563','#9ca3af','#f3efdc'];
+let cmHex = '#ef4444';
+function cmSetHex(h) {
+  cmHex = h.toLowerCase();
+  document.getElementById('cm-hex').value = cmHex;
+  document.getElementById('cm-hex-txt').textContent = cmHex;
+  document.querySelectorAll('#cm-pal .cm-sw').forEach(b => b.classList.toggle('sel', b.dataset.hex === cmHex));
+  if (window.FV && FV.registerColor) { FV.registerColor('__preview', cmHex); document.getElementById('cm-prev').innerHTML = FV.tomato('__preview', 62); }
+}
+function renderColorModalList() {
+  const list = Object.values(customColors).sort((x, y) => x.name.localeCompare(y.name, 'fr'));
+  const counts = {}; tomatoesData.forEach(t => { if (t.color) counts[t.color] = (counts[t.color] || 0) + 1; });
+  document.getElementById('cm-list').innerHTML = list.length
+    ? `<div class="filter-title" style="margin-bottom:6px">Couleurs ajoutées</div>` + list.map(c => `<div class="cm-item"><i class="sw-dot" style="background:${c.hex}"></i><span>${escHtml(c.name)}</span><small>${counts[c.name] || 0} variété${(counts[c.name] || 0) > 1 ? 's' : ''}</small><button type="button" data-del="${escHtml(c.key)}" title="Supprimer" aria-label="Supprimer ${escHtml(c.name)}"><i class="fa-solid fa-trash-can"></i></button></div>`).join('')
+    : '';
+}
+function openColorModal() {
+  if (!isAdmin) return;
+  const pal = document.getElementById('cm-pal');
+  if (!pal.children.length) pal.innerHTML = PALETTE.map(h => `<button type="button" class="cm-sw" data-hex="${h}" style="background:${h}" aria-label="${h}"></button>`).join('');
+  document.getElementById('color-error').style.display = 'none';
+  document.getElementById('cm-name').value = '';
+  cmSetHex(cmHex);
+  renderColorModalList();
+  document.getElementById('color-modal').classList.add('active');
+  setTimeout(() => document.getElementById('cm-name').focus(), 250);
+}
+const closeColorModal = () => document.getElementById('color-modal').classList.remove('active');
+function colorError(msg) { const e = document.getElementById('color-error'); e.textContent = msg; e.style.display = 'block'; }
+document.getElementById('btn-add-color').onclick = openColorModal;
+document.getElementById('close-color-modal').onclick = closeColorModal;
+document.getElementById('color-modal').addEventListener('click', e => { if (e.target.id === 'color-modal') closeColorModal(); });
+document.getElementById('cm-pal').addEventListener('click', e => { const b = e.target.closest('.cm-sw'); if (b) cmSetHex(b.dataset.hex); });
+document.getElementById('cm-hex').oninput = e => cmSetHex(e.target.value);
+document.getElementById('cm-name').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('cm-save').click(); } });
+document.getElementById('cm-save').onclick = async () => {
+  if (!isAdmin || !currentUser) return;
+  const name = document.getElementById('cm-name').value.replace(/\s+/g, ' ').trim();
+  if (name.length < 2) return colorError('Donne un nom à la couleur (2 caractères minimum).');
+  if (/[<>&"]/.test(name)) return colorError('Le nom ne peut pas contenir < > & ou ".');
+  const slug = slugColor(name);
+  if (!slug) return colorError('Ce nom n’est pas valide.');
+  const existing = allColorNames().some(n => normName(n) === normName(name) || slugColor(n) === slug);
+  if (existing) return colorError('Cette couleur existe déjà.');
+  const btn = document.getElementById('cm-save');
+  btn.disabled = true;
+  try {
+    await update(ref(db, 'pepins/colors/' + slug), { name, hex: cmHex, by: currentUser.uid, at: Date.now() });
+    document.getElementById('cm-name').value = '';
+    document.getElementById('color-error').style.display = 'none';
+    showToast('Couleur « ' + name + ' » ajoutée', 'fa-palette');
+  } catch (e) {
+    colorError('Impossible d’ajouter la couleur (droits insuffisants ou règles Firebase pas encore mises à jour).');
+  }
+  btn.disabled = false;
+};
+document.getElementById('cm-list').addEventListener('click', async e => {
+  const b = e.target.closest('[data-del]');
+  if (!b || !isAdmin) return;
+  const c = customColors[b.dataset.del];
+  if (!c) return;
+  const used = tomatoesData.filter(t => t.color === c.name).length;
+  if (used) { colorError('« ' + c.name + ' » est utilisée par ' + used + ' variété' + (used > 1 ? 's' : '') + ' : change d’abord leur couleur.'); return; }
+  if (!confirm('Supprimer la couleur « ' + c.name + ' » ?')) return;
+  try { await remove(ref(db, 'pepins/colors/' + c.key)); } catch (err) { colorError('Suppression refusée.'); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeColorModal(); });
 
 // ─── AUTHENTIFICATION & TOGGLE ANONYME ────────────────────────────────────────
 const anonToggle = document.getElementById('toggle-anon');
@@ -1411,6 +1594,7 @@ function subscribeTomatoes() {
       tomatoesRetryCount = 0;
       if (tomatoesRetryTimer) { clearTimeout(tomatoesRetryTimer); tomatoesRetryTimer = null; }
       updateVarietyCounter(tomatoesData.length);
+      renderColorFilters();
       renderGrid();
       if (detailCurrentId) {
         refreshDetailLikeBtn();
@@ -1503,6 +1687,7 @@ function renderGrid() {
   });
 
   filtered = sortTomatoes(filtered, currentSort, currentProfile, currentUser ? currentUser.uid : null);
+  updateFilterUI(filtered.length);
 
   if (filtered.length === 0) {
     if (tomatoesLoadError) {

@@ -339,5 +339,15 @@
     return { cycle: c, semis: s };
   }
 
-  window.FV = { tomato, thumb, weightScale, country, cycle, hydrate, parseCulture };
+  // Couleurs ajoutées par les modérateurs : on enregistre la teinte, et on force la régénération du dégradé
+  function registerColor(name, hex) {
+    if (!/^#[0-9a-fA-F]{6}$/.test(hex || '')) return;
+    const k = norm(name);
+    PAL[k] = hex;
+    const id = 'fvt-' + (k.replace(/[^a-z]/g, '') || 'rouge');
+    delete defsDone[id];
+    const old = document.getElementById(id + 'f');
+    if (old) old.remove();
+  }
+  window.FV = { tomato, thumb, weightScale, country, cycle, hydrate, parseCulture, registerColor };
 })();

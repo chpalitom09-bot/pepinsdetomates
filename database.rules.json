@@ -17,6 +17,17 @@
         ".read": "auth != null",
         ".write": "auth != null && (auth.uid === 'C2FrKuBXBzRYcqCG7pW8eEzm5RI3' || auth.uid === '1uKGbtsFGOYKTwge7lT88yAfnx92' || auth.uid === 'ptNpn0JJF1Serl8Ej7yAJLtpPti2' || auth.uid === 'pJVYaoxxs2UReJ2bcp5VWSLvl6x2')"
       },
+      "colors": {
+        "$colorId": {
+          ".write": "auth != null && (auth.uid === 'C2FrKuBXBzRYcqCG7pW8eEzm5RI3' || auth.uid === '1uKGbtsFGOYKTwge7lT88yAfnx92' || auth.uid === 'ptNpn0JJF1Serl8Ej7yAJLtpPti2' || auth.uid === 'pJVYaoxxs2UReJ2bcp5VWSLvl6x2' || root.child('pepins/admins').child(auth.uid).val() === true)",
+          ".validate": "newData.hasChildren(['name', 'hex'])",
+          "name": { ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 24 && newData.val().matches(/^[^<>&\"]+$/)" },
+          "hex": { ".validate": "newData.isString() && newData.val().matches(/^#[0-9a-fA-F]{6}$/)" },
+          "by": { ".validate": "newData.isString()" },
+          "at": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        }
+      },
       "tomatoes": {
         "$id": {
           ".write": "auth != null && (auth.uid === 'C2FrKuBXBzRYcqCG7pW8eEzm5RI3' || auth.uid === '1uKGbtsFGOYKTwge7lT88yAfnx92' || auth.uid === 'ptNpn0JJF1Serl8Ej7yAJLtpPti2' || auth.uid === 'pJVYaoxxs2UReJ2bcp5VWSLvl6x2' || root.child('pepins/admins').child(auth.uid).val() === true)",
