@@ -66,7 +66,7 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
         <div><b>Assistant tomates</b><small>Il connaît tout le catalogue</small></div>
         <button class="ai-x" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
       </header>
-      ${LIVE ? '<div class="ai-note"><i class="fa-solid fa-lock"></i> Tes questions sont envoyées à Mistral (France).</div>' : '<div class="ai-demo-note"><i class="fa-solid fa-flask"></i> Aperçu : l’assistant n’est pas encore connecté, cette conversation est un exemple.</div>'}
+      ${LIVE ? '<div class="ai-note"><i class="fa-solid fa-lock"></i> Tes questions sont envoyées à un service d’IA externe (Pollinations).</div>' : '<div class="ai-demo-note"><i class="fa-solid fa-flask"></i> Aperçu : l’assistant n’est pas encore connecté, cette conversation est un exemple.</div>'}
       <div class="ai-msgs" id="ai-msgs" aria-live="polite"></div>
       <form class="ai-form" autocomplete="off"><input type="text" id="ai-input" maxlength="300" placeholder="Pose ta question…" aria-label="Ta question"><button type="submit" aria-label="Envoyer"><i class="fa-solid fa-paper-plane"></i></button></form>`;
     document.body.appendChild(panel);
@@ -124,6 +124,7 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
   }
   function erreurTexte(status, code, connecte) {
     if (code === 'quota') return 'Tu as atteint la limite de questions pour aujourd’hui. Reviens demain' + (connecte ? '.' : ' (ou connecte-toi pour en avoir davantage).');
+    if (code === 'plein') return 'L’assistant a beaucoup servi cette heure. Réessaie dans quelques minutes.';
     if (status === 429) return 'L’assistant est très sollicité en ce moment. Réessaie dans une minute.';
     if (status === 403 || status === 503) return 'L’assistant est indisponible pour le moment. Réessaie plus tard.';
     if (status === 413 || code === 'long') return 'Ta question est trop longue : essaie de la raccourcir.';
