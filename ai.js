@@ -130,39 +130,119 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
     if (status === 413 || code === 'long') return 'Ta question est trop longue : essaie de la raccourcir.';
     return 'Je n’arrive pas à répondre pour l’instant. Réessaie dans un instant.';
   }
+  const PH_DEBUT = ['Je réfléchis…', 'Je feuillette le catalogue…', 'Je compare les variétés…'];
+  const PH_SUITE = ['Je prépare ma réponse…', 'Je choisis les meilleures variétés…'];
+  function thinking() {
+    const d = bubble('bot', `<div class="ai-think"><span class="ai-think-ico">${window.FV ? FV.tomato('Rouge', 28) : '🍅'}</span><span class="ai-think-lab"><span class="ai-think-l in">${PH_DEBUT[0]}</span><span class="ai-dots"><i></i><i></i><i></i></span></span></div>`);
+    d.classList.add('ai-thinking');
+    const lab = d.querySelector('.ai-think-l'), ico = d.querySelector('.ai-think-ico');
+    let phase = 'think', tour = 0, k = 0, timer;
+    const set = txt => { if (lab.textContent === txt) return; lab.classList.remove('in'); void lab.offsetWidth; lab.textContent = txt; lab.classList.add('in'); };
+    timer = setInterval(() => { if (phase === 'think') { const l = tour ? PH_SUITE : PH_DEBUT; k = (k + 1) % l.length; set(l[k]); } }, 2300);
+    return {
+      el: d,
+      status(ev) {
+        if (ev.s === 'search') { phase = 'search'; ico.classList.add('search'); set('Je cherche dans le catalogue' + (ev.q ? ' : « ' + ev.q + ' »' : '') + '…'); }
+        else { phase = 'think'; tour = ev.tour || 0; k = 0; ico.classList.remove('search'); set(tour ? PH_SUITE[0] : PH_DEBUT[0]); }
+      },
+      stop() { clearInterval(timer); }
+    };
+  }
+  const avecCurseur = h => h.replace(/<\/p>$/, '<span class="ai-caret"></span></p>') || '<span class="ai-caret"></span>';
+
   async function askLive(text) {
     if (busy) return;
     text = String(text).trim().slice(0, 300);
     if (!text) return;
     bubble('me', esc(text));
-    const t = typing();
+    let th = thinking();
     setBusy(true);
     const hist = lireHist();
     const historique = [];
     hist.forEach(h => { historique.push({ role: 'user', content: h.q }, { role: 'assistant', content: h.a }); });
     const ctrl = new AbortController();
-    const stop = setTimeout(() => ctrl.abort(), 35000);
-    let reponse = null, erreur = null;
+    let stop = setTimeout(() => ctrl.abort(), 60000);
+    let final = null, erreur = null;
+    let live = null, acc = '', shown = 0, raf = 0, drainRes = null;
+
+    const proche = () => msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 90;
+    function ensureLive() {
+      if (live) return;
+      th.stop(); live = th.el; live.classList.remove('ai-thinking'); live.innerHTML = '';
+    }
+    function draw() {
+      ensureLive();
+      const bas = proche();
+      live.innerHTML = avecCurseur(texteHtml(acc.slice(0, shown)));
+      if (bas) msgs.scrollTop = msgs.scrollHeight;
+    }
+    function tick() {
+      raf = 0;
+      if (shown < acc.length) { shown = Math.min(acc.length, shown + Math.max(2, Math.ceil((acc.length - shown) / 14))); draw(); }
+      if (shown < acc.length) raf = requestAnimationFrame(tick);
+      else if (drainRes) { drainRes(); drainRes = null; }
+    }
+    const pump = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    const drained = () => new Promise(res => { if (shown >= acc.length) res(); else { drainRes = res; pump(); } });
+
+    function onEvent(ev) {
+      if (ev.t === 'status') { if (!live) th.status(ev); }
+      else if (ev.t === 'delta') { acc += ev.x; pump(); }
+      else if (ev.t === 'reset') {
+        acc = ''; shown = 0;
+        if (live) { live.remove(); live = null; th = thinking(); }
+      }
+      else if (ev.t === 'done') final = ev;
+      else if (ev.t === 'error') erreur = erreurTexte(ev.status, ev.erreur, ev.connecte);
+    }
+
     try {
       let jeton = null;
       try { jeton = window.TL && TL.getToken ? await TL.getToken() : null; } catch (e) {}
       const headers = { 'Content-Type': 'application/json' };
       if (jeton) headers.Authorization = 'Bearer ' + jeton;
-      const r = await fetch(WORKER_URL, { method: 'POST', headers, body: JSON.stringify({ message: text, historique }), signal: ctrl.signal });
-      let j = null; try { j = await r.json(); } catch (e) {}
-      if (r.ok && j && typeof j.texte === 'string') reponse = j; else erreur = erreurTexte(r.status, j && j.erreur, j && j.connecte);
+      const r = await fetch(WORKER_URL, { method: 'POST', headers, body: JSON.stringify({ message: text, historique, stream: true }), signal: ctrl.signal });
+      const ct = r.headers.get('content-type') || '';
+      if (!r.ok || !/event-stream/i.test(ct) || !r.body) {
+        let j = null; try { j = await r.json(); } catch (e) {}
+        if (r.ok && j && typeof j.texte === 'string') { acc = j.texte; final = Object.assign({ t: 'done' }, j); }
+        else erreur = erreurTexte(r.status, j && j.erreur, j && j.connecte);
+      } else {
+        const lecteur = r.body.getReader(), dec = new TextDecoder();
+        let tampon = '';
+        for (;;) {
+          const { done, value } = await lecteur.read();
+          if (done) break;
+          tampon += dec.decode(value, { stream: true });
+          let i;
+          while ((i = tampon.indexOf('\n')) >= 0) {
+            const ligne = tampon.slice(0, i).trim(); tampon = tampon.slice(i + 1);
+            if (!ligne.startsWith('data:')) continue;
+            let ev; try { ev = JSON.parse(ligne.slice(5)); } catch (e) { continue; }
+            onEvent(ev);
+          }
+        }
+        if (!final && !erreur) erreur = acc ? null : erreurTexte(0);
+      }
     } catch (e) {
       erreur = navigator.onLine === false ? 'Tu n’as pas l’air d’être connecté à Internet. Vérifie ta connexion et réessaie.' : (e && e.name === 'AbortError' ? 'L’assistant met trop de temps à répondre. Réessaie dans un instant.' : 'Impossible de joindre l’assistant pour le moment. Réessaie dans un instant.');
     }
     clearTimeout(stop);
-    t.remove();
+    if (final) { acc = final.texte; await drained(); }
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    th.stop();
     setBusy(false);
-    if (erreur) { bubble('bot', '<p>' + esc(erreur) + '</p>'); return; }
-    hist.push({ q: text, a: reponse.texte, ids: reponse.ids || [] });
+    if (!final) {
+      if (live) live.remove(); else th.el.remove();
+      bubble('bot', '<p>' + esc(erreur || erreurTexte(0)) + '</p>');
+      return;
+    }
+    hist.push({ q: text, a: final.texte, ids: final.ids || [] });
     ecrireHist(hist);
-    const m = bubble('bot', texteHtml(reponse.texte) + cardsFromIds(reponse.ids) + (typeof reponse.reste === 'number' && reponse.reste <= 3 && !reponse.connecte ? `<p class="ai-tip">Il te reste ${esc(reponse.reste)} question${reponse.reste > 1 ? 's' : ''} aujourd’hui.</p>` : ''));
+    ensureLive();
+    live.innerHTML = texteHtml(final.texte) + cardsFromIds(final.ids) + (typeof final.reste === 'number' && final.reste <= 3 && !final.connecte ? `<p class="ai-tip">Il te reste ${esc(final.reste)} question${final.reste > 1 ? 's' : ''} aujourd’hui.</p>` : '');
     if (window.PL) PL.refresh();
-    msgs.scrollTop = Math.max(0, m.offsetTop - 10);
+    if (live.offsetHeight > msgs.clientHeight - 24) msgs.scrollTop = Math.max(0, live.offsetTop - 10); else msgs.scrollTop = msgs.scrollHeight;
   }
   const ask = text => (LIVE ? askLive(text) : askDemo(text));
 
@@ -248,6 +328,19 @@ const WORKER_URL = 'https://pepins-assistant.wikimind-ai.workers.dev';
 .ai-form button{width:42px;height:42px;flex-shrink:0;border:none;border-radius:50%;background:var(--primary);color:#fff;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.ai-m,#ai-fab.wide .ai-spark{animation:none}}
 .ai-form input:disabled,.ai-form button:disabled{opacity:.6}
+.ai-think{display:flex;align-items:center;gap:10px;min-height:34px}
+.ai-think-ico{display:flex;width:30px;height:30px;align-items:center;justify-content:center;flex-shrink:0;transform-origin:50% 100%;animation:aiBounce 1.1s cubic-bezier(.3,.7,.4,1) infinite}
+.ai-think-ico.search{animation:aiRoll 1.6s ease-in-out infinite}
+@keyframes aiBounce{0%,100%{transform:translateY(0) scale(1,1)}45%{transform:translateY(-8px) scale(.96,1.04) rotate(-6deg)}60%{transform:translateY(-8px) rotate(6deg)}85%{transform:translateY(0) scale(1.06,.94)}}
+@keyframes aiRoll{0%,100%{transform:translateX(-4px) rotate(-25deg)}50%{transform:translateX(4px) rotate(25deg)}}
+.ai-think-lab{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--text-muted);min-width:0}
+.ai-think-l{opacity:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ai-think-l.in{animation:aiLab .35s ease forwards}
+@keyframes aiLab{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.ai-m.ai-thinking{background:linear-gradient(100deg,#fff 30%,#fff1f1 50%,#fff 70%);background-size:220% 100%;animation:aiIn .3s ease both,aiShimmer 2.2s linear infinite}
+@keyframes aiShimmer{from{background-position:120% 0}to{background-position:-120% 0}}
+.ai-caret{display:inline-block;width:2px;height:1.05em;margin-left:2px;vertical-align:text-bottom;background:var(--primary);animation:aiBlink .8s steps(1) infinite}
+@keyframes aiBlink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ai-think-ico,.ai-thinking,.ai-caret{animation:none}}
 `;
   document.head.appendChild(st);
 
