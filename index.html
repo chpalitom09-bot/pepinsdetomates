@@ -68,49 +68,30 @@
   .lang-menu button.active { font-weight: 700; background: var(--bg); color: var(--primary); }
 
 
-  /* ── Hero : tomates de toutes les couleurs ── */
-  .hero { --ease: cubic-bezier(.7,0,.2,1); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(18px, 3.2vh, 34px); min-height: clamp(330px, calc((100svh - 72px) / 2 - 44px), 560px); padding: 28px 24px 8px; text-align: center; }
-  .hero-title { font-family: var(--display); font-weight: 700; font-size: clamp(32px, 5.2vw, 66px); line-height: 1.03; letter-spacing: -.045em; color: var(--text-main); max-width: 19ch; text-wrap: balance; }
+  /* ── Hero : tomate dessinée à l'encre ── */
+  .hero { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(10px, 2vh, 22px); min-height: clamp(330px, calc((100svh - 72px) / 2 - 30px), 560px); padding: 26px 24px 4px; text-align: center; }
+  .hero-title { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 52px); line-height: 1.05; letter-spacing: -.045em; color: var(--text-main); max-width: 19ch; text-wrap: balance; }
   .hero-title .w { display: inline-block; padding: .06em .04em; }
   .hero:not(.go) .hero-title .w { clip-path: inset(-12% 101% -12% 0); }
-  .hero.go .hero-title .w { animation: heroWipe 1.15s var(--ease) 1.45s both; }
+  .hero.go .hero-title .w { animation: heroWipe 1s cubic-bezier(.7,0,.2,1) 1.2s both; }
   @keyframes heroWipe { from { clip-path: inset(-12% 101% -12% 0); } to { clip-path: inset(-12% -4% -12% 0); } }
-  .hero-stage { display: flex; justify-content: center; align-items: flex-end; width: 100%; max-width: 1060px; padding-bottom: 12px; }
-  .hero-slot { --w: clamp(54px, 9.2vw, 116px); position: relative; flex: none; width: calc(var(--w) * var(--s, 1)); margin: 0 calc(var(--w) * -.035); margin-bottom: calc(var(--y, 0) * 1px); }
-  .hero-sh { position: absolute; left: 10%; right: 10%; bottom: -7px; height: 12px; border-radius: 50%; background: radial-gradient(closest-side, rgba(60,10,10,.34), rgba(60,10,10,0)); transform-origin: 50% 50%; }
-  .hero:not(.go) .hero-sh { opacity: 0; }
-  .hero.go .hero-sh { animation: heroSh 1.25s linear calc(var(--i) * 85ms + 150ms) both; }
-  @keyframes heroSh { 0%, 50% { opacity: 0; transform: scaleX(.3); } 56% { opacity: 1; transform: scaleX(1.18); } 68% { opacity: .6; transform: scaleX(.8); } 82% { opacity: 1; transform: scaleX(1.06); } 100% { opacity: 1; transform: none; } }
-  .hero-tm { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; transform-origin: 50% 100%; -webkit-tap-highlight-color: transparent; }
-  .hero:not(.go) .hero-tm { opacity: 0; }
-  .hero.go .hero-tm { animation: heroDrop 1.25s linear calc(var(--i) * 85ms + 150ms) both; }
-  @keyframes heroDrop {
-    0%   { transform: translateY(-460px) rotate(var(--r0, 18deg)); opacity: 0; animation-timing-function: cubic-bezier(.55,0,.9,.5); }
-    6%   { opacity: 1; }
-    52%  { transform: translateY(0) rotate(0deg) scale(1.08,.88); opacity: 1; animation-timing-function: cubic-bezier(.2,.7,.3,1); }
-    68%  { transform: translateY(-24px) scale(.98,1.04); animation-timing-function: cubic-bezier(.55,0,.9,.5); }
-    82%  { transform: translateY(0) scale(1.03,.97); animation-timing-function: ease-out; }
-    100% { transform: none; opacity: 1; }
-  }
-  .hero-par { display: block; transform: translate(calc(var(--mx, 0) * var(--d, 1) * 9px), 0) rotate(calc(var(--mx, 0) * var(--d, 1) * 2.4deg)); transition: transform .45s cubic-bezier(.2,.7,.3,1); }
-  .hero-tm svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 1px 0 rgba(255,255,255,.35)); animation: heroBob 4.6s ease-in-out calc(2s + var(--i) * .37s) infinite alternate both; transition: transform .25s; }
-  @keyframes heroBob { to { transform: translateY(-5px) rotate(1.4deg); } }
-  .hero-tm:hover .hero-par, .hero-tm:focus-visible .hero-par { transform: translate(calc(var(--mx, 0) * var(--d, 1) * 9px), -10px) scale(1.07); }
-  .hero-tm:focus-visible { outline: 3px solid var(--primary); outline-offset: 6px; border-radius: 40%; }
-  .hero-tm.on svg { filter: drop-shadow(0 0 0 #fff) drop-shadow(0 0 3px #fff) drop-shadow(0 6px 10px rgba(185,28,28,.35)); }
-  .hero-tm.on .hero-par { transform: translate(0, -8px) scale(1.1); }
-  .hero-hint { min-height: 20px; font-size: 13.5px; font-weight: 500; color: var(--text-muted); letter-spacing: .01em; transition: color .2s; }
-  .hero-hint.is-name { color: var(--text-main); font-weight: 600; }
-  .hero:not(.go) .hero-hint { opacity: 0; }
-  .hero.go .hero-hint { animation: heroHint .8s ease 2.5s both; }
-  @keyframes heroHint { from { opacity: 0; } to { opacity: 1; } }
-  #tomatoes-grid { scroll-margin-top: 96px; }
-  @media (max-width: 640px) { .hero-slot.x { display: none; } .hero-slot { --w: clamp(58px, 17vw, 96px); } .hero { padding-top: 18px; } }
+  .ink-wrap { width: clamp(210px, 29vw, 330px); }
+  .ink { display: block; width: 100%; height: auto; overflow: visible; color: #1b1613; }
+  .ink path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .ink .paper { fill: #fff; stroke: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+  .hero:not(.go) .ink path { visibility: hidden; }
+  .hero.go .ink path:not(.paper) { animation: inkDraw var(--t, .5s) cubic-bezier(.5,0,.25,1) var(--d, 0s) both; }
+  .hero.go .ink .paper { animation: inkPaper .7s ease .35s both; }
+  @keyframes inkDraw { from { stroke-dashoffset: 1; opacity: 0; } 2% { opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+  @keyframes inkPaper { from { opacity: 0; } to { opacity: 1; } }
+  @media (max-width: 640px) { .ink-wrap { width: clamp(170px, 52vw, 230px); } .hero { padding-top: 18px; } }
   @media (prefers-reduced-motion: reduce) {
-    .hero *, .hero *::before { animation: none !important; transition: none !important; }
-    .hero:not(.go) .hero-tm, .hero:not(.go) .hero-sh, .hero:not(.go) .hero-hint { opacity: 1; }
+    .hero *, .hero *::before { animation: none !important; }
+    .hero:not(.go) .ink path { visibility: visible; }
+    .ink path { stroke-dashoffset: 0; }
     .hero:not(.go) .hero-title .w { clip-path: none; }
   }
+  #tomatoes-grid { scroll-margin-top: 96px; }
 
   /* Toolbar */
   .toolbar-wrap { max-width: 1200px; margin: 0 auto 24px; }
@@ -626,104 +607,95 @@
 </nav>
 
 <section class="hero" id="hero" aria-label="Pépins de tomates">
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <defs>
-      <radialGradient id="hShade" cx=".36" cy=".3" r=".85">
-        <stop offset="0" stop-color="#fff" stop-opacity=".30"/>
-        <stop offset=".45" stop-color="#fff" stop-opacity="0"/>
-        <stop offset="1" stop-color="#000" stop-opacity=".34"/>
-      </radialGradient>
-      <linearGradient id="hBi" x1="0" y1="0" x2="1" y2="1">
-        <stop offset=".34" stop-color="#dc2626"/><stop offset=".66" stop-color="#f5b50a"/>
-      </linearGradient>
-    </defs>
-  </svg>
-  <h2 class="hero-title"><span class="w" id="hero-title" data-i18n="hero_title">Chaque pépin raconte une variété.</span></h2>
-  <div class="hero-stage" id="hero-stage"></div>
-  <div class="hero-hint" id="hero-hint" data-i18n="hero_hint">Touchez une tomate pour filtrer par couleur</div>
+  <h2 class="hero-title"><span class="w" data-i18n="hero_title">Chaque pépin raconte une variété.</span></h2>
+  <div class="ink-wrap"><svg class="ink" id="ink" viewBox="0 0 300 264" role="img" aria-label="Dessin d'une tomate"></svg></div>
 </section>
 <script>
 (function () {
-  var hero = document.getElementById('hero'), stage = document.getElementById('hero-stage'), hint = document.getElementById('hero-hint');
-  if (!hero || !stage) return;
-  var BODY = 'M50 17C57 11 70 9 82 17C96 27 100 48 93 64C86 80 68 89 50 89C32 89 14 80 7 64C0 48 4 27 18 17C30 9 43 11 50 17Z';
-  var CALYX = 'M50 17C47 9 38 8 30 12C38 14 42 17 44 20C38 20 33 24 32 29C39 25 45 24 50 24C55 24 61 25 68 29C67 24 62 20 56 20C58 17 62 14 70 12C62 8 53 9 50 17Z';
-  // val = valeur du filtre existant ; key = clé de traduction ; s = taille ; y = décalage vertical ; r = angle de chute
-  var T = [
-    { val: 'Rouge',    key: 'color_red',      fill: '#e11d2e', s: 1.04, y: 0,  r: -22 },
-    { val: 'Orange',   key: 'color_orange',   fill: '#f97316', s: .9,   y: 6,  r: 18 },
-    { val: 'Jaune',    key: 'color_yellow',   fill: '#f5b50a', s: .98,  y: -2, r: -14 },
-    { val: 'Verte',    key: 'color_green',    fill: '#8cc63f', s: 1.1,  y: 3,  r: 26 },
-    { val: 'Bicolore', key: 'color_bicolor',  fill: 'url(#hBi)', s: 1.0, y: -4, r: -20 },
-    { val: 'Rose',     key: 'color_pink',     fill: '#ee6a9a', s: .92,  y: 5,  r: 16 },
-    { val: 'Blanche',  key: 'color_white',    fill: '#f6efd6', s: .98,  y: -1, r: -26 },
-    { val: 'Noire',    key: 'color_black',    fill: '#52243a', s: 1.06, y: 2,  r: 20 }
-  ];
-  var DEF = { color_red: 'Rouge', color_orange: 'Orange', color_yellow: 'Jaune', color_green: 'Verte', color_bicolor: 'Bicolore', color_pink: 'Rose', color_white: 'Blanche', color_black: 'Noire' };
-  var tr0 = function (k) { return DEF[k] || k; };
-  stage.innerHTML = T.map(function (t, i) {
-    // sur mobile on garde 5 tomates : 0,2,3,4,7 ... on masque les index 1, 5, 6
-    var hide = (i === 1 || i === 5 || i === 6) ? ' x' : '';
-    return '<div class="hero-slot' + hide + '" style="--i:' + i + ';--s:' + t.s + ';--y:' + t.y + ';--d:' + (i % 2 ? -1 : 1) * (0.6 + (i % 3) * 0.3) + '">' +
-      '<span class="hero-sh"></span>' +
-      '<button type="button" class="hero-tm" data-val="' + t.val + '" data-key="' + t.key + '" style="--r0:' + t.r + 'deg" aria-label="' + tr0(t.key) + '">' +
-      '<span class="hero-par"><svg viewBox="0 0 100 92" aria-hidden="true">' +
-      '<path d="' + BODY + '" fill="' + t.fill + '"/>' +
-      '<path d="' + BODY + '" fill="url(#hShade)"/>' +
-      '<ellipse cx="33" cy="34" rx="11" ry="6" transform="rotate(-32 33 34)" fill="#fff" opacity=".36"/>' +
-      '<path d="M50 18C50 12 51 8 54 4" fill="none" stroke="#3f7d2a" stroke-width="3.2" stroke-linecap="round"/>' +
-      '<path d="' + CALYX + '" fill="#4d9230"/>' +
-      '</svg></span></button></div>';
-  }).join('');
-
-  var defaultHint = '';
-  window.heroSetLabels = function (tr) {
-    stage.querySelectorAll('.hero-tm').forEach(function (b) {
-      var n = tr(b.getAttribute('data-key')); b.setAttribute('aria-label', n); b.title = n;
-    });
-    defaultHint = tr('hero_hint');
-    if (!hint.classList.contains('is-name')) hint.textContent = defaultHint;
-  };
-  function showName(b) { hint.textContent = b.getAttribute('aria-label'); hint.classList.add('is-name'); }
-  function resetName() { hint.classList.remove('is-name'); hint.textContent = defaultHint || hint.textContent; }
-  defaultHint = hint.textContent;
-  stage.addEventListener('pointerover', function (e) { var b = e.target.closest('.hero-tm'); if (b) showName(b); });
-  stage.addEventListener('pointerout', function (e) { if (e.target.closest('.hero-tm')) resetName(); });
-  stage.addEventListener('focusin', function (e) { var b = e.target.closest('.hero-tm'); if (b) showName(b); });
-  stage.addEventListener('focusout', resetName);
-
-  // Clic sur une tomate = filtre de couleur du catalogue (même mécanisme que les pastilles de « Filtres »)
-  function syncOn(val) {
-    stage.querySelectorAll('.hero-tm').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-val') === val); });
+  var hero = document.getElementById('hero'), svg = document.getElementById('ink');
+  if (!hero || !svg) return;
+  var seed = 7; function rnd() { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }
+  var CX = 150, CY = 150, RX = 120, RY = 88, N = 2.6, R = Math.PI / 180;
+  function f(p) { return p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
+  function pt(th, s, j) {
+    var a = th * R, c = Math.cos(a), si = Math.sin(a);
+    var x = CX + RX * s * Math.sign(c) * Math.pow(Math.abs(c), 2 / N);
+    var y = CY + RY * s * Math.sign(si) * Math.pow(Math.abs(si), 2 / N);
+    var d = ((th + 90 + 540) % 360) - 180;
+    y += 16 * s * Math.exp(-(d * d) / 392);
+    j = j || 0; return [x + (rnd() - .5) * j, y + (rnd() - .5) * j];
   }
-  stage.addEventListener('click', function (e) {
-    var b = e.target.closest('.hero-tm'); if (!b) return;
-    var val = b.getAttribute('data-val'), already = b.classList.contains('on');
-    var pill = document.querySelector('#color-group .filter-pill[data-val="' + (already ? 'all' : val) + '"]');
-    if (pill) pill.click();
-    var grid = document.getElementById('tomatoes-grid');
-    if (grid && !already) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-  var cg = document.getElementById('color-group');
-  if (cg) cg.addEventListener('click', function (e) {
-    var p = e.target.closest('.filter-pill'); if (p) syncOn(p.getAttribute('data-val'));
-  });
-
-  // Les tomates suivent doucement le pointeur
-  if (window.matchMedia('(pointer:fine)').matches) {
-    hero.addEventListener('pointermove', function (e) {
-      var r = hero.getBoundingClientRect();
-      hero.style.setProperty('--mx', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
-    });
-    hero.addEventListener('pointerleave', function () { hero.style.setProperty('--mx', 0); });
+  function smooth(P, closed) {
+    var n = P.length, d = 'M' + f(P[0]), end = closed ? n : n - 1;
+    for (var i = 0; i < end; i++) {
+      var p0 = P[closed ? (i - 1 + n) % n : Math.max(i - 1, 0)], p1 = P[i], p2 = P[(i + 1) % n], p3 = P[closed ? (i + 2) % n : Math.min(i + 2, n - 1)];
+      d += 'C' + f([p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6]) + ' ' + f([p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6]) + ' ' + f(p2);
+    }
+    return d + (closed ? 'Z' : '');
   }
-
-  // Lancement : quand l'intro (logo) est terminée
+  function arc(t0, t1, s, step, j) { var P = []; for (var t = t0; t <= t1 + .01; t += step) P.push(pt(t, s, j)); return smooth(P, false); }
+  var out = [];
+  function add(d, w, delay, dur, extra) {
+    out.push('<path pathLength="1" d="' + d + '" stroke-width="' + w + '" style="--d:' + delay.toFixed(2) + 's;--t:' + dur.toFixed(2) + 's"' + (extra || '') + '/>');
+  }
+  // contour du fruit (pas de pt() bruité pour que le papier colle au trait)
+  var body = []; for (var t = -180; t < 180; t += 10) body.push(pt(t, 1, .8));
+  var bodyD = smooth(body, true);
+  out.push('<path class="paper" d="' + bodyD + '"/>');
+  add(bodyD, 2.8, 0, .8);
+  add(arc(25, 155, 1.008, 8, 0).replace(/^M([\d.]+) ([\d.]+)/, function (m, x, y) { return 'M' + (+x + 2) + ' ' + (+y + 1.8); }), 1.6, .15, .7);
+  // côtes du fruit
+  add('M104 98C86 132 84 192 112 234', 1.5, .65, .45);
+  add('M196 98C214 132 216 192 188 234', 1.5, .72, .45);
+  add('M141 106C133 150 135 200 146 238', 1.2, .8, .4);
+  add('M160 106C168 150 166 200 156 238', 1.2, .86, .4);
+  // calice : 6 feuilles, nervures, tige
+  var leaves = [[-172, 82, 17], [-128, 66, 14], [-52, 66, 14], [-8, 82, 17], [112, 56, 13], [68, 56, 13]];
+  leaves.forEach(function (l, i) {
+    var L = l[1], w = l[2], dl = .85 + i * .07;
+    var tf = ' transform="translate(150 88) rotate(' + l[0] + ')"';
+    add('M0 0C' + (.2 * L) + ' ' + (-w) + ' ' + (.65 * L) + ' ' + (-w * .8) + ' ' + L + ' 0C' + (.65 * L) + ' ' + (w * .55) + ' ' + (.2 * L) + ' ' + w + ' 0 0Z', 2, dl, .35, tf);
+    add('M' + (.1 * L) + ' 0Q' + (.5 * L) + ' ' + (-w * .15) + ' ' + (.82 * L) + ' 0', 1, dl + .2, .25, tf);
+  });
+  add('M146 84C143 64 148 44 158 26', 2, 1.25, .3);
+  add('M155 84C155 66 160 48 169 28', 2, 1.3, .3);
+  add('M158 26C161 23 167 24 169 28', 1.6, 1.5, .15);
+  // brillance
+  add(arc(-168, -122, .8, 8, 0), 1.6, 1.3, .3);
+  add(arc(-160, -140, .72, 8, 0), 1.2, 1.4, .2);
+  // hachures d'ombre : arcs concentriques côté bas-droit
+  for (var k = 0; k < 11; k++) {
+    var s = .965 - k * .05, hw = 96 - k * 7.6, c0 = 58;
+    var segs = hw > 45 ? [[c0 - hw, c0 - 6], [c0 + 2 + rnd() * 6, c0 + hw]] : [[c0 - hw, c0 + hw]];
+    segs.forEach(function (sg, i) { add(arc(sg[0], sg[1], s, 7, .7), 1.2 + (10 - k) * .05, .9 + k * .06 + i * .03, .32); });
+  }
+  // hachures croisées : plus le fruit est dans l'ombre, plus les traits sont longs et doublés
+  var inside = function (x, y) { var u = (x - CX) / (RX * .9), v = (y - CY) / (RY * .9); return Math.pow(Math.abs(u), N) + Math.pow(Math.abs(v), N) < 1; };
+  var rows = 0;
+  for (var y = 96; y < 238; y += 8.5) {
+    var d1 = '', d2 = '';
+    for (var x = 40; x < 270; x += 7.5) {
+      var xx = x + (rnd() - .5) * 3, yy = y + (rnd() - .5) * 2;
+      if (!inside(xx, yy)) continue;
+      var sh = .5 * ((xx - CX) / RX) + .85 * ((yy - CY) / RY);
+      if (sh < .3) continue;
+      var L = 4 + 11 * Math.min(sh, 1.1);
+      d1 += 'M' + xx.toFixed(1) + ' ' + yy.toFixed(1) + 'l' + (L * .7).toFixed(1) + ' ' + (-L * .7).toFixed(1);
+      if (sh > .75) d2 += 'M' + xx.toFixed(1) + ' ' + yy.toFixed(1) + 'l' + (L * .6).toFixed(1) + ' ' + (L * .5).toFixed(1);
+    }
+    if (d1) add(d1, .85, 1.05 + rows * .055, .28);
+    if (d2) add(d2, .75, 1.2 + rows * .05, .25);
+    rows++;
+  }
+  // ombre portée
+  [[70, 252, 118], [96, 247, 210], [138, 256, 236], [112, 250, 262]].forEach(function (r, i) {
+    add('M' + r[0] + ' ' + r[1] + 'Q' + ((r[0] + r[2]) / 2) + ' ' + (r[1] - 2) + ' ' + r[2] + ' ' + r[1], 1.1, 1.65 + i * .07, .22);
+  });
+  svg.innerHTML = out.join('');
   function go() { hero.classList.add('go'); }
   var intro = document.getElementById('intro');
   if (!intro) { go(); return; }
-  new MutationObserver(function (m, o) { if (!document.getElementById('intro')) { o.disconnect(); go(); } })
-    .observe(document.body, { childList: true });
+  new MutationObserver(function (m, o) { if (!document.getElementById('intro')) { o.disconnect(); go(); } }).observe(document.body, { childList: true });
 })();
 </script>
 
@@ -1950,6 +1922,10 @@ function refreshDetailLikeBtn() {
 
 document.getElementById('detail-like-btn').onclick = () => { if (detailCurrentId) toggleLike(detailCurrentId); };
 
+function unlockScrollIfNoDetail() {
+  const d = document.getElementById('detail-modal');
+  if (!d || !d.classList.contains('active')) document.body.classList.remove('detail-open');
+}
 function closeDetailModal(fromPop) {
   if (!detailCurrentId) return;
   document.getElementById('detail-modal').classList.remove('active');
@@ -2415,7 +2391,7 @@ document.getElementById('btn-submit').onclick = async () => {
       }
       await update(ref(db, `pepins/tomatoes/${editingTomatoId}`), updates);
       fill.style.width = '100%';
-      setTimeout(() => { document.getElementById('add-modal').classList.remove('active'); resetForm(); showToast(tr('update_done'), 'fa-seedling'); }, 400);
+      setTimeout(() => { document.getElementById('add-modal').classList.remove('active'); unlockScrollIfNoDetail(); resetForm(); showToast(tr('update_done'), 'fa-seedling'); }, 400);
     } else {
       let authorName = "Anonyme";
       if (!isAnon) authorName = document.getElementById('f-author-name').value.trim() || 'Anonyme';
@@ -2432,7 +2408,7 @@ document.getElementById('btn-submit').onclick = async () => {
       };
       await push(ref(db, 'pepins/tomatoes'), tomatoData);
       fill.style.width = '100%';
-      setTimeout(() => { document.getElementById('add-modal').classList.remove('active'); resetForm(); showToast(tr('publish_success'), 'fa-seedling'); }, 500);
+      setTimeout(() => { document.getElementById('add-modal').classList.remove('active'); unlockScrollIfNoDetail(); resetForm(); showToast(tr('publish_success'), 'fa-seedling'); }, 500);
     }
   } catch(e) {
     errBox.textContent = "Erreur de connexion. L'image est-elle trop lourde ?";
@@ -2477,7 +2453,7 @@ function isFormDirty() {
 }
 function closeAddModalWithConfirm() {
   if (isFormDirty() && !confirm(tr('leave_confirm') || 'Voulez-vous vraiment annuler ? Vos modifications seront perdues.')) return;
-  document.getElementById('add-modal').classList.remove('active');
+  document.getElementById('add-modal').classList.remove('active'); unlockScrollIfNoDetail();
   resetForm();
 }
 
@@ -2519,6 +2495,7 @@ function openEditModal(t) {
   const imgs = t.imageURLs || (t.imageURL ? [t.imageURL] : []);
   imgs.forEach(url => addImageToGallery(url));
   document.getElementById('detail-modal').classList.remove('active');
+  document.body.classList.remove('detail-open');
   document.getElementById('add-modal').classList.add('active');
 }
 
