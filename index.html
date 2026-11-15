@@ -67,8 +67,53 @@
   .lang-menu button:hover { background: var(--bg); }
   .lang-menu button.active { font-weight: 700; background: var(--bg); color: var(--primary); }
 
+
+  /* ── Hero : tomates de toutes les couleurs ── */
+  .hero { --ease: cubic-bezier(.7,0,.2,1); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(18px, 3.2vh, 34px); min-height: clamp(330px, calc((100svh - 72px) / 2 - 44px), 560px); padding: 28px 24px 8px; text-align: center; }
+  .hero-title { font-family: var(--display); font-weight: 700; font-size: clamp(32px, 5.2vw, 66px); line-height: 1.03; letter-spacing: -.045em; color: var(--text-main); max-width: 19ch; text-wrap: balance; }
+  .hero-title .w { display: inline-block; padding: .06em .04em; }
+  .hero:not(.go) .hero-title .w { clip-path: inset(-12% 101% -12% 0); }
+  .hero.go .hero-title .w { animation: heroWipe 1.15s var(--ease) 1.45s both; }
+  @keyframes heroWipe { from { clip-path: inset(-12% 101% -12% 0); } to { clip-path: inset(-12% -4% -12% 0); } }
+  .hero-stage { display: flex; justify-content: center; align-items: flex-end; width: 100%; max-width: 1060px; padding-bottom: 12px; }
+  .hero-slot { --w: clamp(54px, 9.2vw, 116px); position: relative; flex: none; width: calc(var(--w) * var(--s, 1)); margin: 0 calc(var(--w) * -.035); margin-bottom: calc(var(--y, 0) * 1px); }
+  .hero-sh { position: absolute; left: 10%; right: 10%; bottom: -7px; height: 12px; border-radius: 50%; background: radial-gradient(closest-side, rgba(60,10,10,.34), rgba(60,10,10,0)); transform-origin: 50% 50%; }
+  .hero:not(.go) .hero-sh { opacity: 0; }
+  .hero.go .hero-sh { animation: heroSh 1.25s linear calc(var(--i) * 85ms + 150ms) both; }
+  @keyframes heroSh { 0%, 50% { opacity: 0; transform: scaleX(.3); } 56% { opacity: 1; transform: scaleX(1.18); } 68% { opacity: .6; transform: scaleX(.8); } 82% { opacity: 1; transform: scaleX(1.06); } 100% { opacity: 1; transform: none; } }
+  .hero-tm { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; transform-origin: 50% 100%; -webkit-tap-highlight-color: transparent; }
+  .hero:not(.go) .hero-tm { opacity: 0; }
+  .hero.go .hero-tm { animation: heroDrop 1.25s linear calc(var(--i) * 85ms + 150ms) both; }
+  @keyframes heroDrop {
+    0%   { transform: translateY(-460px) rotate(var(--r0, 18deg)); opacity: 0; animation-timing-function: cubic-bezier(.55,0,.9,.5); }
+    6%   { opacity: 1; }
+    52%  { transform: translateY(0) rotate(0deg) scale(1.08,.88); opacity: 1; animation-timing-function: cubic-bezier(.2,.7,.3,1); }
+    68%  { transform: translateY(-24px) scale(.98,1.04); animation-timing-function: cubic-bezier(.55,0,.9,.5); }
+    82%  { transform: translateY(0) scale(1.03,.97); animation-timing-function: ease-out; }
+    100% { transform: none; opacity: 1; }
+  }
+  .hero-par { display: block; transform: translate(calc(var(--mx, 0) * var(--d, 1) * 9px), 0) rotate(calc(var(--mx, 0) * var(--d, 1) * 2.4deg)); transition: transform .45s cubic-bezier(.2,.7,.3,1); }
+  .hero-tm svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 1px 0 rgba(255,255,255,.35)); animation: heroBob 4.6s ease-in-out calc(2s + var(--i) * .37s) infinite alternate both; transition: transform .25s; }
+  @keyframes heroBob { to { transform: translateY(-5px) rotate(1.4deg); } }
+  .hero-tm:hover .hero-par, .hero-tm:focus-visible .hero-par { transform: translate(calc(var(--mx, 0) * var(--d, 1) * 9px), -10px) scale(1.07); }
+  .hero-tm:focus-visible { outline: 3px solid var(--primary); outline-offset: 6px; border-radius: 40%; }
+  .hero-tm.on svg { filter: drop-shadow(0 0 0 #fff) drop-shadow(0 0 3px #fff) drop-shadow(0 6px 10px rgba(185,28,28,.35)); }
+  .hero-tm.on .hero-par { transform: translate(0, -8px) scale(1.1); }
+  .hero-hint { min-height: 20px; font-size: 13.5px; font-weight: 500; color: var(--text-muted); letter-spacing: .01em; transition: color .2s; }
+  .hero-hint.is-name { color: var(--text-main); font-weight: 600; }
+  .hero:not(.go) .hero-hint { opacity: 0; }
+  .hero.go .hero-hint { animation: heroHint .8s ease 2.5s both; }
+  @keyframes heroHint { from { opacity: 0; } to { opacity: 1; } }
+  #tomatoes-grid { scroll-margin-top: 96px; }
+  @media (max-width: 640px) { .hero-slot.x { display: none; } .hero-slot { --w: clamp(58px, 17vw, 96px); } .hero { padding-top: 18px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero *, .hero *::before { animation: none !important; transition: none !important; }
+    .hero:not(.go) .hero-tm, .hero:not(.go) .hero-sh, .hero:not(.go) .hero-hint { opacity: 1; }
+    .hero:not(.go) .hero-title .w { clip-path: none; }
+  }
+
   /* Toolbar */
-  .toolbar-wrap { max-width: 1200px; margin: 32px auto 24px; }
+  .toolbar-wrap { max-width: 1200px; margin: 0 auto 24px; }
   .variety-counter { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; margin-bottom: 20px; font-family: var(--display); font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.02em; }
   .variety-counter i { color: var(--primary); font-size: 13px; }
   .variety-counter #variety-counter-num { font-size: 20px; font-weight: 700; color: var(--text-main); letter-spacing: -0.01em; }
@@ -249,12 +294,13 @@
     #detail-modal .detail-modal { max-width: 1200px; width: 100%; max-height: none; overflow: visible; border-radius: 0; box-shadow: none; background: transparent; transform: none; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); column-gap: 44px; align-content: start; padding: 0 24px 70px; margin: 0 auto; }
     #detail-modal .modal-header { display: none; }
     #detail-modal .modal-body { display: contents; }
-    #detail-modal .modal-body > * { grid-column: 2; }
-    #detail-modal #similar-block, #detail-modal #comments-block { grid-column: 1 / -1; }
+    #detail-modal .detail-info { grid-column: 2; grid-row: 2; min-width: 0; }
+    #detail-modal #similar-block, #detail-modal #comments-block { grid-column: 1 / -1; grid-row: auto; position: relative; z-index: 1; background: var(--bg); }
     .detail-topbar { grid-column: 1 / -1; position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 14px; background: var(--surface); border-bottom: 1px solid var(--line); padding: 12px 24px; margin: 0 -24px; }
     .detail-crumb { font-size: 13.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .detail-crumb b { color: var(--text-main); font-weight: 600; }
-    .detail-gallery-col { grid-column: 1; grid-row: 2 / span 12; align-self: start; position: sticky; top: 78px; display: flex; gap: 14px; margin-top: 26px; }
+    .detail-gallery-col { grid-column: 1; grid-row: 2; align-self: stretch; margin-top: 26px; }
+    .detail-gallery-sticky { position: sticky; top: 78px; display: flex; gap: 14px; }
     .detail-thumbs { display: flex; flex-direction: column; gap: 10px; max-height: min(560px, 70vh); overflow-y: auto; scrollbar-width: none; flex: none; }
     .detail-thumbs::-webkit-scrollbar { display: none; }
     .detail-thumbs img { width: 60px; height: 60px; object-fit: cover; border-radius: 10px; border: 2px solid var(--line); cursor: pointer; opacity: .75; transition: .15s; }
@@ -272,8 +318,9 @@
     #detail-modal #comments-block { max-width: 760px; }
     @media (max-width: 900px) {
       #detail-modal .detail-modal { grid-template-columns: minmax(0, 1fr); }
-      #detail-modal .modal-body > * { grid-column: 1; }
-      .detail-gallery-col { grid-column: 1; grid-row: auto; position: static; flex-direction: column-reverse; margin-top: 16px; }
+      #detail-modal .detail-info { grid-column: 1; grid-row: auto; }
+      .detail-gallery-col { grid-column: 1; grid-row: auto; margin-top: 16px; }
+      .detail-gallery-sticky { position: static; flex-direction: column-reverse; }
       .detail-thumbs { flex-direction: row; max-height: none; overflow-x: auto; }
       #detail-modal .detail-gallery-wrap { height: 340px; }
       #detail-modal #detail-title { font-size: 26px; margin-top: 20px; }
@@ -573,10 +620,112 @@
       </div>
     </div>
     <button class="btn btn-outline" id="btn-auth"><i class="fa-solid fa-user"></i> <span class="hide-mobile" id="auth-label" data-i18n="login">Connexion</span></button>
-    <button class="btn btn-outline" id="btn-import-data" style="display:none"><i class="fa-solid fa-cloud-arrow-up"></i> <span class="hide-mobile">Importer</span></button>
+    <button class="btn btn-outline" id="btn-import-data" style="display:none"><i class="fa-solid fa-cloud-arrow-up"></i> <span class="hide-mobile" data-i18n="import">Importer</span></button>
     <button class="btn btn-primary" id="btn-add-modal" style="display:none"><i class="fa-solid fa-plus"></i> <span class="hide-mobile" data-i18n="add">Ajouter</span></button>
   </div>
 </nav>
+
+<section class="hero" id="hero" aria-label="Pépins de tomates">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="hShade" cx=".36" cy=".3" r=".85">
+        <stop offset="0" stop-color="#fff" stop-opacity=".30"/>
+        <stop offset=".45" stop-color="#fff" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000" stop-opacity=".34"/>
+      </radialGradient>
+      <linearGradient id="hBi" x1="0" y1="0" x2="1" y2="1">
+        <stop offset=".34" stop-color="#dc2626"/><stop offset=".66" stop-color="#f5b50a"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <h2 class="hero-title"><span class="w" id="hero-title" data-i18n="hero_title">Chaque pépin raconte une variété.</span></h2>
+  <div class="hero-stage" id="hero-stage"></div>
+  <div class="hero-hint" id="hero-hint" data-i18n="hero_hint">Touchez une tomate pour filtrer par couleur</div>
+</section>
+<script>
+(function () {
+  var hero = document.getElementById('hero'), stage = document.getElementById('hero-stage'), hint = document.getElementById('hero-hint');
+  if (!hero || !stage) return;
+  var BODY = 'M50 17C57 11 70 9 82 17C96 27 100 48 93 64C86 80 68 89 50 89C32 89 14 80 7 64C0 48 4 27 18 17C30 9 43 11 50 17Z';
+  var CALYX = 'M50 17C47 9 38 8 30 12C38 14 42 17 44 20C38 20 33 24 32 29C39 25 45 24 50 24C55 24 61 25 68 29C67 24 62 20 56 20C58 17 62 14 70 12C62 8 53 9 50 17Z';
+  // val = valeur du filtre existant ; key = clé de traduction ; s = taille ; y = décalage vertical ; r = angle de chute
+  var T = [
+    { val: 'Rouge',    key: 'color_red',      fill: '#e11d2e', s: 1.04, y: 0,  r: -22 },
+    { val: 'Orange',   key: 'color_orange',   fill: '#f97316', s: .9,   y: 6,  r: 18 },
+    { val: 'Jaune',    key: 'color_yellow',   fill: '#f5b50a', s: .98,  y: -2, r: -14 },
+    { val: 'Verte',    key: 'color_green',    fill: '#8cc63f', s: 1.1,  y: 3,  r: 26 },
+    { val: 'Bicolore', key: 'color_bicolor',  fill: 'url(#hBi)', s: 1.0, y: -4, r: -20 },
+    { val: 'Rose',     key: 'color_pink',     fill: '#ee6a9a', s: .92,  y: 5,  r: 16 },
+    { val: 'Blanche',  key: 'color_white',    fill: '#f6efd6', s: .98,  y: -1, r: -26 },
+    { val: 'Noire',    key: 'color_black',    fill: '#52243a', s: 1.06, y: 2,  r: 20 }
+  ];
+  var DEF = { color_red: 'Rouge', color_orange: 'Orange', color_yellow: 'Jaune', color_green: 'Verte', color_bicolor: 'Bicolore', color_pink: 'Rose', color_white: 'Blanche', color_black: 'Noire' };
+  var tr0 = function (k) { return DEF[k] || k; };
+  stage.innerHTML = T.map(function (t, i) {
+    // sur mobile on garde 5 tomates : 0,2,3,4,7 ... on masque les index 1, 5, 6
+    var hide = (i === 1 || i === 5 || i === 6) ? ' x' : '';
+    return '<div class="hero-slot' + hide + '" style="--i:' + i + ';--s:' + t.s + ';--y:' + t.y + ';--d:' + (i % 2 ? -1 : 1) * (0.6 + (i % 3) * 0.3) + '">' +
+      '<span class="hero-sh"></span>' +
+      '<button type="button" class="hero-tm" data-val="' + t.val + '" data-key="' + t.key + '" style="--r0:' + t.r + 'deg" aria-label="' + tr0(t.key) + '">' +
+      '<span class="hero-par"><svg viewBox="0 0 100 92" aria-hidden="true">' +
+      '<path d="' + BODY + '" fill="' + t.fill + '"/>' +
+      '<path d="' + BODY + '" fill="url(#hShade)"/>' +
+      '<ellipse cx="33" cy="34" rx="11" ry="6" transform="rotate(-32 33 34)" fill="#fff" opacity=".36"/>' +
+      '<path d="M50 18C50 12 51 8 54 4" fill="none" stroke="#3f7d2a" stroke-width="3.2" stroke-linecap="round"/>' +
+      '<path d="' + CALYX + '" fill="#4d9230"/>' +
+      '</svg></span></button></div>';
+  }).join('');
+
+  var defaultHint = '';
+  window.heroSetLabels = function (tr) {
+    stage.querySelectorAll('.hero-tm').forEach(function (b) {
+      var n = tr(b.getAttribute('data-key')); b.setAttribute('aria-label', n); b.title = n;
+    });
+    defaultHint = tr('hero_hint');
+    if (!hint.classList.contains('is-name')) hint.textContent = defaultHint;
+  };
+  function showName(b) { hint.textContent = b.getAttribute('aria-label'); hint.classList.add('is-name'); }
+  function resetName() { hint.classList.remove('is-name'); hint.textContent = defaultHint || hint.textContent; }
+  defaultHint = hint.textContent;
+  stage.addEventListener('pointerover', function (e) { var b = e.target.closest('.hero-tm'); if (b) showName(b); });
+  stage.addEventListener('pointerout', function (e) { if (e.target.closest('.hero-tm')) resetName(); });
+  stage.addEventListener('focusin', function (e) { var b = e.target.closest('.hero-tm'); if (b) showName(b); });
+  stage.addEventListener('focusout', resetName);
+
+  // Clic sur une tomate = filtre de couleur du catalogue (même mécanisme que les pastilles de « Filtres »)
+  function syncOn(val) {
+    stage.querySelectorAll('.hero-tm').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-val') === val); });
+  }
+  stage.addEventListener('click', function (e) {
+    var b = e.target.closest('.hero-tm'); if (!b) return;
+    var val = b.getAttribute('data-val'), already = b.classList.contains('on');
+    var pill = document.querySelector('#color-group .filter-pill[data-val="' + (already ? 'all' : val) + '"]');
+    if (pill) pill.click();
+    var grid = document.getElementById('tomatoes-grid');
+    if (grid && !already) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  var cg = document.getElementById('color-group');
+  if (cg) cg.addEventListener('click', function (e) {
+    var p = e.target.closest('.filter-pill'); if (p) syncOn(p.getAttribute('data-val'));
+  });
+
+  // Les tomates suivent doucement le pointeur
+  if (window.matchMedia('(pointer:fine)').matches) {
+    hero.addEventListener('pointermove', function (e) {
+      var r = hero.getBoundingClientRect();
+      hero.style.setProperty('--mx', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
+    });
+    hero.addEventListener('pointerleave', function () { hero.style.setProperty('--mx', 0); });
+  }
+
+  // Lancement : quand l'intro (logo) est terminée
+  function go() { hero.classList.add('go'); }
+  var intro = document.getElementById('intro');
+  if (!intro) { go(); return; }
+  new MutationObserver(function (m, o) { if (!document.getElementById('intro')) { o.disconnect(); go(); } })
+    .observe(document.body, { childList: true });
+})();
+</script>
 
 <div class="toolbar-wrap">
   <div class="variety-counter" id="variety-counter">
@@ -604,7 +753,7 @@
         <button class="filter-pill foryou-pill" data-val="foryou"><i class="fa-solid fa-sparkles"></i> <span data-i18n="sort_foryou">Pour vous</span></button>
         <button class="filter-pill active" data-val="date" data-i18n="sort_date">Les plus récentes</button>
         <button class="filter-pill" data-val="alpha" data-i18n="sort_alpha">Ordre alphabétique</button>
-        <button class="filter-pill" data-val="likes"><i class="fa-solid fa-heart" style="color:var(--primary); font-size:12px"></i> Plus populaires</button>
+        <button class="filter-pill" data-val="likes"><i class="fa-solid fa-heart" style="color:var(--primary); font-size:12px"></i> <span data-i18n="sort_likes">Plus populaires</span></button>
       </div>
     </div>
 
@@ -741,6 +890,7 @@
       <button class="modal-close" id="close-detail-modal" style="background:rgba(17,24,39,0.55); color:#fff; border:none;"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="detail-gallery-col">
+    <div class="detail-gallery-sticky">
     <div class="detail-thumbs" id="detail-thumbs"></div>
     <div class="detail-gallery-wrap">
       <div class="detail-carousel" id="detail-carousel"></div>
@@ -748,8 +898,10 @@
       <button class="detail-nav-btn detail-nav-next" id="detail-nav-next" aria-label="Image suivante"><i class="fa-solid fa-chevron-right"></i></button>
       <div class="detail-dots" id="detail-dots"></div>
     </div>
+    </div><!-- /detail-gallery-sticky -->
     </div>
     <div class="modal-body">
+      <div class="detail-info">
       <div class="modal-title" id="detail-title" style="margin-bottom:12px;"></div>
       <div class="card-meta" id="detail-meta" style="margin-bottom:20px;"></div>
       <div id="detail-specs"></div>
@@ -757,7 +909,7 @@
       <p class="detail-desc" id="detail-desc">-</p>
       <div class="detail-actions">
         <button class="btn btn-outline btn-sm" id="detail-share-btn"><i class="fa-solid fa-share-nodes"></i> <span data-i18n="share">Partager</span></button>
-        <button class="btn btn-outline btn-sm" id="detail-print-btn"><i class="fa-solid fa-print"></i> <span>Imprimer</span></button>
+        <button class="btn btn-outline btn-sm" id="detail-print-btn"><i class="fa-solid fa-print"></i> <span data-i18n="print">Imprimer</span></button>
         <button class="btn btn-outline btn-sm" id="detail-edit-btn" style="display:none"><i class="fa-solid fa-pen"></i> <span data-i18n="edit">Modifier</span></button>
         <button class="btn btn-danger btn-sm" id="detail-delete-btn" style="display:none"><i class="fa-solid fa-trash"></i> <span data-i18n="delete">Supprimer</span></button>
       </div>
@@ -772,9 +924,10 @@
         </div>
       </div>
       <div id="detail-contributors" style="display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--line);">
-        <div class="detail-section-title" style="margin-bottom:10px;">Contributeurs</div>
+        <div class="detail-section-title" style="margin-bottom:10px;" data-i18n="contributors">Contributeurs</div>
         <div id="detail-contributors-list" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
       </div>
+      </div><!-- /detail-info -->
       <div id="similar-block" style="margin-top:22px; display:none;">
         <div class="detail-section-title" data-i18n="similar_title">Tomates similaires</div>
         <div class="similar-grid" id="similar-grid"></div>
@@ -785,7 +938,7 @@
         <div class="detail-section-title" data-i18n="comments_title">Commentaires</div>
         <div id="comments-list" style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;"></div>
         <div class="comment-form" style="display:flex; flex-direction:column; gap:8px;">
-          <textarea id="comment-input" class="form-control" rows="2" placeholder="Ajouter un commentaire..."></textarea>
+          <textarea id="comment-input" class="form-control" rows="2" data-i18n-ph="comment_ph" placeholder="Ajouter un commentaire..."></textarea>
           <button class="btn btn-primary btn-sm" id="btn-submit-comment" style="align-self:flex-end;"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="send">Envoyer</span></button>
         </div>
       </div>
@@ -1155,10 +1308,19 @@ function trSize(size) {
   return key ? tr(key) : size;
 }
 function applyI18n() {
+  // Si une clé manque, tr() renvoie la clé elle-même : on garde alors le texte déjà écrit dans le HTML.
   document.querySelectorAll('[data-i18n]').forEach(el => {
-    el.textContent = tr(el.getAttribute('data-i18n'));
+    const key = el.getAttribute('data-i18n');
+    const val = tr(key);
+    if (val && val !== key) el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    const val = tr(key);
+    if (val && val !== key) el.placeholder = val;
   });
   document.getElementById('lang-label').textContent = currentLang.toUpperCase();
+  if (window.heroSetLabels) window.heroSetLabels(tr);
 }
 document.getElementById('btn-lang-dropdown').onclick = (e) => {
   e.stopPropagation(); document.getElementById('lang-menu').classList.toggle('active');
