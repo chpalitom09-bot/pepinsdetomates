@@ -75,20 +75,17 @@
   .hero:not(.go) .hero-title .w { clip-path: inset(-12% 101% -12% 0); }
   .hero.go .hero-title .w { animation: heroWipe 1s cubic-bezier(.7,0,.2,1) 1.2s both; }
   @keyframes heroWipe { from { clip-path: inset(-12% 101% -12% 0); } to { clip-path: inset(-12% -4% -12% 0); } }
-  .ink-wrap { width: clamp(210px, 29vw, 330px); }
-  .ink { display: block; width: 100%; height: auto; overflow: visible; color: #1b1613; }
-  .ink path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
-  .ink .paper { fill: #fff; stroke: none; stroke-dasharray: none; stroke-dashoffset: 0; }
-  .hero:not(.go) .ink path { visibility: hidden; }
-  .hero.go .ink path:not(.paper) { animation: inkDraw var(--t, .5s) cubic-bezier(.5,0,.25,1) var(--d, 0s) both; }
-  .hero.go .ink .paper { animation: inkPaper .7s ease .35s both; }
-  @keyframes inkDraw { from { stroke-dashoffset: 1; opacity: 0; } 2% { opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
-  @keyframes inkPaper { from { opacity: 0; } to { opacity: 1; } }
-  @media (max-width: 640px) { .ink-wrap { width: clamp(170px, 52vw, 230px); } .hero { padding-top: 18px; } }
+  .hero-img { display: block; width: clamp(210px, 25vw, 320px); height: auto; mix-blend-mode: multiply; margin: -14px 0 -24px;
+    -webkit-mask-image: linear-gradient(115deg, #000 42%, transparent 58%); mask-image: linear-gradient(115deg, #000 42%, transparent 58%);
+    -webkit-mask-size: 300% 100%; mask-size: 300% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+  .hero:not(.go) .hero-img { opacity: 0; }
+  .hero.go .hero-img { animation: imgReveal 2s cubic-bezier(.55,0,.25,1) both; }
+  @keyframes imgReveal { from { -webkit-mask-position: 100% 0; mask-position: 100% 0; opacity: 1; } to { -webkit-mask-position: 0 0; mask-position: 0 0; opacity: 1; } }
+  @media (max-width: 640px) { .hero-img { width: clamp(200px, 62vw, 290px); } .hero { padding-top: 18px; } }
   @media (prefers-reduced-motion: reduce) {
     .hero *, .hero *::before { animation: none !important; }
-    .hero:not(.go) .ink path { visibility: visible; }
-    .ink path { stroke-dashoffset: 0; }
+    .hero:not(.go) .hero-img { opacity: 1; }
+    .hero-img { -webkit-mask-image: none; mask-image: none; }
     .hero:not(.go) .hero-title .w { clip-path: none; }
   }
   #tomatoes-grid { scroll-margin-top: 96px; }
@@ -608,90 +605,11 @@
 
 <section class="hero" id="hero" aria-label="Pépins de tomates">
   <h2 class="hero-title"><span class="w" data-i18n="hero_title">Chaque pépin raconte une variété.</span></h2>
-  <div class="ink-wrap"><svg class="ink" id="ink" viewBox="0 0 300 264" role="img" aria-label="Dessin d'une tomate"></svg></div>
+  <img class="hero-img" src="tomates.webp" alt="Dessin à l'encre de trois tomates sur la vigne" width="720" height="720" decoding="async">
 </section>
 <script>
 (function () {
-  var hero = document.getElementById('hero'), svg = document.getElementById('ink');
-  if (!hero || !svg) return;
-  var seed = 7; function rnd() { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }
-  var CX = 150, CY = 150, RX = 120, RY = 88, N = 2.6, R = Math.PI / 180;
-  function f(p) { return p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
-  function pt(th, s, j) {
-    var a = th * R, c = Math.cos(a), si = Math.sin(a);
-    var x = CX + RX * s * Math.sign(c) * Math.pow(Math.abs(c), 2 / N);
-    var y = CY + RY * s * Math.sign(si) * Math.pow(Math.abs(si), 2 / N);
-    var d = ((th + 90 + 540) % 360) - 180;
-    y += 16 * s * Math.exp(-(d * d) / 392);
-    j = j || 0; return [x + (rnd() - .5) * j, y + (rnd() - .5) * j];
-  }
-  function smooth(P, closed) {
-    var n = P.length, d = 'M' + f(P[0]), end = closed ? n : n - 1;
-    for (var i = 0; i < end; i++) {
-      var p0 = P[closed ? (i - 1 + n) % n : Math.max(i - 1, 0)], p1 = P[i], p2 = P[(i + 1) % n], p3 = P[closed ? (i + 2) % n : Math.min(i + 2, n - 1)];
-      d += 'C' + f([p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6]) + ' ' + f([p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6]) + ' ' + f(p2);
-    }
-    return d + (closed ? 'Z' : '');
-  }
-  function arc(t0, t1, s, step, j) { var P = []; for (var t = t0; t <= t1 + .01; t += step) P.push(pt(t, s, j)); return smooth(P, false); }
-  var out = [];
-  function add(d, w, delay, dur, extra) {
-    out.push('<path pathLength="1" d="' + d + '" stroke-width="' + w + '" style="--d:' + delay.toFixed(2) + 's;--t:' + dur.toFixed(2) + 's"' + (extra || '') + '/>');
-  }
-  // contour du fruit (pas de pt() bruité pour que le papier colle au trait)
-  var body = []; for (var t = -180; t < 180; t += 10) body.push(pt(t, 1, .8));
-  var bodyD = smooth(body, true);
-  out.push('<path class="paper" d="' + bodyD + '"/>');
-  add(bodyD, 2.8, 0, .8);
-  add(arc(25, 155, 1.008, 8, 0).replace(/^M([\d.]+) ([\d.]+)/, function (m, x, y) { return 'M' + (+x + 2) + ' ' + (+y + 1.8); }), 1.6, .15, .7);
-  // côtes du fruit
-  add('M104 98C86 132 84 192 112 234', 1.5, .65, .45);
-  add('M196 98C214 132 216 192 188 234', 1.5, .72, .45);
-  add('M141 106C133 150 135 200 146 238', 1.2, .8, .4);
-  add('M160 106C168 150 166 200 156 238', 1.2, .86, .4);
-  // calice : 6 feuilles, nervures, tige
-  var leaves = [[-172, 82, 17], [-128, 66, 14], [-52, 66, 14], [-8, 82, 17], [112, 56, 13], [68, 56, 13]];
-  leaves.forEach(function (l, i) {
-    var L = l[1], w = l[2], dl = .85 + i * .07;
-    var tf = ' transform="translate(150 88) rotate(' + l[0] + ')"';
-    add('M0 0C' + (.2 * L) + ' ' + (-w) + ' ' + (.65 * L) + ' ' + (-w * .8) + ' ' + L + ' 0C' + (.65 * L) + ' ' + (w * .55) + ' ' + (.2 * L) + ' ' + w + ' 0 0Z', 2, dl, .35, tf);
-    add('M' + (.1 * L) + ' 0Q' + (.5 * L) + ' ' + (-w * .15) + ' ' + (.82 * L) + ' 0', 1, dl + .2, .25, tf);
-  });
-  add('M146 84C143 64 148 44 158 26', 2, 1.25, .3);
-  add('M155 84C155 66 160 48 169 28', 2, 1.3, .3);
-  add('M158 26C161 23 167 24 169 28', 1.6, 1.5, .15);
-  // brillance
-  add(arc(-168, -122, .8, 8, 0), 1.6, 1.3, .3);
-  add(arc(-160, -140, .72, 8, 0), 1.2, 1.4, .2);
-  // hachures d'ombre : arcs concentriques côté bas-droit
-  for (var k = 0; k < 11; k++) {
-    var s = .965 - k * .05, hw = 96 - k * 7.6, c0 = 58;
-    var segs = hw > 45 ? [[c0 - hw, c0 - 6], [c0 + 2 + rnd() * 6, c0 + hw]] : [[c0 - hw, c0 + hw]];
-    segs.forEach(function (sg, i) { add(arc(sg[0], sg[1], s, 7, .7), 1.2 + (10 - k) * .05, .9 + k * .06 + i * .03, .32); });
-  }
-  // hachures croisées : plus le fruit est dans l'ombre, plus les traits sont longs et doublés
-  var inside = function (x, y) { var u = (x - CX) / (RX * .9), v = (y - CY) / (RY * .9); return Math.pow(Math.abs(u), N) + Math.pow(Math.abs(v), N) < 1; };
-  var rows = 0;
-  for (var y = 96; y < 238; y += 8.5) {
-    var d1 = '', d2 = '';
-    for (var x = 40; x < 270; x += 7.5) {
-      var xx = x + (rnd() - .5) * 3, yy = y + (rnd() - .5) * 2;
-      if (!inside(xx, yy)) continue;
-      var sh = .5 * ((xx - CX) / RX) + .85 * ((yy - CY) / RY);
-      if (sh < .3) continue;
-      var L = 4 + 11 * Math.min(sh, 1.1);
-      d1 += 'M' + xx.toFixed(1) + ' ' + yy.toFixed(1) + 'l' + (L * .7).toFixed(1) + ' ' + (-L * .7).toFixed(1);
-      if (sh > .75) d2 += 'M' + xx.toFixed(1) + ' ' + yy.toFixed(1) + 'l' + (L * .6).toFixed(1) + ' ' + (L * .5).toFixed(1);
-    }
-    if (d1) add(d1, .85, 1.05 + rows * .055, .28);
-    if (d2) add(d2, .75, 1.2 + rows * .05, .25);
-    rows++;
-  }
-  // ombre portée
-  [[70, 252, 118], [96, 247, 210], [138, 256, 236], [112, 250, 262]].forEach(function (r, i) {
-    add('M' + r[0] + ' ' + r[1] + 'Q' + ((r[0] + r[2]) / 2) + ' ' + (r[1] - 2) + ' ' + r[2] + ' ' + r[1], 1.1, 1.65 + i * .07, .22);
-  });
-  svg.innerHTML = out.join('');
+  var hero = document.getElementById('hero'); if (!hero) return;
   function go() { hero.classList.add('go'); }
   var intro = document.getElementById('intro');
   if (!intro) { go(); return; }
