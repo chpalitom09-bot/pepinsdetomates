@@ -42,8 +42,14 @@
     --sans: 'Inter', sans-serif; --display: 'Space Grotesk', sans-serif;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: linear-gradient(120deg, #fecaca 0%, #ffffff 50%, #fca5a5 100%); background-size: 200% 200%; animation: gradientBG 15s ease-in-out infinite; color: var(--text-main); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-  @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  body { background: linear-gradient(120deg, #fecaca 0%, #ffffff 50%, #fca5a5 100%); color: var(--text-main); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  @media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
+    body::before { content: ''; position: fixed; top: 0; left: 0; width: 200vw; height: 100%; z-index: -1; pointer-events: none; background: linear-gradient(120deg, #fecaca 0%, #ffffff 25%, #fca5a5 50%, #ffffff 75%, #fecaca 100%); animation: bgDrift 24s ease-in-out infinite alternate; will-change: transform; }
+    @keyframes bgDrift { to { transform: translateX(-100vw); } }
+  }
+  html { -webkit-tap-highlight-color: transparent; }
+  button, .card, a { touch-action: manipulation; }
+  @media (hover: none) { .card:hover { transform: none; box-shadow: none; } }
   a { text-decoration: none; color: inherit; }
   button, input, select, textarea { font-family: inherit; }
 
@@ -248,21 +254,22 @@
 
 
   body.introing { overflow: hidden; }
-  #intro { --ease: cubic-bezier(.22,.8,.2,1); position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; overflow: hidden; color: var(--text-main); cursor: pointer; user-select: none; }
+  #intro { --fs: clamp(28px, 5.2vw, 54px); --ease: cubic-bezier(.22,.8,.2,1); position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; overflow: hidden; color: var(--text-main); cursor: pointer; user-select: none; }
   .in-bg { position: absolute; inset: 0; background: var(--surface); transition: opacity .8s ease .1s; }
   #intro.land { pointer-events: none; }
   #intro.land .in-bg { opacity: 0; }
   .in-lock { position: relative; display: flex; align-items: center; margin-top: -3vh; }
-  .in-logo { position: relative; z-index: 2; flex: none; width: 132px; height: 132px; }
-  .in-tile { width: 100%; height: 100%; border-radius: 30px; overflow: hidden; opacity: 0; transform: scale(.92); will-change: transform; box-shadow: 0 18px 50px -14px rgba(0,0,0,.35), 0 0 0 1px rgba(17,24,39,.08); animation: tileIn .9s var(--ease) .15s forwards; }
+  .in-logo { position: relative; z-index: 2; flex: none; width: calc(var(--fs) * 2.35); height: calc(var(--fs) * 2.35); }
+  .in-tile { width: 100%; height: 100%; border-radius: calc(var(--fs) * .55); overflow: hidden; opacity: 0; transform: scale(.92); will-change: transform; box-shadow: 0 18px 50px -14px rgba(0,0,0,.35), 0 0 0 1px rgba(17,24,39,.08); animation: tileIn .9s var(--ease) .15s forwards; }
   @keyframes tileIn { to { opacity: 1; transform: none; } }
   .in-tile img { display: block; width: 100%; height: 100%; }
   .in-word { position: relative; z-index: 1; flex: none; width: 0; overflow: hidden; animation: wordOpen 1s var(--ease) 1.2s forwards; }
   @keyframes wordOpen { to { width: var(--w, 420px); } }
-  .in-name { display: block; width: max-content; margin: 0; padding: 0 0 .06em 26px; white-space: nowrap; font-family: var(--display); font-size: clamp(28px, 5.2vw, 54px); font-weight: 700; letter-spacing: -.04em; line-height: 1.1; color: var(--primary); opacity: 0; transform: translateX(-40%); animation: wordIn 1s var(--ease) 1.2s forwards; }
+  .in-name { display: block; width: max-content; margin: 0; padding: 0 0 .06em 26px; white-space: nowrap; font-family: var(--display); font-size: var(--fs); font-weight: 700; letter-spacing: -.04em; line-height: 1.1; color: var(--primary); opacity: 0; transform: translateX(-40%); animation: wordIn 1s var(--ease) 1.2s forwards; }
   @keyframes wordIn { to { opacity: 1; transform: none; } }
   #intro.out .in-name { animation: outRight .45s cubic-bezier(.5,0,.75,0) forwards; }
   @keyframes outRight { to { opacity: 0; transform: translateX(20px); } }
+  @media (max-width: 640px) { #intro { --fs: clamp(24px, 7.4vw, 34px); } .in-name { padding-left: 14px; } }
   @media (prefers-reduced-motion: reduce) { #intro { display: none; } }
 
   @media screen {
@@ -325,8 +332,9 @@
   .detail-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
 
   /* Modal & Form Upload Multi-images */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.25s; padding: 16px; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.25s; padding: 16px; }
   .modal-overlay.active { opacity: 1; pointer-events: all; }
+  @media (min-width: 769px) { .modal-overlay.active { backdrop-filter: blur(4px); } }
   .modal { background: var(--surface); width: 100%; max-width: 600px; border-radius: 20px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 48px rgba(0,0,0,0.2); transform: scale(0.95) translateY(20px); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
   .modal-overlay.active .modal { transform: scale(1) translateY(0); }
   .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--surface); z-index: 10; }
@@ -1536,7 +1544,7 @@ function renderGrid() {
     let imagesHtml = '';
     let imgCountBadge = '';
     if (imagesArray.length > 0) {
-      imagesHtml = `<div class="card-img-wrapper"><img src="${imagesArray[0]}" class="card-img" alt="${t.name}" loading="lazy"></div>`;
+      imagesHtml = `<div class="card-img-wrapper"><img src="${FV.thumb(imagesArray[0], 640)}" data-o="${imagesArray[0]}" onerror="if(this.dataset.o&&this.src!==this.dataset.o){this.src=this.dataset.o}" class="card-img" alt="${t.name}" loading="lazy" decoding="async"></div>`;
       if (imagesArray.length > 1) imgCountBadge = `<div class="img-count"><i class="fa-regular fa-images"></i> ${imagesArray.length}</div>`;
     } else {
       imagesHtml = `<div class="card-img-wrapper" style="background:#eee"></div>`;
@@ -1578,7 +1586,13 @@ function renderGrid() {
     `);
   });
 
-  grid.innerHTML = htmlParts.join('');
+  const gridHtml = htmlParts.join('');
+  if (window.__gridHtml === gridHtml && grid.firstElementChild && grid.firstElementChild.classList.contains('card')) {
+    renderPagination(totalPages);
+    return;
+  }
+  window.__gridHtml = gridHtml;
+  grid.innerHTML = gridHtml;
   renderPagination(totalPages);
   if (window.PL) PL.refresh();
 
@@ -1813,7 +1827,7 @@ function openDetailModal(tomatoId, fromPop) {
       const sImg = sImgs[0] || '';
       return `<div class="similar-card" data-id="${s.id}">
         <div class="similar-card-imgwrap">
-          ${sImg ? `<img src="${sImg}" alt="${s.name}" loading="lazy">` : `<div class="no-img"><i class="fa-solid fa-image"></i></div>`}
+          ${sImg ? `<img src="${FV.thumb(sImg, 360)}" data-o="${sImg}" onerror="if(this.dataset.o&&this.src!==this.dataset.o){this.src=this.dataset.o}" alt="${s.name}" loading="lazy" decoding="async">` : `<div class="no-img"><i class="fa-solid fa-image"></i></div>`}
         </div>
         <div class="similar-name">${s.name}</div>
       </div>`;

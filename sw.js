@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pepins-v5';
+const CACHE_NAME = 'pepins-v6';
 const APP_SHELL = [
   './',
   './index.html',

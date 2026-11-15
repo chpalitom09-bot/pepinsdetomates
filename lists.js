@@ -14,7 +14,7 @@
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   const TLx = () => window.TL || { getTomatoes: () => [], openDetail() {}, toast() {}, detailId: () => null };
   const byId = id => TLx().getTomatoes().find(t => t.id === id);
-  const thumb = t => (t && ((t.imageURLs && t.imageURLs[0]) || t.imageURL)) || '';
+  const thumb = t => { const u = (t && ((t.imageURLs && t.imageURLs[0]) || t.imageURL)) || ''; return window.FV && u ? FV.thumb(u, 120) : u; };
 
   // ── Stockage ──────────────────────────────────────────────────────────────
   function seed() {
@@ -107,7 +107,7 @@
     const img = thumb(t);
     const color = window.FV ? FV.tomato(t.color, 16) : '';
     return `<div class="pl-item${opts.hit ? ' hit' : ''}" data-open="${esc(t.id)}">
-      <div class="pl-thumb">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ''}</div>
+      <div class="pl-thumb">${img ? `<img src="${esc(img)}" alt="" loading="lazy" decoding="async">` : ''}</div>
       <div class="pl-iname"><b>${esc(t.name)}</b><span>${color} ${esc(t.color || '')}${t.weight ? ' · ' + esc(t.weight) + ' g' : ''}</span></div>
       ${opts.hit ? '<span class="pl-hit" title="Correspondance">🎯</span>' : ''}
       ${opts.rm ? `<button class="pl-x" data-act="rm" data-list="${esc(opts.rm)}" data-t="${esc(t.id)}" title="Retirer de la liste"><i class="fa-solid fa-xmark"></i></button>`

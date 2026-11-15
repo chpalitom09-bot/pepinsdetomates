@@ -33,29 +33,45 @@
   }
 
   // ── Tomate réaliste ───────────────────────────────────────────────────────
+  // Les dégradés sont définis UNE fois par couleur dans un <svg> caché : les cartes
+  // n'embarquent plus de <defs> (HTML plus léger, rendu stable, pas de filtre coûteux).
+  const defsDone = {};
+  function defsHolder() {
+    let h = document.getElementById('fv-defs');
+    if (!h) {
+      document.body.insertAdjacentHTML('beforeend', '<svg id="fv-defs" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs></defs></svg>');
+      h = document.getElementById('fv-defs');
+      h.firstChild.insertAdjacentHTML('beforeend', `<radialGradient id="fvt-s" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></radialGradient><linearGradient id="fvt-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cb342"/><stop offset="1" stop-color="#3d7a1f"/></linearGradient>`);
+    }
+    return h.firstChild;
+  }
+  function tomatoId(color) {
+    const id = 'fvt-' + (norm(color).replace(/[^a-z]/g, '') || 'rouge');
+    if (!defsDone[id]) { defsDone[id] = 1; defsHolder().insertAdjacentHTML('beforeend', fillDef(color, id)); }
+    return id;
+  }
   function tomato(color, px) {
     px = px || 22;
-    const id = 'fvt' + (++uid);
+    const id = tomatoId(color);
     const body = 'M32 17 C22 10 5 16 5 35 C5 51 17 60 32 60 C47 60 59 51 59 35 C59 16 42 10 32 17Z';
     const sepal = a => `<path transform="rotate(${a} 32 19)" d="M32 19 C28.5 22 27.5 28 32 33 C36.5 28 35.5 22 32 19Z"/>`;
-    return `<svg class="fv-tomato" viewBox="0 0 64 66" width="${px}" height="${Math.round(px * 66 / 64)}" aria-hidden="true">
-  <defs>
-    ${fillDef(color, id)}
-    <radialGradient id="${id}s" cx=".36" cy=".3" r=".85">
-      <stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/>
-      <stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".42"/>
-    </radialGradient>
-    <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cb342"/><stop offset="1" stop-color="#3d7a1f"/></linearGradient>
-  </defs>
+    return `<svg class="fv-tomato" viewBox="0 0 64 66" width="${px}" height="${Math.round(px * 66 / 64)}" aria-hidden="true" focusable="false">
   <ellipse cx="32" cy="62" rx="19" ry="2.6" fill="#000" opacity=".16"/>
   <path d="${body}" fill="url(#${id}f)"/>
-  <path d="${body}" fill="url(#${id}s)"/>
+  <path d="${body}" fill="url(#fvt-s)"/>
   <path d="M32 18 C25 30 25 47 32 59 M32 18 C39 30 39 47 32 59" fill="none" stroke="#000" stroke-opacity=".09" stroke-width="1.2"/>
   <ellipse cx="20" cy="29" rx="4.6" ry="8" transform="rotate(28 20 29)" fill="#fff" opacity=".34"/>
-  <circle cx="14.5" cy="40" r="1.6" fill="#fff" opacity=".22"/>
-  <g fill="url(#${id}g)" stroke="#2f5f17" stroke-width=".4" stroke-linejoin="round">${[-78, -40, 0, 40, 78].map(sepal).join('')}</g>
+  <g fill="url(#fvt-g)" stroke="#2f5f17" stroke-width=".4" stroke-linejoin="round">${[-78, -40, 0, 40, 78].map(sepal).join('')}</g>
   <path d="M32 20 C31.5 15 32 11 34 8" fill="none" stroke="#4d7c0f" stroke-width="2.4" stroke-linecap="round"/>
 </svg>`;
+  }
+
+  // Miniature légère (proxy d'images redimensionnées) : évite de télécharger/décoder des photos de plusieurs Mo
+  function thumb(u, w) {
+    if (!u || !/^https?:\/\//i.test(u)) return u;
+    if (/images\.unsplash\.com/.test(u)) return /[?&]w=\d+/.test(u) ? u.replace(/([?&])w=\d+/, '$1w=' + w) : u + (u.includes('?') ? '&' : '?') + 'w=' + w;
+    if (/wsrv\.nl/.test(u)) return u;
+    return 'https://wsrv.nl/?url=' + encodeURIComponent(u) + '&w=' + w + '&output=webp&q=72&we=1';
   }
 
   // ── Échelle poids / taille ────────────────────────────────────────────────
@@ -111,14 +127,26 @@
       });
     });
     root.querySelectorAll('svg.fv-cycle-svg').forEach(svg => {
+      if (svg._fvWatch) return;
       const days = +svg.getAttribute('data-days') || 0, out = svg.querySelector('.fv-day');
-      if (!days || !out || svg._fvTimer) return;
-      svg._fvTimer = setInterval(() => {
-        if (!svg.isConnected) { clearInterval(svg._fvTimer); return; }
-        let f = (svg.getCurrentTime() % DUR) / DUR;
-        f = Math.min(1, f / .8); // la récolte arrive à ~80 % de la boucle
-        out.textContent = Math.round(f * days) + ' / ' + days;
-      }, 120);
+      let inView = true, paused = false;
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(es => { inView = es[es.length - 1].isIntersecting; }, { threshold: 0 });
+        io.observe(svg);
+        svg._fvIO = io;
+      }
+      svg._fvWatch = setInterval(() => {
+        if (!svg.isConnected) { clearInterval(svg._fvWatch); if (svg._fvIO) svg._fvIO.disconnect(); return; }
+        const hidden = !inView || !!svg.closest('.modal-overlay:not(.active)') || document.hidden;
+        try {
+          if (hidden && !paused) { svg.pauseAnimations(); paused = true; }
+          else if (!hidden && paused) { svg.unpauseAnimations(); paused = false; }
+        } catch (e) {}
+        if (hidden || !days || !out) return;
+        const f = Math.min(1, ((svg.getCurrentTime() % DUR) / DUR) / .8);
+        const txt = Math.round(f * days) + ' / ' + days;
+        if (out.textContent !== txt) out.textContent = txt;
+      }, 250);
     });
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
       root.querySelectorAll('svg.fv-cycle-svg').forEach(svg => {
@@ -275,7 +303,7 @@
   // ── Styles ────────────────────────────────────────────────────────────────
   const css = `
 .fv-inline{display:inline-flex;align-items:center;gap:8px}
-.fv-tomato{display:inline-block;vertical-align:middle;flex-shrink:0;filter:drop-shadow(0 1px 1px rgba(0,0,0,.12))}
+.fv-tomato{display:inline-block;vertical-align:middle;flex-shrink:0}
 .fv-card{margin:0 0 22px;padding:16px 18px;border:1px solid var(--line,#e5e7eb);border-radius:16px;background:var(--card-bg,rgba(255,255,255,.6))}
 .fv-card-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted,#6b7280);margin-bottom:10px}
 .fv-scale-head{font-size:15px;margin-bottom:4px}.fv-scale-head span{color:var(--text-muted,#6b7280)}
@@ -288,11 +316,10 @@
 .fv-track i{position:absolute;top:-3px;width:1.5px;height:14px;background:rgba(0,0,0,.28);transform:translateX(-50%)}
 .fv-track i b{position:absolute;top:18px;left:50%;transform:translateX(-50%);font-size:10px;font-style:normal;font-weight:600;color:var(--text-muted,#6b7280);white-space:nowrap}
 .fv-marker{position:absolute;bottom:6px;left:var(--p);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;animation:fvSlide 1.1s cubic-bezier(.34,1.4,.5,1) both}
-.fv-marker .fv-tomato{filter:drop-shadow(0 3px 3px rgba(0,0,0,.25))}
 .fv-pin{width:2px;height:10px;background:#111;border-radius:2px;margin-top:-2px}
 .fv-note{font-size:11px;color:var(--text-muted,#6b7280);margin-top:2px}
 .fv-country-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.fv-country svg{display:block;max-width:100%;height:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.12))}
+.fv-country svg{display:block;max-width:100%;height:auto}
 .fv-cycle-svg{display:block;width:100%;max-width:480px;height:auto;border-radius:14px}
 .fv-cycle-info{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
 .fv-cycle-info span{color:var(--text-muted,#6b7280)}
@@ -312,5 +339,5 @@
     return { cycle: c, semis: s };
   }
 
-  window.FV = { tomato, weightScale, country, cycle, hydrate, parseCulture };
+  window.FV = { tomato, thumb, weightScale, country, cycle, hydrate, parseCulture };
 })();
