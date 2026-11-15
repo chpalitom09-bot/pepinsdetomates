@@ -84,22 +84,8 @@
   .hero { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(10px, 2vh, 22px); min-height: clamp(330px, calc((100svh - 72px) / 2 - 30px), 560px); padding: 26px 24px 4px; text-align: center; }
   .hero-title { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.2vw, 52px); line-height: 1.05; letter-spacing: -.045em; color: var(--text-main); max-width: 19ch; text-wrap: balance; }
   .hero-title .w { display: inline-block; padding: .06em .04em; }
-  .hero:not(.go) .hero-title .w { clip-path: inset(-12% 101% -12% 0); }
-  .hero.go .hero-title .w { animation: heroWipe 1s cubic-bezier(.7,0,.2,1) 1.2s both; }
-  @keyframes heroWipe { from { clip-path: inset(-12% 101% -12% 0); } to { clip-path: inset(-12% -4% -12% 0); } }
-  .hero-img { display: block; width: clamp(210px, 25vw, 320px); height: auto; mix-blend-mode: multiply; margin: -14px 0 -24px;
-    -webkit-mask-image: linear-gradient(115deg, #000 42%, transparent 58%); mask-image: linear-gradient(115deg, #000 42%, transparent 58%);
-    -webkit-mask-size: 300% 100%; mask-size: 300% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
-  .hero:not(.go) .hero-img { opacity: 0; }
-  .hero.go .hero-img { animation: imgReveal 2s cubic-bezier(.55,0,.25,1) both; }
-  @keyframes imgReveal { from { -webkit-mask-position: 100% 0; mask-position: 100% 0; opacity: 1; } to { -webkit-mask-position: 0 0; mask-position: 0 0; opacity: 1; } }
+  .hero-img { display: block; width: clamp(210px, 25vw, 320px); height: auto; mix-blend-mode: multiply; margin: -14px 0 -24px; }
   @media (max-width: 640px) { .hero-img { width: clamp(200px, 62vw, 290px); } .hero { padding-top: 18px; } }
-  @media (prefers-reduced-motion: reduce) {
-    .hero *, .hero *::before { animation: none !important; }
-    .hero:not(.go) .hero-img { opacity: 1; }
-    .hero-img { -webkit-mask-image: none; mask-image: none; }
-    .hero:not(.go) .hero-title .w { clip-path: none; }
-  }
   #tomatoes-grid { scroll-margin-top: 96px; }
 
   /* Toolbar */
@@ -1053,7 +1039,7 @@
 <script src="fiche-visuals.js"></script>
 <script src="lists.js"></script>
 <script src="wiki.js"></script>
-<script src="ai-demo.js"></script>
+<script src="ai.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
@@ -1563,7 +1549,7 @@ function renderGrid() {
     let imagesHtml = '';
     let imgCountBadge = '';
     if (imagesArray.length > 0) {
-      imagesHtml = `<div class="card-img-wrapper"><img src="${FV.thumb(imagesArray[0], 640)}" data-o="${imagesArray[0]}" onerror="if(this.dataset.o&&this.src!==this.dataset.o){this.src=this.dataset.o}" class="card-img" alt="${t.name}" loading="lazy" decoding="async"></div>`;
+      imagesHtml = `<div class="card-img-wrapper"><img src="${FV.thumb(imagesArray[0], 640)}" data-o="${imagesArray[0]}" referrerpolicy="no-referrer" onerror="if(this.dataset.o&&this.src!==this.dataset.o){this.src=this.dataset.o}" class="card-img" alt="${t.name}" loading="lazy" decoding="async"></div>`;
       if (imagesArray.length > 1) imgCountBadge = `<div class="img-count"><i class="fa-regular fa-images"></i> ${imagesArray.length}</div>`;
     } else {
       imagesHtml = `<div class="card-img-wrapper" style="background:#eee"></div>`;
@@ -1750,7 +1736,7 @@ function openDetailModal(tomatoId, fromPop) {
     ? imagesArray.map(url => `
         <div class="detail-img-slide">
           <div class="detail-carousel-blur" style="background-image:url('${url}')"></div>
-          <img src="${url}" alt="${t.name}" data-zoom="${url}" style="cursor:zoom-in">
+          <img src="${url}" referrerpolicy="no-referrer" alt="${t.name}" data-zoom="${url}" style="cursor:zoom-in">
         </div>
       `).join('')
     : `<div class="detail-img-slide" style="background:#eee"></div>`;
@@ -1769,7 +1755,7 @@ function openDetailModal(tomatoId, fromPop) {
   prevBtn.onclick = () => carousel.scrollBy({ left: -carousel.offsetWidth, behavior: 'smooth' });
   nextBtn.onclick = () => carousel.scrollBy({ left: carousel.offsetWidth, behavior: 'smooth' });
   const thumbs = document.getElementById('detail-thumbs');
-  thumbs.innerHTML = imagesArray.length > 1 ? imagesArray.map((u, i) => `<img src="${u}" alt="" class="${i === 0 ? 'active' : ''}" data-i="${i}">`).join('') : '';
+  thumbs.innerHTML = imagesArray.length > 1 ? imagesArray.map((u, i) => `<img src="${u}" referrerpolicy="no-referrer" alt="" class="${i === 0 ? 'active' : ''}" data-i="${i}">`).join('') : '';
   thumbs.querySelectorAll('img').forEach(im => {
     im.onclick = () => carousel.scrollTo({ left: Number(im.dataset.i) * carousel.offsetWidth, behavior: 'smooth' });
   });
@@ -1848,7 +1834,7 @@ function openDetailModal(tomatoId, fromPop) {
       const sImg = sImgs[0] || '';
       return `<div class="similar-card" data-id="${s.id}">
         <div class="similar-card-imgwrap">
-          ${sImg ? `<img src="${FV.thumb(sImg, 360)}" data-o="${sImg}" onerror="if(this.dataset.o&&this.src!==this.dataset.o){this.src=this.dataset.o}" alt="${s.name}" loading="lazy" decoding="async">` : `<div class="no-img"><i class="fa-solid fa-image"></i></div>`}
+          ${sImg ? `<img src="${FV.thumb(sImg, 360)}" data-o="${sImg}" referrerpolicy="no-referrer" onerror="if(this.dataset.o&&this.src!==this.dataset.o){this.src=this.dataset.o}" alt="${s.name}" loading="lazy" decoding="async">` : `<div class="no-img"><i class="fa-solid fa-image"></i></div>`}
         </div>
         <div class="similar-name">${s.name}</div>
       </div>`;
@@ -2031,7 +2017,7 @@ document.getElementById('detail-print-btn').onclick = () => {
 };
 
 // Pont vers lists.js (listes de variétés)
-window.TL = { getTomatoes: () => tomatoesData, openDetail: (id) => openDetailModal(id), toast: showToast, detailId: () => detailCurrentId };
+window.TL = { getToken: () => (currentUser ? currentUser.getIdToken() : Promise.resolve(null)), getTomatoes: () => tomatoesData, openDetail: (id) => openDetailModal(id), toast: showToast, detailId: () => detailCurrentId };
 
 function maybeOpenSharedTomato() {
   if (detailCurrentId) return;
@@ -2095,7 +2081,7 @@ function openAuthorModal(uid, name) {
       const img = imgs[0] || '';
       const likesCount = t.likes ? Object.keys(t.likes).length : 0;
       return `<div class="card" data-id="${t.id}">
-        <div class="card-img-wrapper">${img ? `<img src="${img}" class="card-img" alt="${t.name}" loading="lazy">` : ''}</div>
+        <div class="card-img-wrapper">${img ? `<img src="${img}" referrerpolicy="no-referrer" class="card-img" alt="${t.name}" loading="lazy">` : ''}</div>
         <div class="card-body">
           <h3 class="card-title">${t.name}</h3>
           <div class="card-desc">${t.description || '-'}</div>
