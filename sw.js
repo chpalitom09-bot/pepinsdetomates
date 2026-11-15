@@ -1,10 +1,12 @@
-const CACHE_NAME = 'pepins-v3';
+const CACHE_NAME = 'pepins-v4';
 const APP_SHELL = [
   './',
   './index.html',
   './pays.json',
   './lang.json',
   './algo.js',
+  './fiche-visuals.js',
+  './countries-shapes.json',
   './auth.html',
   './manifest.json',
   './pepins-icon.svg?v=2'

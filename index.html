@@ -1023,6 +1023,7 @@
   </div>
 </div>
 
+<script src="fiche-visuals.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
@@ -1550,7 +1551,7 @@ function renderGrid() {
           </h3>
           <div class="card-meta">
             ${t.probableError ? `<span class="badge" style="background:#fef2f2; color:#d92d20; border-color:#fecaca"><i class="fa-solid fa-triangle-exclamation"></i> Erreur probable</span>` : ''}
-            <span class="badge"><i class="color-dot" style="background:${colorBg}"></i> ${trColor(t.color)}</span>
+            <span class="badge">${FV.tomato(t.color, 18)} ${trColor(t.color)}</span>
             ${t.weight ? `<span class="badge"><i class="fa-solid fa-scale-balanced"></i> ${t.weight}g</span>` : ''}
             ${countryBadge}
           </div>
@@ -1757,7 +1758,7 @@ function openDetailModal(tomatoId, fromPop) {
   const sizeLabel = trSize(t.averageSize);
   document.getElementById('detail-meta').innerHTML = `
     ${t.probableError ? `<span class="badge" style="background:#fef2f2; color:#d92d20; border-color:#fecaca"><i class="fa-solid fa-triangle-exclamation"></i> Erreur probable</span>` : ''}
-    <span class="badge"><i class="color-dot" style="background:${colorBg}"></i> ${trColor(t.color)}</span>
+    <span class="badge">${FV.tomato(t.color, 18)} ${trColor(t.color)}</span>
     ${t.weight ? `<span class="badge"><i class="fa-solid fa-scale-balanced"></i> ${t.weight}g</span>` : ''}
     ${sizeLabel ? `<span class="badge"><i class="fa-solid fa-ruler"></i> ${sizeLabel}</span>` : ''}
     ${countryBadge}
@@ -1765,14 +1766,18 @@ function openDetailModal(tomatoId, fromPop) {
 
   document.getElementById('detail-desc').textContent = t.description || '-';
   document.getElementById('detail-crumb').innerHTML = `Catalogue &rsaquo; <b>${t.name}</b>`;
+  const cObj = countriesList.find(c => c.name === t.country);
   const specRows = [
-    [tr('t_color') ? tr('t_color').replace(' *', '') : 'Couleur', trColor(t.color)],
-    [tr('t_weight') || 'Poids moyen (g)', t.weight ? t.weight + ' g' : ''],
-    [tr('t_size') || 'Taille', sizeLabel],
-    [tr('t_country') || "Pays d'origine", t.country],
+    [tr('t_color') ? tr('t_color').replace(' *', '') : 'Couleur', `<span class="fv-inline">${FV.tomato(t.color, 30)} <span>${trColor(t.color)}</span></span>`],
+    [tr('t_country') || "Pays d'origine", t.country ? FV.country(t.country, cObj ? cObj.code : '') : ''],
     ['Ajoutée le', t.createdAt ? new Date(t.createdAt).toLocaleDateString(currentLang) : '']
   ].filter(r => r[1]);
-  document.getElementById('detail-specs').innerHTML = specRows.length ? `<div class="detail-section-title">${tr('specs_title') || 'Caractéristiques'}</div><table class="specs-table">${specRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>` : '';
+  const culture = FV.parseCulture(t);
+  const specsEl = document.getElementById('detail-specs');
+  specsEl.innerHTML = (specRows.length ? `<div class="detail-section-title">${tr('specs_title') || 'Caractéristiques'}</div><table class="specs-table">${specRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>` : '')
+    + FV.weightScale(t.weight, sizeLabel, t.color, t.averageSize)
+    + FV.cycle(culture.cycle, culture.semis, t.color);
+  FV.hydrate(specsEl);
 
   const verifiedBadgeSvg = `<svg fill="#1d9bf0" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 910.288 910.287" style="flex-shrink:0; margin-left:4px;"><path d="M873.206,202.06l-1.212-28.51l-28.386-2.915c-109.036-11.198-202.773-51.887-262.21-84.049 c-65.099-35.226-104.56-68.274-104.922-68.579L455.165,0L433.84,17.981c-0.392,0.33-39.853,33.379-104.951,68.604 c-59.437,32.162-153.173,72.851-262.209,84.049l-28.387,2.915l-1.212,28.51c-0.217,5.104-4.777,126.698,42.059,273.937 c27.637,86.887,67.549,164.736,118.627,231.396c64.139,83.701,145.948,149.68,243.155,196.102l14.221,6.793l14.221-6.793 c97.207-46.422,179.017-112.398,243.155-196.102c51.079-66.658,90.991-144.51,118.628-231.395 C877.982,328.759,873.423,207.165,873.206,202.06z M455.143,836.93c-81.095-41.209-149.731-97.887-204.194-168.646 c-46.393-60.275-82.812-130.998-108.248-210.201c-31.088-96.808-38.06-183.144-39.471-225.538 c43.735-6.494,87.949-17.421,131.833-32.597c42.9-14.836,85.598-33.752,126.907-56.221c41.915-22.798,73.81-44.573,93.172-58.812 c19.362,14.238,51.258,36.014,93.173,58.812c41.309,22.47,84.007,41.385,126.907,56.221 c43.896,15.181,88.123,26.108,131.87,32.602c-1.359,41.978-8.194,127.098-38.842,223.443 c-25.317,79.594-61.694,150.672-108.12,211.258C605.537,738.494,536.632,795.52,455.143,836.93z"/></svg>`;
   const authorEl = document.getElementById('detail-author');
