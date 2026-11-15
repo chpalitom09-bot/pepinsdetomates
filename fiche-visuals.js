@@ -110,80 +110,163 @@
   <path d="${s.d}" fill="#fff1e8" stroke="#111" stroke-width="1.6" stroke-linejoin="round" vector-effect="non-scaling-stroke" fill-rule="evenodd"/></svg>`;
       });
     });
+    root.querySelectorAll('svg.fv-cycle-svg').forEach(svg => {
+      const days = +svg.getAttribute('data-days') || 0, out = svg.querySelector('.fv-day');
+      if (!days || !out || svg._fvTimer) return;
+      svg._fvTimer = setInterval(() => {
+        if (!svg.isConnected) { clearInterval(svg._fvTimer); return; }
+        let f = (svg.getCurrentTime() % DUR) / DUR;
+        f = Math.min(1, f / .8); // la récolte arrive à ~80 % de la boucle
+        out.textContent = Math.round(f * days) + ' / ' + days;
+      }, 120);
+    });
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
       root.querySelectorAll('svg.fv-cycle-svg').forEach(svg => {
-        try { svg.setCurrentTime(8.8); svg.pauseAnimations(); } catch (e) {}
+        try { svg.setCurrentTime(DUR * .88); svg.pauseAnimations(); } catch (e) {}
       });
     }
   }
 
-  // ── Cycle animé ───────────────────────────────────────────────────────────
-  const DUR = 10;
-  const an = (attr, vals, times, extra) =>
-    `<animate attributeName="${attr}" values="${vals.join(';')}" keyTimes="${times.join(';')}" dur="${DUR}s" repeatCount="indefinite" ${extra || ''}/>`;
-  const at = (type, vals, times) =>
-    `<animateTransform attributeName="transform" type="${type}" values="${vals.join(';')}" keyTimes="${times.join(';')}" dur="${DUR}s" repeatCount="indefinite"/>`;
+  // ── Cycle animé : coupe de jardin ─────────────────────────────────────────
+  const DUR = 16;
+  const EASE = '.45 0 .2 1';
+  const an = (attr, vals, times, o) => {
+    o = o || {};
+    const sp = o.ease ? ` calcMode="spline" keySplines="${vals.slice(1).map(() => EASE).join(';')}"` : '';
+    return `<animate attributeName="${attr}" values="${vals.join(';')}" keyTimes="${times.join(';')}" dur="${o.dur || DUR}s" repeatCount="indefinite"${sp}/>`;
+  };
+  const at = (type, vals, times, o) => {
+    o = o || {};
+    const sp = o.ease ? ` calcMode="spline" keySplines="${vals.slice(1).map(() => EASE).join(';')}"` : '';
+    return `<animateTransform attributeName="transform" type="${type}" values="${vals.join(';')}" keyTimes="${times.join(';')}" dur="${o.dur || DUR}s" repeatCount="indefinite"${sp}/>`;
+  };
+  // pousse un trait (pathLength=1) entre t0 et t1
+  const grow = (d, t0, t1, stroke, w, extra) =>
+    `<path d="${d}" pathLength="1" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1" opacity="0" ${extra || ''}>${an('stroke-dashoffset', [1, 1, 0, 0], [0, t0, t1, 1], { ease: true })}${an('opacity', [0, 0, 1, 1], [0, t0, Math.min(.999, t0 + .002), 1])}</path>`;
+  // apparition par échelle (avec léger dépassement) puis balancement continu
+  const pop = (inner, t0, t1, sway, swayDur, pivot) => {
+    const s = at('scale', [0, 0, 1, 1], [0, t0, t1, 1], { ease: true });
+    const w = sway ? `<g>${at('rotate', [`${-sway} ${pivot || '0 0'}`, `${sway} ${pivot || '0 0'}`, `${-sway} ${pivot || '0 0'}`], [0, .5, 1], { ease: true, dur: swayDur || 5 })}${inner}</g>` : inner;
+    return `<g>${s}${w}</g>`;
+  };
 
-  function leaf(x, y, a, t0, t1, s) {
-    return `<g transform="translate(${x} ${y}) rotate(${a})"><g>${at('scale', [0, 0, s || 1, s || 1], [0, t0, t1, 1])}
-      <path d="M0 0 C7 -8 19 -8 25 0 C19 8 7 8 0 0Z" fill="#5fa83a" stroke="#3f7d20" stroke-width=".6"/><path d="M2 0 L22 0" stroke="#3f7d20" stroke-width=".6" opacity=".6"/></g></g>`;
+  const LEAFLET = 'M0 0 C2 -3.6 5.2 -5.8 8.6 -5.1 L9.6 -7 C11.6 -5.2 13.6 -3.9 15.2 -1.2 L17.2 -.9 C16.2 1.3 14.6 3.1 12.2 4.1 L12.6 6.1 C8.6 5.3 4 3.9 0 0Z';
+  function compoundLeaf() {
+    const lf = (x, a, s) => `<g transform="translate(${x} 0) rotate(${a}) scale(${s})"><path d="${LEAFLET}" fill="url(#fvlf)" stroke="#34581c" stroke-width=".55" stroke-linejoin="round"/><path d="M0 0 L13 -.6" stroke="#34581c" stroke-width=".45" opacity=".7"/></g>`;
+    return `<path d="M0 0 C10 -1.5 22 -1 33 0" fill="none" stroke="#4c7a2a" stroke-width="1.3" stroke-linecap="round"/>` +
+      lf(7, -58, .7) + lf(7, 58, .7) + lf(15, -52, .85) + lf(15, 52, .85) + lf(24, -48, .8) + lf(24, 48, .8) + lf(32, 0, 1.15);
   }
-  function flower(x, y) {
-    const petals = [0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-3.6" rx="2.2" ry="3.4" transform="rotate(${a})" fill="#ffd43b"/>`).join('');
-    return `<g transform="translate(${x} ${y})"><g>${at('scale', [0, 0, 1, 1, 0, 0], [0, .5, .56, .64, .68, 1])}${petals}<circle r="1.8" fill="#f08c00"/></g></g>`;
+  function leaf(x, y, rot, s, t0, t1, swayDur) {
+    return `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${s})">${pop(compoundLeaf(), t0, t1, 2.2, swayDur)}</g>`;
   }
-  function fruit(x, y, r, base, t0) {
-    const ry = r * .92;
-    const star = `<path transform="translate(0 ${-ry + 1.2}) scale(${r / 9})" d="M0,-3 L1.2,-1 L4,-1.8 L2.2,0.4 L3.6,3 L0.9,1.8 L-0.9,1.8 L-3.6,3 L-2.2,0.4 L-4,-1.8 L-1.2,-1Z" fill="#3f7d20"/>`;
-    return `<g transform="translate(${x} ${y})"><g>${at('scale', [0, 0, .3, .72, 1, 1], [0, t0, t0 + .04, t0 + .16, t0 + .28, 1])}
-      <ellipse rx="${r}" ry="${ry}" fill="#86bf4f">${an('fill', ['#86bf4f', '#86bf4f', base, base], [0, t0 + .12, t0 + .3, 1])}</ellipse>
+  function flower(x, y, t0, t1) {
+    const pet = [0, 60, 120, 180, 240, 300].map(a => `<ellipse cx="0" cy="-3.7" rx="1.35" ry="3.7" transform="rotate(${a})" fill="#ffd23f" stroke="#d99a00" stroke-width=".25"/>`).join('');
+    return `<g transform="translate(${x} ${y})"><g>${at('scale', [0, 0, 1, 1, 0, 0], [0, t0, t0 + .035, t1, t1 + .03, 1], { ease: true })}${pet}<path d="M-1.4 0 L0 -3.2 L1.4 0Z" fill="#f2a900"/><circle r="1.1" fill="#b45f06"/></g></g>`;
+  }
+  function fruit(x, y, r, base, mid, t0) {
+    const ry = r * .93, top = -ry;
+    const star = `<path transform="translate(0 ${top + 1}) scale(${r / 8.5})" d="M0,-2.6 L1,-1 L3.8,-1.6 L2,.4 L3.4,2.8 L.8,1.7 L0,3.4 L-.8,1.7 L-3.4,2.8 L-2,.4 L-3.8,-1.6 L-1,-1Z" fill="#3f7d20"/>`;
+    const fillAnim = mid ? an('fill', ['#8cba4d', '#8cba4d', mid, base, base], [0, t0 + .1, t0 + .2, t0 + .3, 1], { ease: true })
+      : an('fill', ['#8cba4d', '#8cba4d', base, base], [0, t0 + .1, t0 + .3, 1], { ease: true });
+    return `<g transform="translate(${x} ${y})">${pop(`<ellipse rx="${r}" ry="${ry}" fill="#8cba4d">${fillAnim}</ellipse>
       <ellipse rx="${r}" ry="${ry}" fill="url(#fvcs)"/>
-      <ellipse cx="${-r * .35}" cy="${-r * .35}" rx="${r * .22}" ry="${r * .38}" transform="rotate(30 ${-r * .35} ${-r * .35})" fill="#fff" opacity=".35"/>${star}</g></g>`;
+      <ellipse cx="${-r * .38}" cy="${-r * .3}" rx="${r * .2}" ry="${r * .36}" transform="rotate(28 ${-r * .38} ${-r * .3})" fill="#fff" opacity=".38"/>${star}`, t0, t0 + .14, 2.5, 4.5, `0 ${top}`)}</g>`;
+  }
+  const mixHex = (a, b, k) => {
+    const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+    const A = p(a), B = p(b);
+    return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, '0')).join('');
+  };
+  function truss(sx, sy, dir, t0, base, mid) {
+    const P = [[12, 8, 15, 19, 6.6], [23, 11, 27, 25, 8.2], [33, 11, 38, 20, 6.2]];
+    const ped = `M0 0 C${dir * 8} -3 ${dir * 22} -2 ${dir * 36} 11`;
+    const sticks = P.map(p => `<path d="M${dir * p[0]} ${p[1] - 1} L${dir * p[2]} ${p[3] - p[4]}" stroke="#5b8c3a" stroke-width="1" fill="none" stroke-linecap="round" stroke-dasharray="1" pathLength="1" stroke-dashoffset="1" opacity="0">${an('stroke-dashoffset', [1, 1, 0, 0], [0, t0 + .04, t0 + .08, 1])}${an('opacity', [0, 0, 1, 1], [0, t0 + .04, t0 + .042, 1])}</path>`).join('');
+    const fl = P.map((p, i) => flower(dir * p[2], p[3] - 3, t0 + .06 + i * .008, t0 + .15)).join('');
+    const fr = P.map((p, i) => fruit(dir * p[2], p[3], p[4], base, mid, t0 + .15 + i * .015)).join('');
+    return `<g transform="translate(${sx} ${sy})">${grow(ped, t0, t0 + .08, '#5b8c3a', 1.6)}${sticks}${fl}${fr}</g>`;
   }
 
   function cycle(cycleTxt, semisTxt, color) {
     if (!cycleTxt) return '';
     const base = baseColor(color);
-    const stages = [
-      [L('fv_st_sow', 'Semis'), 0, .14], [L('fv_st_grow', 'Croissance'), .14, .5], [L('fv_st_flower', 'Floraison'), .5, .64],
-      [L('fv_st_green', 'Fruits verts'), .64, .8], [L('fv_st_ripe', 'Maturité !'), .8, 1]
-    ];
-    const label = stages.map(([txt, a, b]) => {
-      const f = .025;
-      const vals = a === 0 ? [1, 1, 0, 0] : b === 1 ? [0, 0, 1, 1] : [0, 0, 1, 1, 0, 0];
-      const times = a === 0 ? [0, b - f, b, 1] : b === 1 ? [0, a, a + f, 1] : [0, a, a + f, b - f, b, 1];
-      return `<text x="14" y="23" font-size="12" font-weight="700" fill="#166534" opacity="0">${txt}${an('opacity', vals, times)}</text>`;
+    const k = norm(color);
+    const warm = ['rouge', 'corail', 'saumon', 'orange', 'bordeaux', 'rose', 'prune', 'bicolore', 'noire', 'chocolat'].includes(k);
+    const mid = k === 'verte' ? null : (warm ? '#e8a23a' : mixHex('#8cba4d', base, .5));
+    const nums = (String(cycleTxt).match(/\d+/g) || []).map(Number);
+    const days = nums.length ? Math.max.apply(null, nums) : 0;
+
+    const stages = [['Semis', 'fv_st_sow', 0], ['Levée', 'fv_st_up', .12], ['Croissance', 'fv_st_grow', .3], ['Floraison', 'fv_st_flower', .55], ['Fruits', 'fv_st_green', .66], ['Maturité', 'fv_st_ripe', .8]];
+    const X = i => 32 + i * 51.2;
+    const labels = stages.map(([d, key, a], i) => {
+      const b = i < 5 ? stages[i + 1][2] : 1, f = .02;
+      const vals = i === 0 ? [1, 1, .4, .4] : i === 5 ? [.4, .4, 1, 1] : [.4, .4, 1, 1, .4, .4];
+      const times = i === 0 ? [0, b - f, b, 1] : i === 5 ? [0, a, a + f, 1] : [0, a, a + f, b - f, b, 1];
+      return `<text x="${X(i)}" y="209" text-anchor="middle" font-size="9" fill="#3b4a2a" opacity=".4">${L(key, d)}${an('opacity', vals, times)}</text>`;
     }).join('');
-    const dots = stages.map(([, a]) => `<circle cx="${20 + a * 220}" cy="164" r="3" fill="#fff" stroke="#16a34a" stroke-width="1.5"/>`).join('');
-    const rays = Array.from({ length: 8 }, (_, i) => `<line x1="0" y1="-17" x2="0" y2="-21" transform="rotate(${i * 45})" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>`).join('');
-    const sapling = (d, t0, t1) => `<path d="${d}" pathLength="1" fill="none" stroke="#4d8f2b" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1">${an('stroke-dashoffset', [1, 1, 0, 0], [0, t0, t1, 1])}</path>`;
+    const ticks = stages.map((s, i) => `<circle cx="${X(i)}" cy="198" r="2.2" fill="#fbf5e6" stroke="#8a9a6a" stroke-width="1"/>`).join('');
+    const mk = stages.map((s, i) => X(i));
+    const markerVals = [...mk, mk[5]];
+    const markerTimes = [...stages.map(s => s[2]), 1];
+
+    const grass = Array.from({ length: 34 }, (_, i) => {
+      const x = 6 + i * 9.4 + (i % 3) * 1.3, h = 3 + (i * 7 % 5);
+      return `<path d="M${x} 141 q${(i % 2 ? 1 : -1) * 1.5} ${-h * .6} ${(i % 2 ? 2.5 : -2.5)} ${-h}" stroke="#6a9a3b" stroke-width="1.1" fill="none" stroke-linecap="round"/>`;
+    }).join('');
+    const specks = Array.from({ length: 46 }, (_, i) => {
+      const x = (i * 53) % 312 + 4, y = 150 + (i * 31) % 34, r = .6 + (i % 4) * .35;
+      return `<circle cx="${x}" cy="${y}" r="${r}" fill="${i % 3 ? '#6e4a2c' : '#b08a5b'}" opacity=".55"/>`;
+    }).join('');
+    const roots = [
+      ['M150 158 C149 168 152 176 150 185', .1, .3, 1.8], ['M150 163 C140 166 132 168 124 176', .2, .34, 1.1], ['M150 166 C160 168 170 171 178 179', .22, .36, 1.1],
+      ['M150 173 C144 176 140 180 134 184', .26, .38, .9], ['M150 175 C157 178 161 181 166 185', .28, .4, .9]
+    ].map(r => grow(r[0], r[1], r[2], '#efe2bd', r[3])).join('');
+
     const info = `<div class="fv-cycle-info"><b>${L('fv_cycle', 'Cycle')} : ${cycleTxt}</b>${semisTxt ? `<span>${L('fv_sow', 'Semis')} : ${semisTxt}</span>` : ''}</div>`;
     return `<div class="fv-card">
   <div class="fv-card-title">${L('fv_cycle_title', 'Cycle de culture')}</div>
-  <svg class="fv-cycle-svg" viewBox="0 0 260 176" role="img" aria-label="${L('fv_cycle_title', 'Cycle de culture')}">
+  <svg class="fv-cycle-svg" data-days="${days}" viewBox="0 0 320 214" role="img" aria-label="${L('fv_cycle_title', 'Cycle de culture')}">
     <defs>
-      <linearGradient id="fvsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0f2fe"/><stop offset="1" stop-color="#fefce8"/></linearGradient>
-      <radialGradient id="fvcs" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".4"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+      <linearGradient id="fvlf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#86b24a"/><stop offset="1" stop-color="#4f7f2a"/></linearGradient>
+      <linearGradient id="fvsoil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5232"/><stop offset="1" stop-color="#4e3320"/></linearGradient>
+      <radialGradient id="fvcs" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".4"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".34"/></radialGradient>
     </defs>
-    <rect width="260" height="176" rx="14" fill="url(#fvsky)"/>
-    <g transform="translate(228 34)"><circle r="12" fill="#fbbf24"/><g>${at('rotate', ['0', '360'], [0, 1])}${rays}</g></g>
-    ${label}
-    <path d="M0 126 Q65 118 130 124 T260 124 L260 140 Q260 150 250 150 L10 150 Q0 150 0 140Z" fill="#8b5e3c"/>
-    <path d="M0 126 Q65 118 130 124 T260 124 L260 130 Q195 127 130 130 T0 132Z" fill="#a5774f"/>
-    <ellipse cx="130" cy="131" rx="5" ry="3" fill="#d7b27a">${an('opacity', [1, 1, 0, 0, 0, 1], [0, .1, .16, .97, .99, 1])}</ellipse>
-    <g>${an('opacity', [1, 1, 0, 0], [0, .94, .99, 1])}
-      ${sapling('M130 126 C127 104 134 84 130 52', .08, .46)}
-      ${sapling('M130 94 C112 90 102 84 92 72', .3, .5)}
-      ${sapling('M130 80 C148 76 160 70 170 62', .34, .52)}
-      ${leaf(129, 112, -150, .18, .3, .9)}${leaf(131, 106, -30, .2, .32, .9)}
-      ${leaf(127, 92, -160, .3, .42)}${leaf(133, 74, -20, .34, .46)}
-      ${leaf(129, 62, -135, .38, .5, .8)}${leaf(131, 56, -55, .4, .52, .8)}
-      ${flower(92, 70)}${flower(170, 60)}${flower(130, 50)}
-      ${fruit(90, 83, 9, base, .62)}${fruit(171, 73, 10, base, .64)}${fruit(130, 60, 8, base, .66)}
+    <rect width="320" height="214" rx="14" fill="#fbf5e6"/>
+    <rect x="3" y="3" width="314" height="208" rx="11" fill="none" stroke="#d8c9a3" stroke-width=".8"/>
+    <text x="16" y="21" font-size="10" letter-spacing=".08em" fill="#7a6a45">${L('fv_day', 'JOUR').toUpperCase()}</text>
+    <text class="fv-day" x="56" y="21" font-size="13" font-weight="700" fill="#3b4a2a">0${days ? ' / ' + days : ''}</text>
+    <path d="M10 141 L310 141 L310 174 Q310 188 296 188 L24 188 Q10 188 10 174Z" fill="url(#fvsoil)"/>
+    <g opacity=".9">${specks}</g>
+    <path d="M10 141 L310 141" stroke="#5f8b34" stroke-width="3.2" stroke-linecap="round"/>
+    ${grass}
+    <g>${an('opacity', [1, 1, 0, 0, 1], [0, .95, .985, .999, 1])}
+      ${roots}
+      <g transform="translate(150 152) rotate(-18)"><g>${at('scale', [1, 1, 1.35, 1.35], [0, .02, .1, 1], { ease: true })}<ellipse rx="4.4" ry="2.9" fill="#e8d7a0" stroke="#a88f4e" stroke-width=".7"/><path d="M-2.5 -.6 L2.6 -.4" stroke="#c4ad6f" stroke-width=".5"/></g></g>
+      ${grow('M150 152 C150 148 151 144 150 139', .13, .22, '#efe2bd', 2.2)}
+      <g>
+        <rect x="159" y="40" width="2.6" height="106" rx="1.2" fill="#b98c55" stroke="#8a6535" stroke-width=".5" transform="translate(0 0)">${an('height', [0, 0, 106, 106], [0, .34, .44, 1], { ease: true })}${an('y', [146, 146, 40, 40], [0, .34, .44, 1], { ease: true })}</rect>
+      </g>
+      ${grow('M150 140 C148 122 152 104 149 88 C147 72 152 58 150 44', .22, .5, '#4c7a2a', 3.4)}
+      ${pop('<ellipse cx="-9" cy="0" rx="9" ry="2.6" fill="#8ab653" stroke="#4f7f2a" stroke-width=".5" transform="rotate(8)"/>', .26, .33, 0).replace('<g>', '<g transform="translate(150 130)">')}
+      ${pop('<ellipse cx="9" cy="0" rx="9" ry="2.6" fill="#8ab653" stroke="#4f7f2a" stroke-width=".5" transform="rotate(-8)"/>', .27, .34, 0).replace('<g>', '<g transform="translate(150 128)">')}
+      ${leaf(150, 128, -16, 1, .31, .4, 5.5)}${leaf(150, 120, 196, 1, .33, .42, 6.5)}
+      ${leaf(150, 108, 202, .95, .36, .45, 6)}${leaf(150, 76, -32, .92, .4, .48, 5.2)}
+      ${leaf(150, 62, -38, .85, .42, .5, 7)}${leaf(150, 54, 216, .82, .43, .5, 6.2)}${leaf(150, 45, -78, .6, .45, .52, 5)}
+      <g>
+        ${[[128, .4], [96, .43], [66, .46]].map(([y, t]) => `<g transform="translate(150 ${y})">${pop('<path d="M-2.4 -1.2 C0 .3 2.4 .3 4.8 -1.2 M-2.4 1.2 C0 2.7 2.4 2.7 4.8 1.2" stroke="#e7d9a8" stroke-width="1.1" fill="none" stroke-linecap="round"/><path d="M4.2 -2 L4.6 2.4" stroke="#e7d9a8" stroke-width=".9"/>', t, t + .05, 0)}</g>`).join('')}
+      </g>
+      ${truss(150, 92, 1, .5, base, mid)}
+      ${truss(150, 70, -1, .52, base, mid)}
+      <g>${an('opacity', [0, 0, 1, 1, 0, 0], [0, .55, .57, .66, .69, 1])}
+        <g><animateMotion dur="${DUR}s" repeatCount="indefinite" keyTimes="0;.55;.68;1" keyPoints="0;0;1;1" calcMode="linear" path="M110 40 C128 58 118 76 132 86 S170 108 178 118 S196 90 214 58 S250 30 292 40"/>
+          <ellipse cx="0" cy="0" rx="3.3" ry="2.3" fill="#f2bf0d" stroke="#3a2a05" stroke-width=".4"/><path d="M-.7 -2 L-.7 2 M1 -2.1 L1 2.1" stroke="#3a2a05" stroke-width=".9"/>
+          <ellipse cx="-.6" cy="-3.4" rx="2.6" ry="1.5" fill="#fff" opacity=".75" stroke="#9bb" stroke-width=".25">${an('ry', [1.5, .4, 1.5], [0, .5, 1], { dur: .12 })}</ellipse>
+        </g>
+      </g>
     </g>
-    <rect x="20" y="162" width="220" height="4" rx="2" fill="#d1d5db"/>
-    <rect x="20" y="162" width="0" height="4" rx="2" fill="#22c55e">${an('width', [0, 0, 220, 220], [0, .02, .97, 1])}</rect>
-    ${dots}
+    <line x1="${X(0)}" y1="198" x2="${X(5)}" y2="198" stroke="#8a9a6a" stroke-width="1"/>
+    ${ticks}
+    <circle r="4" cy="198" fill="#2f7d32" stroke="#fbf5e6" stroke-width="1.4"><animate attributeName="cx" values="${markerVals.join(';')}" keyTimes="${markerTimes.join(';')}" dur="${DUR}s" repeatCount="indefinite"/></circle>
+    ${labels}
   </svg>
   ${info}
 </div>`;
@@ -210,7 +293,7 @@
 .fv-note{font-size:11px;color:var(--text-muted,#6b7280);margin-top:2px}
 .fv-country-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .fv-country svg{display:block;max-width:100%;height:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.12))}
-.fv-cycle-svg{display:block;width:100%;max-width:420px;height:auto;border-radius:14px}
+.fv-cycle-svg{display:block;width:100%;max-width:480px;height:auto;border-radius:14px}
 .fv-cycle-info{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
 .fv-cycle-info span{color:var(--text-muted,#6b7280)}
 @keyframes fvSlide{from{left:0}to{left:var(--p)}}
