@@ -597,6 +597,7 @@
         <button data-lang="en">English</button>
       </div>
     </div>
+    <button class="btn btn-outline" id="btn-lists" title="Mes listes"><i class="fa-solid fa-bookmark"></i> <span class="hide-mobile">Mes listes</span> <span class="pl-count" id="pl-count" style="display:none"></span></button>
     <button class="btn btn-outline" id="btn-auth"><i class="fa-solid fa-user"></i> <span class="hide-mobile" id="auth-label" data-i18n="login">Connexion</span></button>
     <button class="btn btn-outline" id="btn-import-data" style="display:none"><i class="fa-solid fa-cloud-arrow-up"></i> <span class="hide-mobile" data-i18n="import">Importer</span></button>
     <button class="btn btn-primary" id="btn-add-modal" style="display:none"><i class="fa-solid fa-plus"></i> <span class="hide-mobile" data-i18n="add">Ajouter</span></button>
@@ -798,6 +799,7 @@
       <div class="detail-section-title" data-i18n="t_desc">Description / Histoire</div>
       <p class="detail-desc" id="detail-desc">-</p>
       <div class="detail-actions">
+        <button class="btn btn-outline btn-sm" id="detail-list-btn"><i class="fa-regular fa-bookmark"></i> <span>Listes</span></button>
         <button class="btn btn-outline btn-sm" id="detail-share-btn"><i class="fa-solid fa-share-nodes"></i> <span data-i18n="share">Partager</span></button>
         <button class="btn btn-outline btn-sm" id="detail-print-btn"><i class="fa-solid fa-print"></i> <span data-i18n="print">Imprimer</span></button>
         <button class="btn btn-outline btn-sm" id="detail-edit-btn" style="display:none"><i class="fa-solid fa-pen"></i> <span data-i18n="edit">Modifier</span></button>
@@ -1024,6 +1026,7 @@
 </div>
 
 <script src="fiche-visuals.js"></script>
+<script src="lists.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
@@ -1402,6 +1405,7 @@ function subscribeTomatoes() {
         if(t) renderComments(t); // Mise à jour en temps réel des commentaires
       }
       maybeOpenSharedTomato();
+      if (window.PL) PL.maybeOpenShared();
     },
     (error) => {
       console.error('Erreur de chargement des tomates :', error);
@@ -1543,6 +1547,7 @@ function renderGrid() {
         <div style="position:relative">
           ${imagesHtml}
           ${imgCountBadge}
+          <button class="pl-btn" data-pl-id="${t.id}" title="Ajouter à une liste" aria-label="Ajouter à une liste"><i class="fa-regular fa-bookmark"></i></button>
         </div>
         <div class="card-body">
           <h3 class="card-title" style="display:flex; align-items:center; gap:6px;">
@@ -1575,6 +1580,7 @@ function renderGrid() {
 
   grid.innerHTML = htmlParts.join('');
   renderPagination(totalPages);
+  if (window.PL) PL.refresh();
 
   // Attacher les événements sur les boutons des bandeaux de partage
   grid.querySelectorAll('[data-share-copy]').forEach(btn => {
@@ -1820,6 +1826,7 @@ function openDetailModal(tomatoId, fromPop) {
   }
 
   refreshDetailLikeBtn();
+  if (window.PL) PL.refresh();
   renderComments(t);
   
   const dm = document.getElementById('detail-modal');
@@ -1987,6 +1994,9 @@ document.getElementById('detail-print-btn').onclick = () => {
 
   window.print();
 };
+
+// Pont vers lists.js (listes de variétés)
+window.TL = { getTomatoes: () => tomatoesData, openDetail: (id) => openDetailModal(id), toast: showToast, detailId: () => detailCurrentId };
 
 function maybeOpenSharedTomato() {
   if (detailCurrentId) return;
