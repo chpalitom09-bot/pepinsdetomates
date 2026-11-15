@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pepins-v6';
+const CACHE_NAME = 'pepins-v8';
 const APP_SHELL = [
   './',
   './index.html',
@@ -7,6 +7,8 @@ const APP_SHELL = [
   './algo.js',
   './fiche-visuals.js',
   './lists.js',
+  './wiki.js',
+  './ai-demo.js',
   './countries-shapes.json',
   './auth.html',
   './manifest.json',
