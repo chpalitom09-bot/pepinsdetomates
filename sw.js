@@ -1,12 +1,13 @@
-const CACHE_NAME = 'tomatolist-v1';
+const CACHE_NAME = 'pepins-v1';
 const APP_SHELL = [
   './',
   './index.html',
   './pays.json',
   './lang.json',
   './algo.js',
+  './auth.html',
   './manifest.json',
-  './icon.svg'
+  './pepins-icon.svg?v=2'
 ];
 
 self.addEventListener('install', (event) => {

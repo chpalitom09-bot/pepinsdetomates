@@ -13,15 +13,15 @@
     },
     "pepins": {
       ".read": "true",
-      "owner": { ".write": "false" },
-      "editors": {
+      "admins": {
         ".read": "auth != null",
-        ".write": "auth != null && root.child('pepins/owner').val() === auth.uid"
+        ".write": "auth != null && (auth.uid === 'C2FrKuBXBzRYcqCG7pW8eEzm5RI3' || auth.uid === '1uKGbtsFGOYKTwge7lT88yAfnx92' || auth.uid === 'ptNpn0JJF1Serl8Ej7yAJLtpPti2' || auth.uid === 'pJVYaoxxs2UReJ2bcp5VWSLvl6x2')"
       },
-      "varieties": {
-        ".write": "auth != null && (root.child('pepins/owner').val() === auth.uid || (auth.token.email_verified === true && root.child('pepins/editors').child(auth.token.email.toLowerCase().replace('.', ',')).val() === true))",
-        "$k": {
-          ".validate": "!newData.exists() || (newData.child('nom').isString() && newData.child('nom').val().length > 0 && newData.child('nom').val().length < 200)"
+      "tomatoes": {
+        "$id": {
+          ".write": "auth != null && (auth.uid === 'C2FrKuBXBzRYcqCG7pW8eEzm5RI3' || auth.uid === '1uKGbtsFGOYKTwge7lT88yAfnx92' || auth.uid === 'ptNpn0JJF1Serl8Ej7yAJLtpPti2' || auth.uid === 'pJVYaoxxs2UReJ2bcp5VWSLvl6x2' || root.child('pepins/admins').child(auth.uid).val() === true)",
+          "likes": { "$uid": { ".write": "auth != null && auth.uid === $uid" } },
+          "comments": { "$cid": { ".write": "auth != null && !data.exists()" } }
         }
       }
     },

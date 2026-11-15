@@ -30,7 +30,7 @@
     "size_xl": "Très grosse",
     "t_desc": "Description / Histoire",
     "submit": "Publier la variété",
-    "footer_desc": "La plateforme collaborative de recensement des variétés de tomates.",
+    "footer_desc": "Bibliothèque de variétés de tomates.",
     "dev_label": "Développement :",
     "mod_label": "Modération Facebook :",
     "anonymous": "Anonyme",
@@ -93,13 +93,13 @@
     "open_in_browser": "Ouvrir dans le navigateur",
     "copy_link": "Copier le lien",
     "link_copied": "Lien copié !",
-    "install_title": "Installer TomatoList",
+    "install_title": "Installer Pépins de tomates",
     "install_sub": "Accédez-y en un tap, même hors connexion.",
     "install_sub_ios": "Appuyez sur <i class=\"fa-solid fa-arrow-up-from-bracket\"></i> puis « Sur l'écran d'accueil ».",
     "install_btn": "Installer",
     "install_ios_hint": "Comment faire",
     "install_later": "Plus tard",
-    "install_success": "TomatoList est installé !"
+    "install_success": "Pépins de tomates est installé !"
   },
   "en": {
     "login": "Login",
@@ -132,7 +132,7 @@
     "size_xl": "Extra large",
     "t_desc": "Description / History",
     "submit": "Publish variety",
-    "footer_desc": "The collaborative platform for cataloging tomato varieties.",
+    "footer_desc": "Tomato varieties library.",
     "dev_label": "Development:",
     "mod_label": "Facebook Moderation:",
     "anonymous": "Anonymous",
@@ -195,12 +195,12 @@
     "open_in_browser": "Open in browser",
     "copy_link": "Copy link",
     "link_copied": "Link copied!",
-    "install_title": "Install TomatoList",
+    "install_title": "Install Pépins de tomates",
     "install_sub": "Get one-tap access, even offline.",
     "install_sub_ios": "Tap <i class=\"fa-solid fa-arrow-up-from-bracket\"></i> then \"Add to Home Screen\".",
     "install_btn": "Install",
     "install_ios_hint": "How to",
     "install_later": "Later",
-    "install_success": "TomatoList is installed!"
+    "install_success": "Pépins de tomates is installed!"
   }
 }

@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TomatoList — Compte</title>
+<title>Pépins de tomates | Compte</title>
+<link rel="icon" type="image/svg+xml" href="pepins-icon.svg?v=2">
 <link rel="icon" type="image/png" href="tomatolist.png">
 <meta name="theme-color" content="#b91c1c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -168,14 +169,14 @@
     </video>
     <div></div>
     <a class="side-logo" href="index.html">
-      <span class="side-logo-text">TomatoList</span>
+      <span class="side-logo-text">Pépins de tomates</span>
     </a>
     <div class="side-quote">
       <div class="side-quote-mark">"</div>
       <div class="side-quote-text" data-i18n="side_quote">La diversité au cœur du potager.</div>
       <div class="side-quote-sub" data-i18n="side_quote_sub">Rejoignez la plus grande communauté de passionnés de tomates.</div>
     </div>
-    <div class="side-foot">© TomatoList — <span id="year"></span></div>
+    <div class="side-foot">© Pépins de tomates | <span id="year"></span></div>
   </div>
 
   <div class="main">
@@ -189,7 +190,7 @@
     <div class="center">
       <div class="card">
 
-        <a href="index.html" class="brand-mini"><span>TomatoList</span></a>
+        <a href="index.html" class="brand-mini"><span>Pépins de tomates</span></a>
 
         <!-- ================= STEP 0: CONNEXION / INSCRIPTION ================= -->
         <div class="step active" id="step-auth">
@@ -558,7 +559,7 @@ let authMode = 'login';
 function updateAuthTexts() {
   const isLogin = authMode === 'login';
   document.getElementById('auth-title').textContent = tr(isLogin ? 'auth_title' : 'signup_title') || (isLogin ? 'Bienvenue' : 'Créer un compte');
-  document.getElementById('auth-subtitle').textContent = tr(isLogin ? 'auth_sub' : 'signup_sub') || (isLogin ? 'Connectez-vous ou créez votre compte' : 'Rejoignez la communauté TomatoList');
+  document.getElementById('auth-subtitle').textContent = tr(isLogin ? 'auth_sub' : 'signup_sub') || (isLogin ? 'Connectez-vous ou créez votre compte' : 'Rejoignez la communauté Pépins de tomates');
 }
 function switchMode(mode) {
   authMode = mode;
