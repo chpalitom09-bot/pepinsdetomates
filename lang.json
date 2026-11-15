@@ -99,7 +99,9 @@
     "install_btn": "Installer",
     "install_ios_hint": "Comment faire",
     "install_later": "Plus tard",
-    "install_success": "Pépins de tomates est installé !"
+    "install_success": "Pépins de tomates est installé !",
+    "back_catalog": "Retour au catalogue",
+    "specs_title": "Caractéristiques"
   },
   "en": {
     "login": "Login",
@@ -201,6 +203,8 @@
     "install_btn": "Install",
     "install_ios_hint": "How to",
     "install_later": "Later",
-    "install_success": "Pépins de tomates is installed!"
+    "install_success": "Pépins de tomates is installed!",
+    "back_catalog": "Back to catalogue",
+    "specs_title": "Specifications"
   }
 }
