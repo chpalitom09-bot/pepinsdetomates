@@ -171,7 +171,7 @@ a{color:inherit;text-decoration:none}
 <div class="field"><label>Adresse e-mail</label><input class="form-control" id="login-email" type="email" autocomplete="email"></div>
 <div class="field"><label>Mot de passe</label><input class="form-control" id="login-pass" type="password" autocomplete="current-password"></div>
 <div class="row"><button class="btn btn-primary" id="btn-signin">Se connecter</button><button class="btn" id="btn-signup">Créer un compte</button></div>
-<p style="font-size:12px;color:var(--muted);margin-top:12px">Un compte sert uniquement à administrer le site. Les visiteurs n'ont pas besoin de se connecter.</p>
+<p style="font-size:12px;color:var(--muted);margin-top:12px">Se connecter n'est utile que pour administrer le site. Consulter le catalogue ne demande aucun compte.</p>
 </div></div></div>
 
 <div class="overlay" id="m-admin"><div class="modal wide">
@@ -213,7 +213,7 @@ a{color:inherit;text-decoration:none}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
 import { getDatabase, ref, onValue, get, set, update, remove, push } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-database.js";
 import { DATA } from "./data.js";
 
@@ -221,6 +221,7 @@ const ROOT = "pepins";
 const ORDER_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSci4D60ZDRPsN8EVhFiZeTmWyJHq5gXCUz6Ahm1d6ZFxfgVzQ/viewform?usp=pp_url&entry.1384065666=";
 const REPORT_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSezgx91JDNljtb1TvW5YDKV_gbehMeDAqxNZaFcXrFg5d_dhw/viewform?usp=header";
 const PAGE = 24;
+const OWNERS = ["C2FrKuBXBzRYcqCG7pW8eEzm5RI3", "1uKGbtsFGOYKTwge7lT88yAfnx92", "ptNpn0JJF1Serl8Ej7yAJLtpPti2", "pJVYaoxxs2UReJ2bcp5VWSLvl6x2"];
 
 const app = initializeApp({
   apiKey: "AIzaSyAaz9s2jxsNqYd9FBsVG4u48-BwE8LAXCE",
@@ -242,14 +243,13 @@ const store = {
   get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
-const emailKey = e => String(e || "").toLowerCase().replace(/\./g, ",");
 const noEmoji = s => String(s).replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").trim();
 
 let varieties = [];
 let source = "local";
 let user = null;
 let role = null;
-let ownerUid = null;
+let adminsWatch = false;
 let editors = {};
 let likes = new Set(store.get("likes", []));
 let cart = store.get("cart", []);
@@ -321,26 +321,22 @@ onValue(ref(db, ROOT + "/varieties"), snap => {
   if ($("#m-admin").classList.contains("open")) renderAdmin();
 }, useLocal);
 
-onValue(ref(db, ROOT + "/owner"), snap => {
-  ownerUid = snap.val();
-  resolveRole();
-});
-
 async function resolveRole() {
   role = null;
   if (user) {
-    if (ownerUid && user.uid === ownerUid) role = "owner";
-    else if (user.emailVerified && user.email) {
+    if (OWNERS.includes(user.uid)) role = "owner";
+    else {
       try {
-        const s = await get(ref(db, ROOT + "/editors/" + emailKey(user.email)));
+        const s = await get(ref(db, ROOT + "/admins/" + user.uid));
         if (s.val() === true) role = "editor";
       } catch {}
     }
   }
   $("#btn-admin").style.display = user ? "" : "none";
   $("#auth-label").textContent = user ? "Déconnexion" : "Connexion";
-  if (role === "owner") {
-    onValue(ref(db, ROOT + "/editors"), s => { editors = s.val() || {}; if ($("#m-admin").classList.contains("open")) renderAdmin(); });
+  if (role === "owner" && !adminsWatch) {
+    adminsWatch = true;
+    onValue(ref(db, ROOT + "/admins"), s => { editors = s.val() || {}; if ($("#m-admin").classList.contains("open")) renderAdmin(); });
   }
   if (detailKey) renderDetail();
   if ($("#m-admin").classList.contains("open")) renderAdmin();
@@ -612,14 +608,14 @@ let adminTab = "varieties";
 function renderAdmin() {
   if (!user) { $("#admin-body").innerHTML = ""; return; }
   if (!canEdit()) {
-    $("#admin-body").innerHTML = `<div class="note">Votre compte n'a pas (encore) les droits de modification.<br>${user.emailVerified ? "" : "Votre adresse e-mail n'est pas vérifiée : ouvrez le lien reçu par e-mail puis reconnectez-vous.<br>"}Communiquez votre adresse <b>${esc(user.email || "")}</b> au propriétaire du site pour obtenir l'accès.<br><br>Propriétaire : si c'est votre compte, créez dans la console Firebase la valeur <code>${ROOT}/owner</code> avec l'identifiant <code>${esc(user.uid)}</code>.</div>`;
+    $("#admin-body").innerHTML = `<div class="note">Votre compte n'a pas les droits de modification.<br>Communiquez votre identifiant utilisateur à un propriétaire du site pour obtenir l'accès :<br><br><code>${esc(user.uid)}</code></div>`;
     return;
   }
   const tabs = `<div class="tabs"><button class="tab ${adminTab === "varieties" ? "on" : ""}" data-tab="varieties">Variétés</button>${role === "owner" ? `<button class="tab ${adminTab === "access" ? "on" : ""}" data-tab="access">Accès</button>` : ""}</div>`;
   if (adminTab === "access" && role === "owner") {
-    const rows = Object.keys(editors).map(k => `<div class="list-row"><span>${esc(k.replace(/,/g, "."))}</span><button class="btn btn-sm btn-danger" data-rm-editor="${esc(k)}">Retirer</button></div>`).join("") || '<div class="empty" style="padding:20px">Aucun éditeur pour le moment.</div>';
-    $("#admin-body").innerHTML = tabs + `<div class="note">Ajoutez l'adresse e-mail Google d'une personne. Elle pourra ajouter, modifier et supprimer des variétés après s'être connectée avec cette adresse.</div>
-<div class="row" style="grid-template-columns:1fr auto"><input class="form-control" id="new-editor" type="email" placeholder="adresse@exemple.com"><button class="btn btn-primary" id="btn-add-editor">Donner l'accès</button></div>
+    const rows = Object.keys(editors).map(k => `<div class="list-row"><code style="font-size:12px">${esc(k)}</code><button class="btn btn-sm btn-danger" data-rm-editor="${esc(k)}">Retirer</button></div>`).join("") || '<div class="empty" style="padding:20px">Aucun éditeur pour le moment.</div>';
+    $("#admin-body").innerHTML = tabs + `<div class="note">Ajoutez l'identifiant utilisateur d'une personne (elle le voit dans Gérer après s'être connectée). Elle pourra ajouter, modifier et supprimer des variétés.</div>
+<div class="row" style="grid-template-columns:1fr auto"><input class="form-control" id="new-editor" type="text" placeholder="Identifiant utilisateur"><button class="btn btn-primary" id="btn-add-editor">Donner l'accès</button></div>
 <div style="margin-top:14px">${rows}</div>`;
     return;
   }
@@ -633,10 +629,11 @@ function renderAdmin() {
 }
 
 async function addEditor() {
-  const e = $("#new-editor").value.trim().toLowerCase();
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) { toast("Adresse e-mail invalide"); return; }
+  const u = $("#new-editor").value.trim();
+  if (!/^[A-Za-z0-9]{20,40}$/.test(u)) { toast("Identifiant invalide"); return; }
   try {
-    await set(ref(db, ROOT + "/editors/" + emailKey(e)), true);
+    await set(ref(db, ROOT + "/admins/" + u), true);
+    $("#new-editor").value = "";
     toast("Accès accordé");
   } catch {
     toast("Action refusée");
@@ -674,7 +671,7 @@ document.addEventListener("click", e => {
   if ((el = closest("[data-edit]"))) { openEdit(el.dataset.edit); return; }
   if ((el = closest("[data-del]"))) { deleteVariety(el.dataset.del); return; }
   if ((el = closest("[data-tab]"))) { adminTab = el.dataset.tab; renderAdmin(); return; }
-  if ((el = closest("[data-rm-editor]"))) { remove(ref(db, ROOT + "/editors/" + el.dataset.rmEditor)).then(() => toast("Accès retiré")).catch(() => toast("Action refusée")); return; }
+  if ((el = closest("[data-rm-editor]"))) { remove(ref(db, ROOT + "/admins/" + el.dataset.rmEditor)).then(() => toast("Accès retiré")).catch(() => toast("Action refusée")); return; }
   if ((el = closest("[data-o]"))) { filt.origin = el.dataset.o; shown = PAGE; renderFilters(); renderGrid(); return; }
   if ((el = closest("#sort-pills .pill"))) { filt.sort = el.dataset.v; shown = PAGE; $$("#sort-pills .pill").forEach(p => p.classList.toggle("active", p === el)); renderGrid(); return; }
   if ((el = closest(".card"))) { openDetail(el.dataset.k); return; }
@@ -716,11 +713,7 @@ $("#btn-admin").onclick = () => { adminTab = "varieties"; renderAdmin(); openMod
 $("#btn-auth").onclick = () => { if (user) signOut(auth).then(() => toast("Déconnecté")); else openModal("m-login"); };
 $("#btn-google").onclick = () => authAction(() => signInWithPopup(auth, new GoogleAuthProvider()));
 $("#btn-signin").onclick = () => authAction(() => signInWithEmailAndPassword(auth, $("#login-email").value.trim(), $("#login-pass").value));
-$("#btn-signup").onclick = () => authAction(async () => {
-  const c = await createUserWithEmailAndPassword(auth, $("#login-email").value.trim(), $("#login-pass").value);
-  await sendEmailVerification(c.user);
-  toast("Compte créé, vérifiez votre boîte mail");
-});
+$("#btn-signup").onclick = () => authAction(() => createUserWithEmailAndPassword(auth, $("#login-email").value.trim(), $("#login-pass").value));
 $("#link-legal").onclick = e => { e.preventDefault(); openModal("m-legal"); };
 $("#link-cookies").onclick = e => { e.preventDefault(); $("#cookie").style.display = "block"; };
 $("#cookie-ok").onclick = () => { store.set("cookie_ok", true); $("#cookie").style.display = "none"; };
