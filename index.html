@@ -174,6 +174,77 @@
     .fp-sort { grid-template-columns: 1fr 1fr; }
     .fbadge { top: -5px; right: -5px; }
   }
+
+  /* ═══ ÉDITEUR PLEINE PAGE ═══ */
+  body.editor-open { overflow: hidden; }
+  body.editor-open #ai-fab { display: none; }
+  .editor-page { padding: 0; align-items: stretch; justify-content: stretch; background: var(--bg); z-index: 950; backdrop-filter: none !important; }
+  .editor-page .ed-shell { max-width: none; width: 100%; max-height: none; height: 100%; border-radius: 0; box-shadow: none; background: var(--bg); overflow-y: auto; overscroll-behavior: contain; transform: translateY(18px); }
+  .editor-page.active .ed-shell { transform: none; }
+  .ed-bar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 14px; padding: 12px 24px; background: rgba(255,255,255,.93); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .ed-back { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; font-weight: 600; font-size: 14px; cursor: pointer; color: var(--text-main); }
+  .ed-back:hover { background: var(--bg); }
+  .ed-bar-title { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.2; }
+  .ed-kicker { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); }
+  .ed-bar #btn-submit { position: relative; overflow: hidden; padding: 11px 20px; border-radius: 10px; white-space: nowrap; }
+  .ed-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; max-width: 1160px; margin: 0 auto; padding: 26px 24px 90px; align-items: start; }
+  .ed-side { position: sticky; top: 90px; }
+  .ed-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 22px; margin-bottom: 18px; box-shadow: 0 1px 2px rgba(0,0,0,.03); }
+  .ed-card > h3 { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 16px; font-weight: 700; margin-bottom: 18px; }
+  .ed-ico { width: 30px; height: 30px; border-radius: 9px; background: #fef2f2; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .ed-hint { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; margin-top: 8px; }
+  .cp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; }
+  .cp-item { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px 9px; border: 1.5px solid var(--line); border-radius: 14px; background: #fff; cursor: pointer; transition: border-color .15s, transform .15s, box-shadow .15s, background .15s; }
+  .cp-item:hover { border-color: #fca5a5; transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,.07); }
+  .cp-item.sel { border-color: var(--primary); background: #fef2f2; box-shadow: 0 0 0 3px rgba(185,28,28,.12); }
+  .cp-item.sel::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 9px; display: flex; align-items: center; justify-content: center; }
+  .cp-t { display: flex; height: 48px; align-items: center; justify-content: center; }
+  .cp-n { font-size: 12px; font-weight: 600; text-align: center; line-height: 1.2; }
+  .ar-import { display: flex; gap: 10px; margin-bottom: 12px; }
+  .ar-import .form-control { flex: 1; min-width: 0; }
+  .ar-import .btn { white-space: nowrap; flex-shrink: 0; }
+  .ar-src { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin-bottom: 12px; border-radius: 10px; background: #f0f9ff; border: 1px solid #bae6fd; font-size: 12.5px; color: #075985; }
+  .ar-src[hidden] { display: none; }
+  .ar-src span { flex: 1; }
+  .ar-src button { border: none; background: transparent; color: #075985; text-decoration: underline; cursor: pointer; font-size: 12.5px; }
+  .ar-tabs { display: flex; align-items: center; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+  .ar-tabs button { border: none; background: transparent; padding: 9px 14px; font-size: 13.5px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .ar-tabs button.on { color: var(--primary); border-bottom-color: var(--primary); }
+  .ar-count { margin-left: auto; font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .ar-tools { display: flex; align-items: center; gap: 2px; padding: 5px; border: 1px solid var(--line); border-bottom: none; border-radius: 10px 10px 0 0; background: #f9fafb; flex-wrap: wrap; }
+  .ar-tools button { width: 34px; height: 32px; border: none; border-radius: 7px; background: transparent; color: var(--text-main); cursor: pointer; font-size: 13px; }
+  .ar-tools button:hover { background: #e5e7eb; }
+  .ar-sep { width: 1px; height: 18px; background: var(--line-h); margin: 0 5px; }
+  .ar-ta { border-radius: 0 0 10px 10px !important; min-height: 340px; resize: vertical; line-height: 1.65; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px !important; background: #fff !important; }
+  .ar-prev { min-height: 340px; padding: 18px 22px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+  .ar-prev[hidden], .ar-ta[hidden] { display: none; }
+  .ar-empty { color: var(--text-muted); font-style: italic; }
+  .ed-pcard { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+  .ed-pimg { aspect-ratio: 4/3; background: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 34px; overflow: hidden; }
+  .ed-pimg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ed-pbody { padding: 14px 16px 16px; }
+  .ed-pbody b { font-family: var(--display); font-size: 17px; display: block; margin-bottom: 6px; word-break: break-word; }
+  .ed-pmeta { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); }
+  .ed-pmeta2 { font-size: 12.5px; color: var(--text-muted); margin-top: 4px; min-height: 16px; }
+  .ed-cap { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin: 0 4px 8px; }
+  .ed-prog { margin-top: 16px; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 16px; }
+  .ed-prog-h { font-size: 13.5px; margin-bottom: 8px; }
+  .ed-meter { height: 8px; border-radius: 99px; background: #f3f4f6; overflow: hidden; margin-bottom: 12px; }
+  .ed-meter i { display: block; height: 100%; background: linear-gradient(90deg, #f87171, #b91c1c); border-radius: 99px; transition: width .35s cubic-bezier(.22,.8,.2,1); }
+  .ed-prog ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+  .ed-prog li { font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 7px; }
+  .ed-prog li i { font-size: 12px; color: #d1d5db; }
+  .ed-prog li.ok { color: var(--text-main); }.ed-prog li.ok i { color: #16a34a; }
+  @media (max-width: 1000px) { .ed-layout { grid-template-columns: 1fr; } .ed-side { display: none; } }
+  @media (max-width: 768px) {
+    .ed-bar { padding: 10px 12px; gap: 10px; }
+    .ed-back { width: 40px; padding: 0; justify-content: center; }
+    .ed-bar #btn-submit { padding: 11px 14px; }
+    .ed-layout { padding: 16px 12px 90px; }
+    .ed-card { padding: 16px; border-radius: 16px; }
+    .ar-import { flex-direction: column; }
+    .cp-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+  }
   /* Modale « Ajouter une couleur » */
   .cm-pal { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 8px; }
   .cm-sw { aspect-ratio: 1; border-radius: 50%; border: none; cursor: pointer; position: relative; box-shadow: inset 0 -3px 5px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.3), 0 0 0 1px rgba(0,0,0,.1); transition: transform .15s; }
@@ -822,6 +893,7 @@
       <div id="detail-specs"></div>
       <div class="detail-section-title" data-i18n="t_desc">Description / Histoire</div>
       <p class="detail-desc" id="detail-desc">-</p>
+      <div id="detail-article"></div>
       <div class="detail-actions">
         <button class="btn btn-outline btn-sm" id="detail-list-btn"><i class="fa-solid fa-cart-plus"></i> <span>Ma liste</span></button>
         <button class="btn btn-outline btn-sm" id="detail-share-btn"><i class="fa-solid fa-share-nodes"></i> <span data-i18n="share">Partager</span></button>
@@ -960,54 +1032,71 @@
   </div>
 </div>
 
-<!-- Add Modal -->
-<div class="modal-overlay" id="add-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="add-modal-title" data-i18n="add_title">Nouvelle variété</div>
-      <button class="modal-close" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="error-msg" id="form-error"></div>
-      <div id="edit-contributor-note" style="display:none; background:#fef2f2; border:1px solid #fca5a5; border-radius:10px; padding:14px; margin-bottom:16px;">
-        <div style="color:var(--primary); font-size:13px; font-weight:600;">
-          <i class="fa-solid fa-circle-info"></i> Vous modifiez la variété d'un autre contributeur. Votre nom s'ajoutera à la liste des contributeurs.
+<!-- Éditeur de variété (page complète) -->
+<div class="modal-overlay editor-page" id="add-modal">
+  <div class="modal ed-shell">
+    <header class="ed-bar">
+      <button class="ed-back" id="close-modal" type="button" aria-label="Retour"><i class="fa-solid fa-arrow-left"></i><span class="hide-mobile">Retour</span></button>
+      <div class="ed-bar-title"><span class="ed-kicker">Éditeur de variété</span><div class="modal-title" id="add-modal-title" data-i18n="add_title">Nouvelle variété</div></div>
+      <button class="btn btn-primary" id="btn-submit" type="button"><div class="btn-progress-fill" id="progress-fill"></div><i class="fa-solid fa-check" style="position:relative"></i><span id="btn-submit-label" data-i18n="submit" style="position:relative">Publier la variété</span></button>
+    </header>
+    <div class="ed-layout">
+      <div class="ed-main">
+        <div class="error-msg" id="form-error"></div>
+        <div id="edit-contributor-note" style="display:none; background:#fef2f2; border:1px solid #fca5a5; border-radius:10px; padding:14px; margin-bottom:16px;">
+          <div style="color:var(--primary); font-size:13px; font-weight:600;"><i class="fa-solid fa-circle-info"></i> Vous modifiez la variété d'un autre contributeur. Votre nom s'ajoutera à la liste des contributeurs.</div>
         </div>
-      </div>
-      <input type="file" id="file-input" accept="image/*" multiple style="display:none">
-      <label class="field-label" style="margin-bottom:8px">Photos de la variété *</label>
-      <div class="upload-gallery" id="upload-gallery">
-        <div class="add-img-btn" id="btn-add-img">
-          <i class="fa-solid fa-camera"></i>
-          <span>Ajouter</span>
+
+        <section class="ed-card">
+          <h3><span class="ed-ico"><i class="fa-solid fa-camera"></i></span>Photos de la variété *</h3>
+          <input type="file" id="file-input" accept="image/*" multiple style="display:none">
+          <div class="upload-gallery" id="upload-gallery" style="margin-bottom:0">
+            <div class="add-img-btn" id="btn-add-img"><i class="fa-solid fa-camera"></i><span>Ajouter</span></div>
+          </div>
+        </section>
+
+        <section class="ed-card">
+          <h3><span class="ed-ico"><i class="fa-solid fa-id-card"></i></span>Identité</h3>
+          <div class="form-group">
+            <label data-i18n="t_name">Nom de la variété *</label>
+            <input type="text" class="form-control" id="f-name" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+          <label data-i18n="t_country">Pays d'origine</label>
+          <div class="custom-select-wrapper">
+            <button class="custom-select-btn" id="f-country-btn" type="button">
+              <span>Sélectionner un pays...</span>
+              <i class="fa-solid fa-chevron-down" style="color:var(--text-muted)"></i>
+            </button>
+            <div class="custom-select-menu" id="f-country-menu">
+              <input type="text" class="custom-search-input" id="f-country-search" placeholder="Rechercher..." autocomplete="off">
+              <div id="f-country-list"></div>
+            </div>
+            <input type="hidden" id="f-country-value" value="">
+          </div>
         </div>
-      </div>
-      <div class="pref-block">
-        <div class="pref-block-text">
-          <div class="pref-block-title" data-i18n="anon_title">Publier en anonyme</div>
-          <div class="pref-block-sub" data-i18n="anon_sub">Votre nom public ne sera pas affiché.</div>
-        </div>
-        <button class="toggle" id="toggle-anon" type="button"></button>
-      </div>
-      <div class="form-group" id="name-input-group">
-        <label>Votre prénom et nom *</label>
-        <input type="text" class="form-control" id="f-author-name" placeholder="Ex: Jean Dupont">
-      </div>
-      <div class="pref-block">
-        <div class="pref-block-text">
-          <div class="pref-block-title">Firebase Verified</div>
-          <div class="pref-block-sub">Badge officiel pour cette variété.</div>
-        </div>
-        <button class="toggle" id="toggle-verified" type="button"></button>
-      </div>
-      <div class="form-group">
-        <label data-i18n="t_name">Nom de la variété *</label>
-        <input type="text" class="form-control" id="f-name" required>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label data-i18n="t_color">Couleur dominante *</label>
-          <select class="form-control" id="f-color">
+            <div class="form-group">
+              <label data-i18n="t_weight">Poids moyen (g)</label>
+              <input type="number" class="form-control" id="f-weight" min="0">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label data-i18n="t_size">Taille</label>
+            <select class="form-control" id="f-size">
+              <option value="" data-i18n="size_any">-</option>
+              <option value="Cerise" data-i18n="size_cherry">Cerise</option>
+              <option value="Petite" data-i18n="size_small">Petite</option>
+              <option value="Moyenne" data-i18n="size_medium">Moyenne</option>
+              <option value="Grosse" data-i18n="size_large">Grosse</option>
+              <option value="Très grosse" data-i18n="size_xl">Très grosse</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="ed-card">
+          <h3><span class="ed-ico"><i class="fa-solid fa-palette"></i></span><span data-i18n="t_color">Couleur dominante *</span><button class="fp-add" id="cp-add" type="button"><i class="fa-solid fa-plus"></i> Nouvelle couleur</button></h3>
+          <select class="form-control" id="f-color" style="display:none" tabindex="-1" aria-hidden="true">
             <option value="Rouge" data-i18n="color_red">Rouge</option>
             <option value="Jaune" data-i18n="color_yellow">Jaune</option>
             <option value="Noire" data-i18n="color_black">Noire / Pourpre</option>
@@ -1031,53 +1120,92 @@
             <option value="Dorée">Dorée</option>
             <option value="Arc-en-ciel">Arc-en-ciel</option>
           </select>
-        </div>
-        <div class="form-group">
-          <label data-i18n="t_country">Pays d'origine</label>
-          <div class="custom-select-wrapper">
-            <button class="custom-select-btn" id="f-country-btn" type="button">
-              <span>Sélectionner un pays...</span>
-              <i class="fa-solid fa-chevron-down" style="color:var(--text-muted)"></i>
-            </button>
-            <div class="custom-select-menu" id="f-country-menu">
-              <input type="text" class="custom-search-input" id="f-country-search" placeholder="Rechercher..." autocomplete="off">
-              <div id="f-country-list"></div>
+          <div class="cp-grid" id="cp-grid" role="radiogroup" aria-label="Couleur dominante"></div>
+        </section>
+
+        <section class="ed-card">
+          <h3><span class="ed-ico"><i class="fa-solid fa-seedling"></i></span>Culture</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="f-cycle-min">Cycle : de (jours)</label>
+              <input type="number" class="form-control" id="f-cycle-min" min="1" max="400" placeholder="Ex : 70">
             </div>
-            <input type="hidden" id="f-country-value" value="">
+            <div class="form-group">
+              <label for="f-cycle-max">à (jours, facultatif)</label>
+              <input type="number" class="form-control" id="f-cycle-max" min="1" max="400" placeholder="Ex : 85">
+            </div>
           </div>
-        </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label for="f-semis">Période de semis</label>
+            <input type="text" class="form-control" id="f-semis" maxlength="120" placeholder="Ex : mars-avril sous abri">
+            <div class="ed-hint">Le cycle va du semis à la première récolte. Il alimente le schéma « cycle de culture » de la fiche.</div>
+          </div>
+        </section>
+
+        <section class="ed-card">
+          <h3><span class="ed-ico"><i class="fa-solid fa-align-left"></i></span><span data-i18n="t_desc">Description / Histoire</span></h3>
+          <textarea class="form-control" id="f-desc" rows="4" placeholder="Quelques lignes pour présenter la variété."></textarea>
+        </section>
+
+        <section class="ed-card">
+          <h3><span class="ed-ico"><i class="fa-solid fa-book-open"></i></span>Article complet</h3>
+          <div class="ar-import">
+            <input type="text" class="form-control" id="f-wiki-title" placeholder="Titre de la page Wikipédia (vide = recherche d’après le nom)" autocomplete="off">
+            <button class="btn btn-outline btn-sm" id="btn-wiki-import" type="button"><i class="fa-brands fa-wikipedia-w"></i> <span>Importer depuis Wikipédia</span></button>
+          </div>
+          <div class="ar-src" id="ar-src" hidden></div>
+          <div class="ar-tabs">
+            <button type="button" class="on" data-tab="write">Écrire</button>
+            <button type="button" data-tab="preview">Aperçu</button>
+            <span class="ar-count" id="ar-count">0 / 30000</span>
+          </div>
+          <div class="ar-tools" id="ar-tools">
+            <button type="button" data-act="h2" title="Titre de section"><i class="fa-solid fa-heading"></i></button>
+            <button type="button" data-act="h3" title="Sous-titre"><i class="fa-solid fa-heading" style="font-size:11px"></i></button>
+            <i class="ar-sep"></i>
+            <button type="button" data-act="b" title="Gras"><i class="fa-solid fa-bold"></i></button>
+            <button type="button" data-act="i" title="Italique"><i class="fa-solid fa-italic"></i></button>
+            <button type="button" data-act="a" title="Lien"><i class="fa-solid fa-link"></i></button>
+            <i class="ar-sep"></i>
+            <button type="button" data-act="ul" title="Liste à puces"><i class="fa-solid fa-list-ul"></i></button>
+            <button type="button" data-act="ol" title="Liste numérotée"><i class="fa-solid fa-list-ol"></i></button>
+            <button type="button" data-act="q" title="Citation"><i class="fa-solid fa-quote-left"></i></button>
+          </div>
+          <textarea class="form-control ar-ta" id="f-article" rows="16" maxlength="30000" placeholder="## Histoire&#10;Raconte l’origine de la variété…&#10;&#10;## Culture&#10;Conseils de semis, d’arrosage, de tuteurage…&#10;&#10;## Dans l’assiette&#10;Saveur, usages en cuisine…"></textarea>
+          <div class="art ar-prev" id="ar-prev" hidden></div>
+          <div class="ed-hint">## Titre · ### Sous-titre · **gras** · *italique* · - liste · [texte](https://lien). Un sommaire est créé automatiquement à partir de 3 titres.</div>
+        </section>
+
+        <section class="ed-card">
+          <h3><span class="ed-ico"><i class="fa-solid fa-user-pen"></i></span>Publication</h3>
+          <div class="pref-block" style="margin-top:0">
+            <div class="pref-block-text">
+              <div class="pref-block-title" data-i18n="anon_title">Publier en anonyme</div>
+              <div class="pref-block-sub" data-i18n="anon_sub">Votre nom public ne sera pas affiché.</div>
+            </div>
+            <button class="toggle" id="toggle-anon" type="button"></button>
+          </div>
+          <div class="form-group" id="name-input-group">
+            <label>Votre prénom et nom *</label>
+            <input type="text" class="form-control" id="f-author-name" placeholder="Ex: Jean Dupont">
+          </div>
+          <div class="pref-block" style="margin-bottom:0">
+            <div class="pref-block-text">
+              <div class="pref-block-title">Firebase Verified</div>
+              <div class="pref-block-sub">Badge officiel pour cette variété.</div>
+            </div>
+            <button class="toggle" id="toggle-verified" type="button"></button>
+          </div>
+        </section>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label data-i18n="t_weight">Poids moyen (g)</label>
-          <input type="number" class="form-control" id="f-weight">
-        </div>
-        <div class="form-group">
-          <label data-i18n="t_size">Taille</label>
-          <select class="form-control" id="f-size">
-            <option value="" data-i18n="size_any">-</option>
-            <option value="Cerise" data-i18n="size_cherry">Cerise</option>
-            <option value="Petite" data-i18n="size_small">Petite</option>
-            <option value="Moyenne" data-i18n="size_medium">Moyenne</option>
-            <option value="Grosse" data-i18n="size_large">Grosse</option>
-            <option value="Très grosse" data-i18n="size_xl">Très grosse</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label data-i18n="t_desc">Description / Histoire</label>
-        <textarea class="form-control" id="f-desc" rows="4"></textarea>
-      </div>
-      <button class="btn btn-primary" style="width:100%; justify-content:center; padding:16px; font-size:16px;" id="btn-submit">
-        <div class="btn-progress-fill" id="progress-fill"></div>
-        <span id="btn-submit-label" data-i18n="submit">Publier la variété</span>
-      </button>
+      <aside class="ed-side"><div id="ed-prev"></div></aside>
     </div>
   </div>
 </div>
 
 <script src="fiche-visuals.js"></script>
 <script src="lists.js"></script>
+<script src="article.js"></script>
 <script src="wiki.js"></script>
 <script src="ai.js"></script>
 <script type="module">
@@ -1361,6 +1489,7 @@ function renderColorFilters() {
   const add = document.getElementById('btn-add-color');
   if (add) add.style.display = isAdmin ? '' : 'none';
   syncColorSelect();
+  renderColorPicker();
 }
 function syncColorSelect() {
   const sel = document.getElementById('f-color');
@@ -1975,6 +2104,7 @@ function openDetailModal(tomatoId, fromPop) {
   `;
 
   document.getElementById('detail-desc').textContent = t.description || '-';
+  document.getElementById('detail-article').innerHTML = t.article ? ART.block(t.article, t.articleSource) : '';
   document.getElementById('detail-crumb').innerHTML = `Catalogue &rsaquo; <b>${t.name}</b>`;
   const cObj = countriesList.find(c => c.name === t.country);
   const specRows = [
@@ -1987,7 +2117,7 @@ function openDetailModal(tomatoId, fromPop) {
   specsEl.innerHTML = (specRows.length ? `<div class="detail-section-title">${tr('specs_title') || 'Caractéristiques'}</div><table class="specs-table">${specRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>` : '')
     + FV.weightScale(t.weight, sizeLabel, t.color, t.averageSize)
     + FV.cycle(culture.cycle, culture.semis, t.color)
-    + WK.block(t);
+    + (t.article ? '' : WK.block(t));
   FV.hydrate(specsEl);
   WK.hydrate(specsEl);
 
@@ -2072,6 +2202,10 @@ function closeDetailModal(fromPop) {
   else history.replaceState(null, '', window.location.pathname);
 }
 window.addEventListener('popstate', () => {
+  if (document.getElementById('add-modal').classList.contains('active')) {
+    if (isFormDirty() && !confirm(tr('leave_confirm') || 'Voulez-vous vraiment annuler ? Vos modifications seront perdues.')) { history.pushState({ ed: 1 }, '', location.href); return; }
+    editorHist = false; closeEditor();
+  }
   const id = new URLSearchParams(window.location.search).get('tomato');
   if (id && tomatoesData.find(t => t.id === id)) openDetailModal(id, true);
   else closeDetailModal(true);
@@ -2439,9 +2573,9 @@ function addImageToGallery(value) {
   div.querySelector('.del-btn').onclick = () => {
     const idx = currentImagesData.indexOf(value);
     if (idx > -1) currentImagesData.splice(idx, 1);
-    div.remove();
+    div.remove(); schedulePreview();
   };
-  gallery.insertBefore(div, addBtn);
+  gallery.insertBefore(div, addBtn); schedulePreview();
 }
 function resizeImage(file) {
   return new Promise((resolve) => {
@@ -2521,6 +2655,7 @@ document.getElementById('btn-submit').onclick = async () => {
         description: document.getElementById('f-desc').value || "", 
         country: document.getElementById('f-country-value').value || "",
         verified: isVerified,
+        ...extraFields(true),
         author: isAnon ? 'Anonyme' : (document.getElementById('f-author-name').value.trim() || 'Anonyme')
       };
       if (!isOwnerEdit) {
@@ -2530,7 +2665,7 @@ document.getElementById('btn-submit').onclick = async () => {
       }
       await update(ref(db, `pepins/tomatoes/${editingTomatoId}`), updates);
       fill.style.width = '100%';
-      setTimeout(() => { document.getElementById('add-modal').classList.remove('active'); unlockScrollIfNoDetail(); resetForm(); showToast(tr('update_done'), 'fa-seedling'); }, 400);
+      setTimeout(() => { closeEditor(); showToast(tr('update_done'), 'fa-seedling'); }, 400);
     } else {
       let authorName = "Anonyme";
       if (!isAnon) authorName = document.getElementById('f-author-name').value.trim() || 'Anonyme';
@@ -2543,17 +2678,170 @@ document.getElementById('btn-submit').onclick = async () => {
         country: document.getElementById('f-country-value').value || "", 
         author: authorName, uid: currentUser ? currentUser.uid : null, 
         createdAt: Date.now(),
-        verified: isVerified
+        verified: isVerified,
+        ...extraFields(false)
       };
       await push(ref(db, 'pepins/tomatoes'), tomatoData);
       fill.style.width = '100%';
-      setTimeout(() => { document.getElementById('add-modal').classList.remove('active'); unlockScrollIfNoDetail(); resetForm(); showToast(tr('publish_success'), 'fa-seedling'); }, 500);
+      setTimeout(() => { closeEditor(); showToast(tr('publish_success'), 'fa-seedling'); }, 500);
     }
   } catch(e) {
     errBox.textContent = "Erreur de connexion. L'image est-elle trop lourde ?";
     errBox.style.display = 'block'; fill.style.width = '0%'; btn.disabled = false;
   }
 };
+
+
+// ─── ÉDITEUR COMPLET ──────────────────────────────────────────────────────────
+const $id = x => document.getElementById(x);
+let articleSource = null, editorHist = false, prevRaf = 0;
+
+function renderColorPicker() {
+  const g = $id('cp-grid'), sel = $id('f-color');
+  if (!g || !sel) return;
+  const cur = sel.value;
+  g.innerHTML = allColorNames().map(n => `<button type="button" class="cp-item${n === cur ? ' sel' : ''}" role="radio" aria-checked="${n === cur}" data-val="${escHtml(n)}"><span class="cp-t">${FV.tomato(n, 46)}</span><span class="cp-n">${escHtml(trColor(n))}</span></button>`).join('');
+}
+$id('cp-grid').addEventListener('click', e => {
+  const b = e.target.closest('.cp-item');
+  if (!b) return;
+  $id('f-color').value = b.dataset.val;
+  renderColorPicker(); schedulePreview();
+});
+$id('cp-add').onclick = openColorModal;
+
+const cycleStr = (a, b) => {
+  a = parseInt(a) || 0; b = parseInt(b) || 0;
+  if (a && b && a !== b) return Math.min(a, b) + '-' + Math.max(a, b) + ' jours';
+  const n = a || b;
+  return n ? n + ' jours' : '';
+};
+function extraFields(forEdit) {
+  const art = $id('f-article').value.trim();
+  const o = {
+    cycle: cycleStr($id('f-cycle-min').value, $id('f-cycle-max').value) || null,
+    semis: $id('f-semis').value.trim() || null,
+    article: art || null,
+    articleSource: (art && articleSource) ? articleSource : null
+  };
+  if (!forEdit) Object.keys(o).forEach(k => { if (o[k] === null) delete o[k]; });
+  return o;
+}
+function fillEditorExtras(t) {
+  const c = FV.parseCulture(t);
+  const n = (String(c.cycle).match(/\d+/g) || []).map(Number);
+  $id('f-cycle-min').value = n.length ? Math.min(...n) : '';
+  $id('f-cycle-max').value = n.length > 1 ? Math.max(...n) : '';
+  $id('f-semis').value = c.semis || '';
+  $id('f-article').value = t.article || '';
+  $id('f-wiki-title').value = '';
+  articleSource = t.articleSource || null;
+  renderArSrc(); updateArCount(); setArTab('write');
+  renderColorPicker();
+  schedulePreview();
+}
+function resetEditorExtras() {
+  ['f-cycle-min', 'f-cycle-max', 'f-semis', 'f-article', 'f-wiki-title'].forEach(i => { $id(i).value = ''; });
+  $id('f-color').value = 'Rouge'; $id('f-size').value = '';
+  articleSource = null;
+  renderArSrc(); updateArCount(); setArTab('write');
+  renderColorPicker();
+  schedulePreview();
+}
+
+// Éditeur ouvert / fermé (avec le bouton Retour du navigateur)
+function openEditor() {
+  $id('add-modal').classList.add('active');
+  document.body.classList.add('editor-open');
+  $id('add-modal').querySelector('.ed-shell').scrollTop = 0;
+  if (!editorHist) { history.pushState({ ed: 1 }, '', location.href); editorHist = true; }
+  renderColorPicker(); schedulePreview();
+}
+function closeEditor() {
+  $id('add-modal').classList.remove('active');
+  document.body.classList.remove('editor-open');
+  unlockScrollIfNoDetail();
+  resetForm();
+  if (editorHist) { editorHist = false; history.back(); }
+}
+
+// Article : onglets, barre d'outils, compteur, import Wikipédia
+function updateArCount() { const n = $id('f-article').value.length; $id('ar-count').textContent = n.toLocaleString('fr-FR') + ' / ' + ART.MAX.toLocaleString('fr-FR'); }
+function renderArSrc() {
+  const box = $id('ar-src');
+  if (articleSource && $id('f-article').value.trim()) {
+    box.hidden = false;
+    box.innerHTML = `<i class="fa-brands fa-wikipedia-w"></i><span>Texte issu de Wikipédia : « ${escHtml(articleSource.title)} » (CC BY-SA 4.0)</span><button type="button" id="ar-src-x">Retirer la source</button>`;
+    $id('ar-src-x').onclick = () => { articleSource = null; renderArSrc(); };
+  } else { box.hidden = true; box.innerHTML = ''; }
+}
+function setArTab(tab) {
+  const prev = tab === 'preview';
+  $id('f-article').hidden = prev; $id('ar-tools').style.display = prev ? 'none' : '';
+  $id('ar-prev').hidden = !prev;
+  if (prev) { const r = ART.render($id('f-article').value); $id('ar-prev').innerHTML = (r.html ? r.toc + r.html : '<p class="ar-empty">Rien à afficher pour l’instant.</p>'); }
+  document.querySelectorAll('.ar-tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+}
+document.querySelector('.ar-tabs').addEventListener('click', e => { const b = e.target.closest('button[data-tab]'); if (b) setArTab(b.dataset.tab); });
+$id('ar-tools').addEventListener('click', e => {
+  const b = e.target.closest('button[data-act]');
+  if (!b) return;
+  const ta = $id('f-article'), a = b.dataset.act;
+  if (a === 'h2') ART.line(ta, '## ');
+  else if (a === 'h3') ART.line(ta, '### ');
+  else if (a === 'ul') ART.line(ta, '- ');
+  else if (a === 'ol') ART.line(ta, '1. ');
+  else if (a === 'q') ART.line(ta, '> ');
+  else if (a === 'b') ART.wrap(ta, '**', '**', 'texte en gras');
+  else if (a === 'i') ART.wrap(ta, '*', '*', 'texte en italique');
+  else if (a === 'a') { const u = prompt('Adresse du lien (https://…)'); if (u && /^https?:\/\//i.test(u.trim())) ART.wrap(ta, '[', '](' + u.trim() + ')', 'texte du lien'); }
+});
+$id('f-article').addEventListener('input', () => { updateArCount(); if (!$id('f-article').value.trim()) { articleSource = null; renderArSrc(); } });
+$id('btn-wiki-import').onclick = async () => {
+  const name = $id('f-name').value.trim(), title = $id('f-wiki-title').value.trim();
+  if (!name && !title) { showToast('Indique d’abord le nom de la variété ou un titre de page.', 'fa-circle-exclamation'); return; }
+  if ($id('f-article').value.trim() && !confirm('Remplacer l’article actuel par celui de Wikipédia ?')) return;
+  const btn = $id('btn-wiki-import'), lab = btn.querySelector('span');
+  btn.disabled = true; lab.textContent = 'Recherche…';
+  const r = await ART.importWiki(name, title);
+  btn.disabled = false; lab.textContent = 'Importer depuis Wikipédia';
+  if (!r) { showToast('Aucun article trouvé. Essaie avec le titre exact de la page Wikipédia.', 'fa-circle-exclamation'); return; }
+  $id('f-article').value = r.markdown;
+  articleSource = { title: r.title, url: r.url };
+  renderArSrc(); updateArCount(); setArTab('write'); schedulePreview();
+  showToast('Article « ' + r.title + ' » importé', 'fa-check');
+};
+
+// Aperçu en direct + complétude
+function schedulePreview() { if (!prevRaf) prevRaf = requestAnimationFrame(() => { prevRaf = 0; renderEdPreview(); }); }
+function renderEdPreview() {
+  const box = $id('ed-prev');
+  if (!box) return;
+  if (!box.firstChild) {
+    box.innerHTML = `<div class="ed-cap">Aperçu de la carte</div><div class="ed-pcard"><div class="ed-pimg"><i class="fa-regular fa-image"></i></div><div class="ed-pbody"><b></b><div class="ed-pmeta"></div><div class="ed-pmeta2"></div></div></div><div class="ed-prog"><div class="ed-prog-h"></div><div class="ed-meter"><i></i></div><ul></ul></div>`;
+  }
+  const name = $id('f-name').value.trim(), color = $id('f-color').value || 'Rouge', country = $id('f-country-value').value;
+  const w = $id('f-weight').value, cyc = cycleStr($id('f-cycle-min').value, $id('f-cycle-max').value);
+  const semis = $id('f-semis').value.trim(), desc = $id('f-desc').value.trim(), art = $id('f-article').value.trim();
+  const img = currentImagesData[0] || '';
+  const wrap = box.querySelector('.ed-pimg');
+  if (wrap.__src !== img) {
+    wrap.__src = img;
+    wrap.innerHTML = img ? '<img alt="">' : '<i class="fa-regular fa-image"></i>';
+    if (img) wrap.firstChild.src = img;
+  }
+  box.querySelector('.ed-pbody b').textContent = name || 'Nom de la variété';
+  box.querySelector('.ed-pmeta').innerHTML = FV.tomato(color, 18) + '<span>' + escHtml(trColor(color)) + '</span>';
+  box.querySelector('.ed-pmeta2').textContent = [w ? w + ' g' : '', cyc, country].filter(Boolean).join(' · ');
+  const items = [['Photo', !!img], ['Nom', !!name], ['Pays', !!country], ['Poids', !!w], ['Cycle', !!cyc], ['Semis', !!semis], ['Description', desc.length > 20], ['Article', art.length > 200]];
+  const pct = Math.round(items.filter(x => x[1]).length / items.length * 100);
+  box.querySelector('.ed-prog-h').innerHTML = '<b>Fiche complète à ' + pct + ' %</b>';
+  box.querySelector('.ed-meter i').style.width = pct + '%';
+  box.querySelector('.ed-prog ul').innerHTML = items.map(([l, ok]) => `<li class="${ok ? 'ok' : ''}"><i class="fa-solid ${ok ? 'fa-circle-check' : 'fa-circle'}"></i>${l}</li>`).join('');
+}
+$id('add-modal').addEventListener('input', schedulePreview);
+$id('add-modal').addEventListener('change', schedulePreview);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $id('add-modal').classList.contains('active') && !$id('color-modal').classList.contains('active')) closeAddModalWithConfirm(); });
 
 function resetForm() {
   editingTomatoId = null; editOwnerUid = null;
@@ -2565,6 +2853,7 @@ function resetForm() {
   document.getElementById('btn-submit-label').textContent = tr('submit');
   document.getElementById('f-name').value = '';
   document.getElementById('f-desc').value = '';
+  resetEditorExtras();
   document.getElementById('f-weight').value = '';
   document.getElementById('f-country-value').value = '';
   document.getElementById('f-country-btn').innerHTML = `<span>Sélectionner un pays...</span> <i class="fa-solid fa-chevron-down" style="color:var(--text-muted)"></i>`;
@@ -2588,12 +2877,11 @@ function resetForm() {
 }
 
 function isFormDirty() {
-  return !!document.getElementById('f-name').value.trim() || !!document.getElementById('f-desc').value.trim() || currentImagesData.length > 0;
+  return !!document.getElementById('f-name').value.trim() || !!document.getElementById('f-desc').value.trim() || !!document.getElementById('f-article').value.trim() || currentImagesData.length > 0;
 }
 function closeAddModalWithConfirm() {
   if (isFormDirty() && !confirm(tr('leave_confirm') || 'Voulez-vous vraiment annuler ? Vos modifications seront perdues.')) return;
-  document.getElementById('add-modal').classList.remove('active'); unlockScrollIfNoDetail();
-  resetForm();
+  closeEditor();
 }
 
 function openEditModal(t) {
@@ -2635,7 +2923,8 @@ function openEditModal(t) {
   imgs.forEach(url => addImageToGallery(url));
   document.getElementById('detail-modal').classList.remove('active');
   document.body.classList.remove('detail-open');
-  document.getElementById('add-modal').classList.add('active');
+  fillEditorExtras(t);
+  openEditor();
 }
 
 document.getElementById('detail-edit-btn').onclick = () => { const t = tomatoesData.find(x => x.id === detailCurrentId); if (t) openEditModal(t); };
@@ -2648,7 +2937,7 @@ document.getElementById('detail-delete-btn').onclick = async () => {
   catch (e) { showToast("Erreur lors de la suppression.", 'fa-triangle-exclamation'); }
 };
 
-document.getElementById('btn-add-modal').onclick = () => { if (!isAdmin) return; editingTomatoId = null; resetForm(); document.getElementById('add-modal').classList.add('active'); };
+document.getElementById('btn-add-modal').onclick = () => { if (!isAdmin) return; editingTomatoId = null; resetForm(); openEditor(); };
 document.getElementById('close-modal').onclick = closeAddModalWithConfirm;
 document.getElementById('add-modal').addEventListener('click', (e) => { if (e.target.id === 'add-modal') closeAddModalWithConfirm(); });
 

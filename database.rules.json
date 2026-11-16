@@ -31,6 +31,14 @@
       "tomatoes": {
         "$id": {
           ".write": "auth != null && (auth.uid === 'C2FrKuBXBzRYcqCG7pW8eEzm5RI3' || auth.uid === '1uKGbtsFGOYKTwge7lT88yAfnx92' || auth.uid === 'ptNpn0JJF1Serl8Ej7yAJLtpPti2' || auth.uid === 'pJVYaoxxs2UReJ2bcp5VWSLvl6x2' || root.child('pepins/admins').child(auth.uid).val() === true)",
+          "cycle": { ".validate": "newData.isString() && newData.val().length <= 40" },
+          "semis": { ".validate": "newData.isString() && newData.val().length <= 120" },
+          "article": { ".validate": "newData.isString() && newData.val().length <= 30000" },
+          "articleSource": {
+            "title": { ".validate": "newData.isString() && newData.val().length <= 200" },
+            "url": { ".validate": "newData.isString() && newData.val().matches(/^https:\\/\\/fr\\.wikipedia\\.org\\//)" },
+            "$other": { ".validate": false }
+          },
           "likes": { "$uid": { ".write": "auth != null && auth.uid === $uid" } },
           "comments": { "$cid": { ".write": "auth != null && !data.exists()" } }
         }
