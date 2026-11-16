@@ -11,18 +11,18 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TomatoList</title>
-<meta property="og:title" content="TomatoList">
-<meta property="og:description" content="Découvrez et partagez des variétés de tomates.">
+<title>Pépins de tomates</title>
+<meta property="og:title" content="Pépins de tomates">
+<meta property="og:description" content="Découvrez ma collection de variétés de tomates.">
 <meta property="og:image" content="apercu.jpg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="TomatoList">
-<meta name="twitter:description" content="Découvrez et partagez des variétés de tomates.">
+<meta name="twitter:title" content="Pépins de tomates">
+<meta name="twitter:description" content="Découvrez ma collection de variétés de tomates.">
 <meta name="twitter:image" content="apercu.jpg">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="apple-touch-icon" href="icon.svg">
-<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="pepins-icon.svg?v=2">
+<link rel="manifest" href="manifest.json?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png?v=2">
 <meta name="theme-color" content="#b91c1c">
 
 <!-- Optimisations de connexion -->
@@ -250,32 +250,6 @@
   .cm-sw { aspect-ratio: 1; border-radius: 50%; border: none; cursor: pointer; position: relative; box-shadow: inset 0 -3px 5px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.3), 0 0 0 1px rgba(0,0,0,.1); transition: transform .15s; }
   .cm-sw:hover { transform: scale(1.12); }
   .cm-sw.sel { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--text-main); transform: scale(1.05); }
-
-  /* Vérification des couleurs (modérateurs) */
-  .cc-modal { max-width: 560px; }
-  .cc-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
-  .cc-prog { flex: 1; height: 6px; background: #f3f4f6; border-radius: 99px; overflow: hidden; }
-  .cc-prog > i { display: block; height: 100%; width: 0; background: var(--primary); transition: width .3s; }
-  .cc-photo { position: relative; background: #f3f4f6; border-radius: 14px; overflow: hidden; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; }
-  .cc-photo img { width: 100%; height: 100%; object-fit: contain; }
-  .cc-thumbs { display: flex; gap: 6px; margin-top: 8px; }
-  .cc-thumbs img { width: 46px; height: 46px; object-fit: cover; border-radius: 8px; cursor: pointer; opacity: .6; border: 2px solid transparent; }
-  .cc-thumbs img.on { opacity: 1; border-color: var(--primary); }
-  .cc-name { font-weight: 700; font-size: 17px; margin: 14px 0 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .cc-now { font-size: 12px; font-weight: 600; color: var(--text-muted); background: #f3f4f6; padding: 3px 9px; border-radius: 99px; display: inline-flex; align-items: center; gap: 6px; }
-  .cc-sugg { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; min-height: 44px; align-items: center; }
-  .cc-chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 99px; border: 1.5px solid var(--line); background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--text-main); }
-  .cc-chip:hover { border-color: var(--line-h); }
-  .cc-chip.sel { border-color: var(--primary); background: #fef2f2; }
-  .cc-chip small { font-weight: 500; color: var(--text-muted); }
-  .cc-chip .sw-dot { width: 16px; height: 16px; border-radius: 50%; display: inline-block; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
-  .cc-conf { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-  .cc-all { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 14px; max-height: 120px; overflow-y: auto; }
-  .cc-all .cc-chip { padding: 5px 10px; font-size: 12.5px; }
-  .cc-actions { display: flex; gap: 10px; }
-  .cc-actions .btn { flex: 1; padding: 13px; }
-  .cc-empty { text-align: center; padding: 30px 10px; color: var(--text-muted); }
-  .cc-hint { font-size: 11.5px; color: var(--text-muted); text-align: center; margin-top: 10px; }
   .cm-top { display: flex; gap: 18px; align-items: center; margin-bottom: 18px; }
   .cm-prev { width: 84px; height: 84px; flex-shrink: 0; border-radius: 20px; background: #fef2f2; display: flex; align-items: center; justify-content: center; }
   .cm-exact { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 13px; color: var(--text-muted); }
@@ -662,7 +636,7 @@
 
     .btn { padding: 10px; border-radius: 8px; } .btn i { margin: 0; font-size: 16px; } .grid { grid-template-columns: 1fr; } .form-row { flex-direction: column; gap: 0; } .share-banner { padding: 20px; } .share-banner-title { font-size: 16px; } }
 
-  /* Print Styles — rendu premium TomatoList */
+  /* Print Styles — rendu premium Pépins de tomates */
   @media screen {
     #print-area { display: none; }
   }
@@ -726,8 +700,8 @@
 <div id="intro">
   <div class="in-bg"></div>
   <div class="in-lock">
-    <div class="in-logo"><div class="in-tile"><img src="icon.svg" alt=""></div></div>
-    <div class="in-word"><h1 class="in-name">TomatoList</h1></div>
+    <div class="in-logo"><div class="in-tile"><img src="pepins-icon.svg?v=2" alt=""></div></div>
+    <div class="in-word"><h1 class="in-name">Pépins de tomates</h1></div>
   </div>
 </div>
 <script>
@@ -767,8 +741,8 @@
 
 <nav class="navbar">
   <a href="#" class="brand" style="display:flex; align-items:center; gap:10px;">
-    <img src="icon.svg" alt="" style="width:28px; height:28px; flex-shrink:0;" onerror="this.style.display='none'">
-    <span class="brand-name">TomatoList</span>
+    <img src="pepins-icon.svg?v=2" alt="" style="width:28px; height:28px; flex-shrink:0;" onerror="this.style.display='none'">
+    <span class="brand-name">Pépins de tomates</span>
   </a>
   <div class="nav-actions">
     <div class="lang-dropdown">
@@ -782,12 +756,14 @@
         <button data-lang="en">English</button>
       </div>
     </div>
+    <button class="btn btn-outline" id="btn-lists" title="Ma liste de courses"><i class="fa-solid fa-cart-shopping"></i> <span class="hide-mobile">Ma liste</span> <span class="pl-count" id="pl-count" style="display:none"></span></button>
     <button class="btn btn-outline" id="btn-auth"><i class="fa-solid fa-user"></i> <span class="hide-mobile" id="auth-label" data-i18n="login">Connexion</span></button>
-    <button class="btn btn-primary" id="btn-add-modal"><i class="fa-solid fa-plus"></i> <span class="hide-mobile" data-i18n="add">Ajouter</span></button>
+    <button class="btn btn-outline" id="btn-import-data" style="display:none"><i class="fa-solid fa-cloud-arrow-up"></i> <span class="hide-mobile" data-i18n="import">Importer</span></button>
+    <button class="btn btn-primary" id="btn-add-modal" style="display:none"><i class="fa-solid fa-plus"></i> <span class="hide-mobile" data-i18n="add">Ajouter</span></button>
   </div>
 </nav>
 
-<section class="hero" id="hero" aria-label="TomatoList">
+<section class="hero" id="hero" aria-label="Pépins de tomates">
   <h2 class="hero-title"><span class="w" data-i18n="hero_title">Chaque pépin raconte une variété.</span></h2>
   <img class="hero-img" src="tomates.webp" alt="Dessin à l'encre de trois tomates sur la vigne" width="720" height="720" decoding="async">
 </section>
@@ -805,7 +781,7 @@
   <div class="variety-counter" id="variety-counter">
     <i class="fa-solid fa-seedling"></i>
     <span id="variety-counter-num">0</span>
-    <span id="variety-counter-label">variétés recensées</span>
+    <span id="variety-counter-label">variétés référencées</span>
   </div>
   <div class="toolbar">
     <div class="search-box">
@@ -837,7 +813,7 @@
         </div>
       </section>
       <section class="fp-sec">
-        <div class="fp-lab"><i class="fa-solid fa-palette"></i><span data-i18n="color">Couleur</span><button class="fp-add" id="btn-add-color" type="button" style="display:none"><i class="fa-solid fa-plus"></i> Ajouter une couleur</button><button class="fp-add" id="btn-color-check" type="button" style="display:none"><i class="fa-solid fa-wand-magic-sparkles"></i> Vérifier les couleurs</button></div>
+        <div class="fp-lab"><i class="fa-solid fa-palette"></i><span data-i18n="color">Couleur</span><button class="fp-add" id="btn-add-color" type="button" style="display:none"><i class="fa-solid fa-plus"></i> Ajouter une couleur</button></div>
         <div class="fp-colors" id="color-group"></div>
       </section>
       <section class="fp-sec">
@@ -864,9 +840,9 @@
 
 <!-- Bannière PWA -->
 <div class="install-banner" id="install-banner">
-  <img src="icon.svg" alt="TomatoList" class="install-banner-icon">
+  <img src="pepins-icon.svg?v=2" alt="Pépins de tomates" class="install-banner-icon">
   <div class="install-banner-body">
-    <div class="install-banner-title" data-i18n="install_title">Installer TomatoList</div>
+    <div class="install-banner-title" data-i18n="install_title">Installer Pépins de tomates</div>
     <div class="install-banner-sub" id="install-banner-sub" data-i18n="install_sub">Accédez-y en un tap, même hors connexion.</div>
   </div>
   <div class="install-banner-actions">
@@ -878,7 +854,7 @@
 <div class="toast-container" id="toast-container"></div>
 
 <footer class="footer">
-  <div class="brand" style="margin-bottom:16px; color:#fff">TomatoList</div>
+  <div class="brand" style="margin-bottom:16px; color:#fff">Pépins de tomates</div>
   <p data-i18n="footer_desc">La plateforme collaborative de recensement des variétés de tomates.</p>
   <div class="credits">
     <div><span data-i18n="dev_label">Développement :</span> <a href="https://wikimindai.github.io/Wikimind/" target="_blank" rel="noopener" style="color:#fff; font-weight:600;">Wikimind</a></div>
@@ -893,7 +869,7 @@
 <div class="modal-overlay" id="detail-modal">
   <div class="modal detail-modal">
     <div class="detail-topbar">
-      <button class="btn btn-outline btn-sm" id="detail-back"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="back_catalog">Retour aux variétés</span></button>
+      <button class="btn btn-outline btn-sm" id="detail-back"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="back_catalog">Retour au catalogue</span></button>
       <div class="detail-crumb" id="detail-crumb"></div>
     </div>
     <div class="modal-header" style="position:absolute; top:12px; right:12px; left:auto; border:none; padding:0; background:transparent; z-index:20;">
@@ -919,9 +895,10 @@
       <p class="detail-desc" id="detail-desc">-</p>
       <div id="detail-article"></div>
       <div class="detail-actions">
+        <button class="btn btn-outline btn-sm" id="detail-list-btn"><i class="fa-solid fa-cart-plus"></i> <span>Ma liste</span></button>
         <button class="btn btn-outline btn-sm" id="detail-share-btn"><i class="fa-solid fa-share-nodes"></i> <span data-i18n="share">Partager</span></button>
         <button class="btn btn-outline btn-sm" id="detail-print-btn"><i class="fa-solid fa-print"></i> <span data-i18n="print">Imprimer</span></button>
-        <button class="btn btn-outline btn-sm" id="detail-edit-btn" style="display:flex"><i class="fa-solid fa-pen"></i> <span data-i18n="edit">Modifier</span></button>
+        <button class="btn btn-outline btn-sm" id="detail-edit-btn" style="display:none"><i class="fa-solid fa-pen"></i> <span data-i18n="edit">Modifier</span></button>
         <button class="btn btn-danger btn-sm" id="detail-delete-btn" style="display:none"><i class="fa-solid fa-trash"></i> <span data-i18n="delete">Supprimer</span></button>
       </div>
       <div class="card-footer">
@@ -967,10 +944,10 @@
     </div>
     <div class="modal-body" style="line-height:1.6; font-size:14px; color:var(--text-main);">
       <h3 style="margin-bottom:8px;">1. Éditeur de la plateforme</h3>
-      <p style="margin-bottom:16px;">TomatoList est une plateforme collaborative gratuite éditée par Wikimind. L'hébergement est assuré par Firebase (Google LLC), 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.</p>
+      <p style="margin-bottom:16px;">Pépins de tomates est une plateforme collaborative gratuite éditée par Wikimind. L'hébergement est assuré par Firebase (Google LLC), 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.</p>
       
       <h3 style="margin-bottom:8px;">2. Propriété intellectuelle et contributions</h3>
-      <p style="margin-bottom:16px;">Les données textuelles et photographiques partagées sur TomatoList sont apportées par la communauté. En publiant une variété ou une photo, l'utilisateur garantit en posséder les droits et accorde à TomatoList une licence non exclusive, gratuite et mondiale pour l'affichage de ces contenus sur la plateforme.</p>
+      <p style="margin-bottom:16px;">Les données textuelles et photographiques partagées sur Pépins de tomates sont apportées par la communauté. En publiant une variété ou une photo, l'utilisateur garantit en posséder les droits et accorde à Pépins de tomates une licence non exclusive, gratuite et mondiale pour l'affichage de ces contenus sur la plateforme.</p>
       
       <h3 style="margin-bottom:8px;">3. Responsabilité</h3>
       <p style="margin-bottom:16px;">Les informations présentes sur cette plateforme (caractéristiques des tomates, précocité, taille) sont données à titre indicatif par les contributeurs. L'éditeur ne saurait être tenu responsable d'éventuelles erreurs ou omissions.</p>
@@ -1027,17 +1004,6 @@
 </div>
 
 <div id="print-area"></div>
-
-<!-- Vérification des couleurs (modérateurs) -->
-<div class="modal-overlay" id="cc-modal">
-  <div class="modal cc-modal">
-    <div class="modal-header">
-      <div class="modal-title"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary);margin-right:8px"></i>Vérifier les couleurs</div>
-      <button class="modal-close" id="cc-close" type="button" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body" id="cc-body"></div>
-  </div>
-</div>
 
 <!-- Modale couleurs (modérateurs) -->
 <div class="modal-overlay" id="color-modal">
@@ -1223,7 +1189,7 @@
             <label>Votre prénom et nom *</label>
             <input type="text" class="form-control" id="f-author-name" placeholder="Ex: Jean Dupont">
           </div>
-          <div class="pref-block" id="verified-block" style="margin-bottom:0;display:none">
+          <div class="pref-block" style="margin-bottom:0">
             <div class="pref-block-text">
               <div class="pref-block-title">Firebase Verified</div>
               <div class="pref-block-sub">Badge officiel pour cette variété.</div>
@@ -1238,7 +1204,7 @@
 </div>
 
 <script src="fiche-visuals.js"></script>
-<script src="color-detect.js"></script>
+<script src="lists.js"></script>
 <script src="article.js"></script>
 <script src="wiki.js"></script>
 <script src="ai.js"></script>
@@ -1324,13 +1290,13 @@ async function resolveAdmin(user) {
   if (user) {
     if (OWNERS.includes(user.uid)) ok = true;
     else {
-      try { const snap = await get(ref(db, 'admins/' + user.uid)); ok = snap.val() === true; } catch (e) {}
+      try { const snap = await get(ref(db, 'pepins/admins/' + user.uid)); ok = snap.val() === true; } catch (e) {}
     }
   }
   isAdmin = ok;
-  const vb = document.getElementById('verified-block'); if (vb) vb.style.display = ok ? '' : 'none';
+  document.getElementById('btn-add-modal').style.display = ok ? '' : 'none';
+  document.getElementById('btn-import-data').style.display = ok ? '' : 'none';
   if (typeof renderColorFilters === 'function') renderColorFilters();
-    if (typeof renderColorFilters === 'function') renderColorFilters();
 }
 let currentProfile = null;
 let currentImagesData = [];
@@ -1522,8 +1488,6 @@ function renderColorFilters() {
   box.innerHTML = html;
   const add = document.getElementById('btn-add-color');
   if (add) add.style.display = isAdmin ? '' : 'none';
-  const cpAdd = document.getElementById('cp-add'); if (cpAdd) cpAdd.style.display = isAdmin ? '' : 'none';
-  const ccBtn = document.getElementById('btn-color-check'); if (ccBtn) ccBtn.style.display = isAdmin ? '' : 'none';
   syncColorSelect();
   renderColorPicker();
 }
@@ -1554,7 +1518,7 @@ function applyCustomColors(raw) {
   renderGrid();
   if (document.getElementById('color-modal').classList.contains('active')) renderColorModalList();
 }
-onValue(ref(db, 'colors'), snap => applyCustomColors(snap.val()), err => console.warn('Couleurs :', err && err.message));
+onValue(ref(db, 'pepins/colors'), snap => applyCustomColors(snap.val()), err => console.warn('Couleurs :', err && err.message));
 
 function setSort(v) {
   currentSort = v;
@@ -1649,7 +1613,7 @@ document.getElementById('cm-save').onclick = async () => {
   const btn = document.getElementById('cm-save');
   btn.disabled = true;
   try {
-    await update(ref(db, 'colors/' + slug), { name, hex: cmHex, by: currentUser.uid, at: Date.now() });
+    await update(ref(db, 'pepins/colors/' + slug), { name, hex: cmHex, by: currentUser.uid, at: Date.now() });
     document.getElementById('cm-name').value = '';
     document.getElementById('color-error').style.display = 'none';
     showToast('Couleur « ' + name + ' » ajoutée', 'fa-palette');
@@ -1666,136 +1630,9 @@ document.getElementById('cm-list').addEventListener('click', async e => {
   const used = tomatoesData.filter(t => t.color === c.name).length;
   if (used) { colorError('« ' + c.name + ' » est utilisée par ' + used + ' variété' + (used > 1 ? 's' : '') + ' : change d’abord leur couleur.'); return; }
   if (!confirm('Supprimer la couleur « ' + c.name + ' » ?')) return;
-  try { await remove(ref(db, 'colors/' + c.key)); } catch (err) { colorError('Suppression refusée.'); }
+  try { await remove(ref(db, 'pepins/colors/' + c.key)); } catch (err) { colorError('Suppression refusée.'); }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeColorModal(); });
-
-
-// ─── VÉRIFICATION DES COULEURS (modérateurs) ──────────────────────────────────
-// Affiche une tomate, détecte sa couleur sur la photo (color-detect.js) et laisse le modérateur valider ou changer.
-let ccQueue = [], ccIndex = 0, ccDone = 0, ccChoice = null, ccRun = 0, ccPhoto = 0, ccBusy = false;
-const ccEl = id => document.getElementById(id);
-const ccDot = n => `<i class="sw-dot" style="background:${colorMap[n] || '#ccc'}"></i>`;
-const ccImgs = t => (t.imageURLs || (t.imageURL ? [t.imageURL] : [])).filter(u => /^https?:\/\//i.test(u));
-const ccExtra = () => { const o = {}; Object.values(customColors).forEach(c => { o[c.name] = c.hex; }); return o; };
-
-function ccBuildQueue() {
-  // uniquement les variétés avec photo et dont la couleur n'a pas déjà été vérifiée ; les plus anciennes d'abord
-  return tomatoesData
-    .filter(t => !t.colorChecked && ccImgs(t).length)
-    .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0))
-    .map(t => t.id);
-}
-function openColorCheck() {
-  if (!isAdmin) return;
-  ccQueue = ccBuildQueue(); ccIndex = 0; ccDone = 0;
-  ccEl('cc-modal').classList.add('active');
-  ccShow();
-}
-function closeColorCheck() { ccRun++; ccEl('cc-modal').classList.remove('active'); }
-
-function ccCurrent() {
-  while (ccIndex < ccQueue.length) {
-    const t = tomatoesData.find(x => x.id === ccQueue[ccIndex]);
-    if (t && !t.colorChecked) return t;
-    ccIndex++;
-  }
-  return null;
-}
-function ccShow() {
-  const body = ccEl('cc-body'), t = ccCurrent();
-  const total = ccQueue.length;
-  if (!t) {
-    body.innerHTML = `<div class="cc-empty"><i class="fa-solid fa-circle-check" style="font-size:38px;color:#059669;margin-bottom:12px"></i><div style="font-weight:700;color:var(--text-main)">${total ? 'Toutes les couleurs ont été passées en revue' : 'Aucune couleur à vérifier'}</div><div style="margin-top:6px;font-size:13px">${ccDone} validée${ccDone > 1 ? 's' : ''} pendant cette session.</div></div>`;
-    return;
-  }
-  const imgs = ccImgs(t);
-  ccPhoto = 0; ccChoice = null;
-  const pct = total ? Math.round(ccIndex / total * 100) : 0;
-  body.innerHTML = `
-    <div class="cc-bar"><div class="cc-prog"><i style="width:${pct}%"></i></div><span>${ccIndex + 1} / ${total}</span></div>
-    <div class="cc-photo"><img id="cc-img" src="${escHtml(FV.thumb(imgs[0], 900))}" data-o="${escHtml(imgs[0])}" referrerpolicy="no-referrer" alt="${escHtml(t.name)}"></div>
-    ${imgs.length > 1 ? `<div class="cc-thumbs">${imgs.map((u, i) => `<img src="${escHtml(FV.thumb(u, 120))}" data-i="${i}" referrerpolicy="no-referrer" alt="" class="${i === 0 ? 'on' : ''}">`).join('')}</div>` : ''}
-    <div class="cc-name">${escHtml(t.name)}<span class="cc-now">Couleur actuelle : ${ccDot(t.color)} ${escHtml(trColor(t.color) || t.color || '—')}</span></div>
-    <div class="cc-sugg" id="cc-sugg"><span class="cc-conf"><i class="fa-solid fa-spinner fa-spin"></i> Analyse de la photo…</span></div>
-    <div class="cc-conf" id="cc-conf"></div>
-    <div class="cc-all" id="cc-all">${allColorNames().map(n => `<button type="button" class="cc-chip" data-c="${escHtml(n)}">${ccDot(n)}${escHtml(trColor(n))}</button>`).join('')}</div>
-    <div class="cc-actions">
-      <button type="button" class="btn btn-outline" id="cc-skip"><i class="fa-solid fa-forward"></i> Passer</button>
-      <button type="button" class="btn btn-primary" id="cc-ok" disabled><i class="fa-solid fa-check"></i> <span id="cc-ok-txt">Valider</span></button>
-    </div>
-    <div class="cc-hint">Entrée = valider · → = passer · 1 2 3 = choisir une proposition</div>`;
-  const img = ccEl('cc-img');
-  img.onerror = () => { if (img.dataset.o && img.src !== img.dataset.o) img.src = img.dataset.o; };
-  ccChoose(t.color && allColorNames().includes(t.color) ? t.color : null, true);
-  const run = ++ccRun;
-  ColorDetect.analyserPhotos(imgs, ccExtra()).then(r => { if (run === ccRun && ccCurrent() === t) ccSuggest(t, r); });
-}
-function ccChoose(name, silent) {
-  ccChoice = name;
-  document.querySelectorAll('#cc-body .cc-chip').forEach(b => b.classList.toggle('sel', b.dataset.c === name));
-  const ok = ccEl('cc-ok'), txt = ccEl('cc-ok-txt');
-  if (!ok) return;
-  ok.disabled = !name;
-  txt.textContent = name ? 'Valider « ' + (trColor(name) || name) + ' »' : 'Valider';
-}
-function ccSuggest(t, r) {
-  const box = ccEl('cc-sugg'), conf = ccEl('cc-conf');
-  if (!box) return;
-  if (!r || !r.suggestions.length) {
-    box.innerHTML = '<span class="cc-conf">Photo illisible : choisis la couleur ci-dessous.</span>';
-    return;
-  }
-  const names = allColorNames();
-  const sugg = r.suggestions.filter(s => names.includes(s.nom));
-  box.innerHTML = sugg.map((s, i) => `<button type="button" class="cc-chip" data-c="${escHtml(s.nom)}">${ccDot(s.nom)}${escHtml(trColor(s.nom) || s.nom)} <small>${Math.round(s.part * 100)} %</small><small>${i + 1}</small></button>`).join('');
-  const same = sugg[0] && sugg[0].nom === t.color;
-  conf.textContent = 'Confiance de la détection : ' + r.confiance + (same ? ' · identique à la couleur actuelle' : '') + (sugg[0] && sugg[0].detail ? ' (' + sugg[0].detail + ')' : '') + (r.photos > 1 ? ' · ' + r.photos + ' photos analysées' : '');
-  if (sugg[0]) ccChoose(sugg[0].nom);
-}
-async function ccValidate() {
-  const t = ccCurrent();
-  if (!t || !ccChoice || ccBusy || !isAdmin || !currentUser) return;
-  ccBusy = true;
-  const ok = ccEl('cc-ok'); if (ok) ok.disabled = true;
-  try {
-    await update(ref(db, 'tomatoes/' + t.id), { color: ccChoice, colorChecked: { by: currentUser.uid, at: Date.now() } });
-    t.color = ccChoice; t.colorChecked = { by: currentUser.uid, at: Date.now() };
-    ccDone++; ccIndex++;
-    showToast('« ' + t.name + ' » : ' + (trColor(ccChoice) || ccChoice), 'fa-palette');
-    ccShow();
-  } catch (e) {
-    showToast('Enregistrement refusé (règles Firebase ?)', 'fa-lock');
-    if (ok) ok.disabled = false;
-  }
-  ccBusy = false;
-}
-function ccSkip() { if (ccCurrent()) { ccIndex++; ccShow(); } }
-
-ccEl('btn-color-check').onclick = () => { openColorCheck(); };
-ccEl('cc-close').onclick = closeColorCheck;
-ccEl('cc-modal').addEventListener('click', e => { if (e.target.id === 'cc-modal') closeColorCheck(); });
-ccEl('cc-body').addEventListener('click', e => {
-  const chip = e.target.closest('.cc-chip');
-  if (chip) { ccChoose(chip.dataset.c); return; }
-  const th = e.target.closest('.cc-thumbs img');
-  if (th) {
-    const t = ccCurrent(); if (!t) return;
-    const u = ccImgs(t)[+th.dataset.i];
-    const big = ccEl('cc-img'); big.dataset.o = u; big.src = FV.thumb(u, 900);
-    document.querySelectorAll('.cc-thumbs img').forEach(x => x.classList.toggle('on', x === th));
-    return;
-  }
-  if (e.target.closest('#cc-skip')) ccSkip();
-  else if (e.target.closest('#cc-ok')) ccValidate();
-});
-document.addEventListener('keydown', e => {
-  if (!ccEl('cc-modal').classList.contains('active')) return;
-  if (e.key === 'Escape') { closeColorCheck(); return; }
-  if (e.key === 'Enter') { e.preventDefault(); ccValidate(); }
-  else if (e.key === 'ArrowRight') { e.preventDefault(); ccSkip(); }
-  else if (/^[1-3]$/.test(e.key)) { const b = document.querySelectorAll('#cc-sugg .cc-chip')[+e.key - 1]; if (b) ccChoose(b.dataset.c); }
-});
 
 // ─── AUTHENTIFICATION & TOGGLE ANONYME ────────────────────────────────────────
 const anonToggle = document.getElementById('toggle-anon');
@@ -1877,7 +1714,7 @@ let tomatoesRetryTimer = null;
 
 function subscribeTomatoes() {
   onValue(
-    ref(db, 'tomatoes'),
+    ref(db, 'pepins/tomatoes'),
     (snapshot) => {
       tomatoesData = [];
       snapshot.forEach(child => { tomatoesData.push({ id: child.key, ...child.val() }); });
@@ -1894,6 +1731,7 @@ function subscribeTomatoes() {
         if(t) renderComments(t); // Mise à jour en temps réel des commentaires
       }
       maybeOpenSharedTomato();
+      if (window.PL) PL.maybeOpenShared();
     },
     (error) => {
       console.error('Erreur de chargement des tomates :', error);
@@ -1913,11 +1751,11 @@ window.retryLoadTomatoes = () => { if (tomatoesRetryTimer) clearTimeout(tomatoes
 // ─── BANDEAU DE PARTAGE ───────────────────────────────────────────────────────
 function buildShareBannerHTML(index) {
   return `
-    <div class="share-banner" role="complementary" aria-label="Partager TomatoList">
+    <div class="share-banner" role="complementary" aria-label="Partager Pépins de tomates">
       <div class="share-banner-left">
         <div class="share-banner-emoji">🍅</div>
         <div>
-          <div class="share-banner-title">Faites grandir la TomatoList&nbsp;!</div>
+          <div class="share-banner-title">Faites grandir Pépins de tomates&nbsp;!</div>
           <div class="share-banner-sub">Plus on est de passionnés, plus la liste s'enrichit. Partagez le site avec vos amis jardiniers&nbsp;🌱</div>
         </div>
       </div>
@@ -2036,6 +1874,7 @@ function renderGrid() {
         <div style="position:relative">
           ${imagesHtml}
           ${imgCountBadge}
+          <button class="pl-btn" data-pl-id="${t.id}" title="Ajouter à ma liste" aria-label="Ajouter à ma liste"><i class="fa-solid fa-cart-plus"></i></button>
         </div>
         <div class="card-body">
           <h3 class="card-title" style="display:flex; align-items:center; gap:6px;">
@@ -2074,6 +1913,7 @@ function renderGrid() {
   window.__gridHtml = gridHtml;
   grid.innerHTML = gridHtml;
   renderPagination(totalPages);
+  if (window.PL) PL.refresh();
 
   // Attacher les événements sur les boutons des bandeaux de partage
   grid.querySelectorAll('[data-share-copy]').forEach(btn => {
@@ -2094,7 +1934,7 @@ function renderGrid() {
       const url = window.location.origin + window.location.pathname;
       if (navigator.share) {
         try {
-          await navigator.share({ title: 'TomatoList', text: 'Découvrez des centaines de variétés de tomates 🍅', url });
+          await navigator.share({ title: 'Pépins de tomates', text: 'Découvrez des centaines de variétés de tomates 🍅', url });
         } catch (_) {}
       } else {
         try {
@@ -2120,7 +1960,7 @@ async function toggleLike(tomatoId) {
   if (!tomato) return;
   const isLiked = tomato.likes && tomato.likes[currentUser.uid];
   const updates = {};
-  updates[`tomatoes/${tomatoId}/likes/${currentUser.uid}`] = isLiked ? null : true;
+  updates[`pepins/tomatoes/${tomatoId}/likes/${currentUser.uid}`] = isLiked ? null : true;
   updates[`users/${currentUser.uid}/likes/${tomatoId}`] = isLiked ? null : true;
   try { await update(ref(db), updates); } catch(err) { showToast("Erreur lors de l'action.", 'fa-triangle-exclamation'); }
 }
@@ -2176,7 +2016,7 @@ document.getElementById('btn-submit-comment').onclick = async () => {
   }
   
   try {
-    await push(ref(db, `tomatoes/${detailCurrentId}/comments`), {
+    await push(ref(db, `pepins/tomatoes/${detailCurrentId}/comments`), {
       author: authorName,
       uid: currentUser ? currentUser.uid : null,
       text: text,
@@ -2265,7 +2105,7 @@ function openDetailModal(tomatoId, fromPop) {
 
   document.getElementById('detail-desc').textContent = t.description || '-';
   document.getElementById('detail-article').innerHTML = t.article ? ART.block(t.article, t.articleSource) : '';
-  document.getElementById('detail-crumb').innerHTML = `Recensement &rsaquo; <b>${t.name}</b>`;
+  document.getElementById('detail-crumb').innerHTML = `Catalogue &rsaquo; <b>${t.name}</b>`;
   const cObj = countriesList.find(c => c.name === t.country);
   const specRows = [
     [tr('t_color') ? tr('t_color').replace(' *', '') : 'Couleur', `<span class="fv-inline">${FV.tomato(t.color, 30)} <span>${trColor(t.color)}</span></span>`],
@@ -2294,9 +2134,9 @@ function openDetailModal(tomatoId, fromPop) {
 
   document.getElementById('detail-date').textContent = new Date(t.createdAt).toLocaleDateString(currentLang);
 
-  const isOwner = !!(currentUser && t.uid && currentUser.uid === t.uid);
-  document.getElementById('detail-edit-btn').style.display = 'flex';
-  document.getElementById('detail-delete-btn').style.display = (isOwner || isAdmin) ? 'flex' : 'none';
+  const isOwner = currentUser && t.uid && currentUser.uid === t.uid;
+  document.getElementById('detail-edit-btn').style.display = isAdmin ? 'flex' : 'none';
+  document.getElementById('detail-delete-btn').style.display = isAdmin ? 'flex' : 'none';
 
   renderContributors(t);
 
@@ -2322,6 +2162,7 @@ function openDetailModal(tomatoId, fromPop) {
   }
 
   refreshDetailLikeBtn();
+  if (window.PL) PL.refresh();
   renderComments(t);
   
   const dm = document.getElementById('detail-modal');
@@ -2377,7 +2218,7 @@ document.getElementById('detail-share-btn').onclick = async () => {
   if (!detailCurrentId) return;
   const url = `${window.location.origin}${window.location.pathname}?tomato=${detailCurrentId}`;
   if (navigator.share) {
-    try { await navigator.share({ title: 'TomatoList', text: document.getElementById('detail-title').textContent, url }); return; } catch(_) {}
+    try { await navigator.share({ title: 'Pépins de tomates', text: document.getElementById('detail-title').textContent, url }); return; } catch(_) {}
   }
   try {
     await navigator.clipboard.writeText(url);
@@ -2452,7 +2293,7 @@ document.getElementById('detail-print-btn').onclick = () => {
         <div class="pp-brand">
           <div class="pp-logo">${TOMATOLIST_LOGO_SVG}</div>
           <div class="pp-brand-text">
-            <span class="pp-brand-name">TomatoList</span>
+            <span class="pp-brand-name">Pépins de tomates</span>
             <span class="pp-brand-tag">Fiche variété</span>
           </div>
         </div>
@@ -2485,8 +2326,8 @@ document.getElementById('detail-print-btn').onclick = () => {
       <div class="pp-desc">${ppEscape(t.description || '—')}</div>
 
       <div class="pp-footer">
-        <div class="pp-footer-brand">${TOMATOLIST_LOGO_SVG} TomatoList</div>
-        <div>wikimindai.github.io/Wikimind/TomatoList</div>
+        <div class="pp-footer-brand">${TOMATOLIST_LOGO_SVG} Pépins de tomates</div>
+        <div>wikimindai.github.io/Wikimind</div>
       </div>
     </div>
   `;
@@ -2494,7 +2335,7 @@ document.getElementById('detail-print-btn').onclick = () => {
   window.print();
 };
 
-// Pont vers ai.js (assistant)
+// Pont vers lists.js (listes de variétés)
 window.TL = { getToken: () => (currentUser ? currentUser.getIdToken() : Promise.resolve(null)), getTomatoes: () => tomatoesData, openDetail: (id) => openDetailModal(id), toast: showToast, detailId: () => detailCurrentId };
 
 function maybeOpenSharedTomato() {
@@ -2775,7 +2616,7 @@ document.getElementById('btn-submit').onclick = async () => {
     }
   }
 
-  const isOwnerEdit = editingTomatoId && currentUser && ((editOwnerUid && currentUser.uid === editOwnerUid) || isAdmin);
+  const isOwnerEdit = editingTomatoId && isAdmin;
   let authorNameValue = document.getElementById('f-author-name').value.trim();
   
   if (isVerified && !authorNameValue) {
@@ -2819,10 +2660,10 @@ document.getElementById('btn-submit').onclick = async () => {
       };
       if (!isOwnerEdit) {
         delete updates.author;
-        const newContribRef = push(ref(db, `tomatoes/${editingTomatoId}/contributors`));
+        const newContribRef = push(ref(db, `pepins/tomatoes/${editingTomatoId}/contributors`));
         updates[`contributors/${newContribRef.key}`] = { name: contributorName || 'Anonyme', uid: currentUser ? currentUser.uid : null, at: Date.now() };
       }
-      await update(ref(db, `tomatoes/${editingTomatoId}`), updates);
+      await update(ref(db, `pepins/tomatoes/${editingTomatoId}`), updates);
       fill.style.width = '100%';
       setTimeout(() => { closeEditor(); showToast(tr('update_done'), 'fa-seedling'); }, 400);
     } else {
@@ -2840,7 +2681,7 @@ document.getElementById('btn-submit').onclick = async () => {
         verified: isVerified,
         ...extraFields(false)
       };
-      await push(ref(db, 'tomatoes'), tomatoData);
+      await push(ref(db, 'pepins/tomatoes'), tomatoData);
       fill.style.width = '100%';
       setTimeout(() => { closeEditor(); showToast(tr('publish_success'), 'fa-seedling'); }, 500);
     }
@@ -3045,7 +2886,7 @@ function closeAddModalWithConfirm() {
 
 function openEditModal(t) {
   editingTomatoId = t.id; editOwnerUid = t.uid || null;
-  const isOwner = !!(currentUser && ((editOwnerUid && currentUser.uid === editOwnerUid) || isAdmin));
+  const isOwner = isAdmin;
   document.getElementById('add-modal-title').removeAttribute('data-i18n');
   document.getElementById('add-modal-title').textContent = tr('edit_title') || 'Modifier';
   document.getElementById('btn-submit-label').removeAttribute('data-i18n');
@@ -3090,16 +2931,13 @@ document.getElementById('detail-edit-btn').onclick = () => { const t = tomatoesD
 document.getElementById('detail-delete-btn').onclick = async () => {
   if (!detailCurrentId) return;
   const t = tomatoesData.find(x => x.id === detailCurrentId);
-  if (!t || !currentUser || !(isAdmin || currentUser.uid === t.uid)) { showToast(tr('not_owner'), 'fa-lock'); return; }
+  if (!t || !isAdmin) { showToast(tr('not_owner'), 'fa-lock'); return; }
   if (!confirm(tr('delete_confirm'))) return;
-  try { await remove(ref(db, `tomatoes/${detailCurrentId}`)); closeDetailModal(); showToast(tr('delete_done'), 'fa-check'); }
+  try { await remove(ref(db, `pepins/tomatoes/${detailCurrentId}`)); closeDetailModal(); showToast(tr('delete_done'), 'fa-check'); }
   catch (e) { showToast("Erreur lors de la suppression.", 'fa-triangle-exclamation'); }
 };
 
-document.getElementById('btn-add-modal').onclick = () => {
-  if (!currentUser) { showToast(tr('login_required') || 'Connecte-toi pour recenser une variété.', 'fa-lock'); setTimeout(() => { window.location.href = 'auth.html'; }, 900); return; }
-  editingTomatoId = null; resetForm(); openEditor();
-};
+document.getElementById('btn-add-modal').onclick = () => { if (!isAdmin) return; editingTomatoId = null; resetForm(); openEditor(); };
 document.getElementById('close-modal').onclick = closeAddModalWithConfirm;
 document.getElementById('add-modal').addEventListener('click', (e) => { if (e.target.id === 'add-modal') closeAddModalWithConfirm(); });
 
@@ -3107,6 +2945,77 @@ loadTranslations();
 loadCountries();
 
 // ─── PWA ──────────────────────────────────────────────────────────────────────
+const normTxt = x => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z\s-]/g, '').trim();
+function mapColor(c) {
+  const x = normTxt(c);
+  if (/bicolore|bigarr/.test(x)) return 'Bicolore';
+  if (/ray|stri/.test(x)) return 'Rayée';
+  if (/noir|pourpre/.test(x)) return 'Noire';
+  if (/violet|mauve/.test(x)) return 'Violette';
+  if (/bordeaux|brun|chocolat/.test(x)) return 'Bordeaux';
+  if (/vert/.test(x)) return 'Verte';
+  if (/jaune/.test(x)) return 'Jaune';
+  if (/orange/.test(x)) return 'Orange';
+  if (/rose/.test(x)) return 'Rose';
+  if (/blanc/.test(x)) return 'Blanche';
+  if (/creme|beige/.test(x)) return 'Crème';
+  if (/bleu/.test(x)) return 'Bleue';
+  return 'Rouge';
+}
+function mapWeight(p) {
+  const n = String(p || '').match(/\d+/g);
+  if (!n) return null;
+  const v = n.map(Number);
+  return Math.round(v.reduce((a, b) => a + b, 0) / v.length);
+}
+function mapSize(w) {
+  if (!w) return null;
+  if (w <= 30) return 'Cerise';
+  if (w <= 80) return 'Petite';
+  if (w <= 200) return 'Moyenne';
+  if (w <= 400) return 'Grosse';
+  return 'Très grosse';
+}
+document.getElementById('btn-import-data').onclick = async () => {
+  if (!isAdmin) return;
+  if (!confirm('Importer le catalogue data.js dans le cloud ? Les variétés déjà importées sont ignorées.')) return;
+  try {
+    const { DATA } = await import('./data.js');
+    const pays = await (await fetch('pays.json')).json();
+    const byName = {};
+    pays.forEach(p => { byName[normTxt(p.name)] = p.name; });
+    const exist = new Set(tomatoesData.map(t => t.id));
+    const updates = {};
+    const now = Date.now();
+    DATA.forEach((d, i) => {
+      const key = 'v' + d.id;
+      if (exist.has(key) || !d.nom) return;
+      const w = mapWeight(d.poids);
+      const c = d.culture || {};
+      const extra = [c.type, c.cycle ? 'cycle ' + c.cycle : '', c.semis ? 'semis ' + c.semis : ''].filter(Boolean).join(', ');
+      updates[key] = {
+        name: d.nom.trim(),
+        color: mapColor(d.couleur),
+        imageURLs: (d.images || []).filter(u => /^https?:\/\//i.test(u)),
+        weight: w,
+        averageSize: mapSize(w),
+        description: ((d.descriptionLongue || d.descriptionCourte || '').trim() + (extra ? '\n\nCulture : ' + extra + '.' : '')).trim(),
+        country: byName[normTxt(d.origine)] || '',
+        author: 'Pépins de tomates',
+        uid: currentUser.uid,
+        createdAt: now - i * 1000,
+        verified: true
+      };
+    });
+    const n = Object.keys(updates).length;
+    if (!n) { showToast('Rien à importer', 'fa-circle-info'); return; }
+    await update(ref(db, 'pepins/tomatoes'), updates);
+    showToast(n + ' variétés importées', 'fa-check');
+  } catch (err) {
+    showToast("Import impossible", 'fa-triangle-exclamation');
+  }
+};
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
 }
@@ -3163,7 +3072,7 @@ if ('serviceWorker' in navigator) {
     if (outcome !== 'accepted') localStorage.setItem(DISMISS_KEY, String(Date.now()));
     deferredPrompt = null;
   };
-  window.addEventListener('appinstalled', () => { hideBanner(); localStorage.removeItem(DISMISS_KEY); showToast(tr('install_success') || 'TomatoList est installé !', 'fa-circle-check'); });
+  window.addEventListener('appinstalled', () => { hideBanner(); localStorage.removeItem(DISMISS_KEY); showToast(tr('install_success') || 'Pépins de tomates est installé !', 'fa-circle-check'); });
 })();
 </script>
 </body>
